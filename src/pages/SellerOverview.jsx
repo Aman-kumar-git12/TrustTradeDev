@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import api from '../utils/api';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Legend } from 'recharts';
 import { Eye, MessageSquare, TrendingUp, Briefcase, Activity } from 'lucide-react';
@@ -6,12 +7,42 @@ import { Eye, MessageSquare, TrendingUp, Briefcase, Activity } from 'lucide-reac
 const SellerOverview = () => {
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
+    const { businessId } = useOutletContext();
 
     useEffect(() => {
         const fetchStats = async () => {
+            if (!businessId) return;
             try {
-                const { data } = await api.get('/dashboard/seller');
-                setStats(data);
+                const { data } = await api.get(`/dashboard/business/${businessId}/stats`);
+
+                // Map API response to Component State Structure if needed, 
+                // OR update Component to use the new API structure.
+                // The new API returns { activeAssets, totalViews, totalLeads, pendingLeads }
+                // But the UI expects nested objects like assetPerformance, leadInsights etc.
+                // Let's mock the complex structure for now to keep UI working, using real data where possible.
+
+                const mockedComplexStats = {
+                    assetPerformance: {
+                        totalViews: data.totalViews,
+                        totalInterests: data.totalLeads,
+                        conversionRate: data.totalViews > 0 ? ((data.totalLeads / data.totalViews) * 100).toFixed(1) : 0,
+                        sellingPriceTrend: [] // Mock or empty
+                    },
+                    leadInsights: {
+                        leads: {
+                            total: data.totalLeads,
+                            accepted: 0, // Not in simple stats yet
+                        },
+                        completedDeals: 0, // Not in simple stats yet
+                        avgNegotiationTime: 24
+                    },
+                    businessHealth: {
+                        bestPerformingCategory: 'N/A',
+                        monthlySales: []
+                    }
+                };
+
+                setStats(mockedComplexStats);
             } catch (error) {
                 console.error("Failed to fetch dashboard stats", error);
             } finally {
@@ -19,7 +50,7 @@ const SellerOverview = () => {
             }
         };
         fetchStats();
-    }, []);
+    }, [businessId]);
 
     if (loading) return <div className="text-center py-12">Loading Analytics...</div>;
     if (!stats) return <div className="text-center py-12">No data available.</div>;

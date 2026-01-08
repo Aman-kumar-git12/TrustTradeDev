@@ -8,7 +8,7 @@ const SellerLeads = () => {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     // Use context from SellerDashboard
-    const { isFilterOpen } = useOutletContext();
+    const { isFilterOpen, businessId } = useOutletContext();
 
     const [filters, setFilters] = useState({
         search: '',
@@ -16,13 +16,14 @@ const SellerLeads = () => {
     });
 
     const fetchLeads = async () => {
+        if (!businessId) return;
         setLoading(true);
         try {
             const params = new URLSearchParams();
             if (filters.search) params.append('search', filters.search);
             if (filters.status) params.append('status', filters.status);
 
-            const { data } = await api.get(`/interests/seller?${params.toString()}`);
+            const { data } = await api.get(`/dashboard/business/${businessId}/leads?${params.toString()}`);
             setLeads(data);
         } catch (error) {
             console.error("Failed to fetch leads", error);
@@ -41,13 +42,21 @@ const SellerLeads = () => {
         // Initial fetch
         fetchLeads();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [businessId]);
 
     const handleClearFilters = () => {
         setFilters({ search: '', status: '' });
         // We trigger reset immediately
-        api.get('/interests/seller').then(res => setLeads(res.data));
+        api.get(`/dashboard/business/${businessId}/leads`).then(res => setLeads(res.data));
     };
+
+    // Auto-clear filters when sidebar is closed
+    useEffect(() => {
+        if (!isFilterOpen) {
+            handleClearFilters();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isFilterOpen]);
 
     const handleStatusUpdate = async (id, status) => {
         try {
@@ -74,7 +83,7 @@ const SellerLeads = () => {
                             onFilterChange={setFilters}
                             onClear={handleClearFilters}
                             onApply={handleApplyFilters}
-                            onClose={() => navigate('/dashboard/seller/leads')}
+                            onClose={() => navigate(`/dashboard/seller/${businessId}/leads`)}
                         />
                     </div>
                 )}
@@ -141,11 +150,11 @@ const LeadRow = ({ lead, onStatusUpdate }) => {
                 {/* Buyer Info */}
                 <div className="flex items-center space-x-2 overflow-hidden min-w-0">
                     <div className="h-6 w-6 rounded-full bg-slate-100 flex-shrink-0 flex items-center justify-center text-xs font-bold text-slate-500">
-                        {lead.buyer.fullName.charAt(0)}
+                        {lead.buyer?.fullName?.charAt(0) || '?'}
                     </div>
                     <div className="min-w-0">
-                        <p className="text-sm font-medium text-gray-700 truncate">{lead.buyer.fullName}</p>
-                        <p className="text-[10px] text-gray-400 truncate">{lead.buyer.companyName}</p>
+                        <p className="text-sm font-medium text-gray-700 truncate">{lead.buyer?.fullName || 'Unknown Buyer'}</p>
+                        <p className="text-[10px] text-gray-400 truncate">{lead.buyer?.companyName || 'No Company'}</p>
                     </div>
                 </div>
 
@@ -206,13 +215,13 @@ const LeadRow = ({ lead, onStatusUpdate }) => {
                         {/* Contact Info */}
                         <div className="text-sm space-y-2">
                             <h5 className="text-xs font-bold text-gray-400 uppercase">Contact Info</h5>
-                            <div className="flex items-center text-gray-700">
-                                <span className="text-gray-400 w-5">📧</span>
-                                <a href={`mailto:${lead.buyer.email}`} className="hover:underline hover:text-primary">{lead.buyer.email}</a>
+                            <div className="flex items-center text-blue-600 text-sm">
+                                <span className="font-bold mr-2 w-16">Email:</span>
+                                <a href={`mailto:${lead.buyer?.email}`} className="font-medium hover:underline truncate">{lead.buyer?.email}</a>
                             </div>
-                            <div className="flex items-center text-gray-700">
-                                <span className="text-gray-400 w-5">📱</span>
-                                <span>{lead.buyer.phone || 'N/A'}</span>
+                            <div className="flex items-center text-blue-600 text-sm">
+                                <span className="font-bold mr-2 w-16">Contact:</span>
+                                <span className="font-medium">{lead.buyer?.phone || 'N/A'}</span>
                             </div>
                         </div>
 

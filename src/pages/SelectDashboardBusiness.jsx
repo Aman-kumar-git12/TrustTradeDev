@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Building2, ArrowRight, Briefcase, MapPin } from 'lucide-react';
 import api from '../utils/api';
 
-const SelectBusinessPost = () => {
+const SelectDashboardBusiness = () => {
     const [businesses, setBusinesses] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -34,10 +34,10 @@ const SelectBusinessPost = () => {
             <div className="max-w-5xl mx-auto">
                 <div className="text-center mb-12">
                     <span className="inline-block py-1 px-3 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-3">
-                        Seller Dashboard
+                        Seller Workspace
                     </span>
-                    <h1 className="text-4xl font-bold text-gray-900 mb-3 tracking-tight">Post a New Asset</h1>
-                    <p className="text-gray-500 text-lg max-w-2xl mx-auto">Select the business entity you want to list this asset under.</p>
+                    <h1 className="text-4xl font-bold text-gray-900 mb-3 tracking-tight">Select Business Dashboard</h1>
+                    <p className="text-gray-500 text-lg max-w-2xl mx-auto">Choose a business entity to view its performance, leads, and manage its listings.</p>
                 </div>
 
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -45,7 +45,7 @@ const SelectBusinessPost = () => {
                     {businesses.map((business) => (
                         <div
                             key={business._id}
-                            onClick={() => navigate(`/post-assets/${business._id}`)}
+                            onClick={() => navigate(`/dashboard/seller/${business._id}/overview`)}
                             className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl hover:shadow-primary/10 border border-gray-100 p-6 flex flex-col transition-all duration-300 transform hover:-translate-y-1 cursor-pointer relative overflow-hidden"
                         >
                             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-accent opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -79,32 +79,23 @@ const SelectBusinessPost = () => {
                             </div>
 
                             <div className="mt-6 pt-4 border-t border-gray-50 flex items-center justify-between">
-                                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Select & Post</span>
+                                <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Launch Dashboard</span>
                                 <span className="text-xs font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity transform translate-x-2 group-hover:translate-x-0">
-                                    Proceed &rarr;
+                                    Open &rarr;
                                 </span>
                             </div>
                         </div>
                     ))}
 
-                    {/* Empty State / Create New */}
                     {businesses.length === 0 && (
-                        <div className="md:col-span-2 lg:col-span-3">
-                            <div className="bg-white rounded-2xl border-2 border-dashed border-gray-300 p-12 text-center flex flex-col items-center">
-                                <div className="w-20 h-20 bg-primary/5 rounded-full flex items-center justify-center mb-6">
-                                    <Building2 size={40} className="text-primary/60" />
-                                </div>
-                                <h3 className="text-2xl font-bold text-gray-900 mb-2">No Businesses Found</h3>
-                                <p className="text-gray-500 mb-8 max-w-md mx-auto">
-                                    You need to establish a business profile before you can list assets on the marketplace.
-                                </p>
-                                <button
-                                    onClick={() => navigate('/my-businesses')}
-                                    className="bg-primary text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all transform hover:-translate-y-0.5"
-                                >
-                                    Create Your First Business
-                                </button>
-                            </div>
+                        <div className="md:col-span-2 lg:col-span-3 text-center py-12">
+                            <p className="text-gray-400 italic">No businesses found. Please create a business profile first.</p>
+                            <button
+                                onClick={() => navigate('/my-businesses')}
+                                className="mt-4 px-4 py-2 bg-primary text-white rounded-lg font-bold hover:bg-primary-light transition-colors"
+                            >
+                                Manage Businesses
+                            </button>
                         </div>
                     )}
                 </div>
@@ -113,4 +104,4 @@ const SelectBusinessPost = () => {
     );
 };
 
-export default SelectBusinessPost;
+export default SelectDashboardBusiness;

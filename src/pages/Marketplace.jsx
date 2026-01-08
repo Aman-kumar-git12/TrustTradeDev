@@ -67,6 +67,14 @@ const Marketplace = () => {
         fetchAssets(emptyFilters);
     };
 
+    // Auto-clear filters when sidebar is closed (URL changes away from /filter)
+    useEffect(() => {
+        if (!isFilterOpen) {
+            handleClearFilters();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isFilterOpen]);
+
     const handleFilterChange = (newFilters) => {
         setFilters(prev => ({ ...prev, ...newFilters }));
     };

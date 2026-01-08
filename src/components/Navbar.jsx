@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, LogOut, PlusCircle, Building2 } from 'lucide-react';
 import { useUI } from '../context/UIContext';
 import { useAuth } from '../context/AuthContext';
+import Hover from './Hover';
 
 const Navbar = () => {
     const navigate = useNavigate();
@@ -51,15 +52,21 @@ const Navbar = () => {
                                     <span>Dashboard</span>
                                 </Link>
                                 <div className="flex items-center space-x-4 border-l border-primary-light pl-6">
-                                    <Link to="/profile" className="flex items-center space-x-2 text-sm text-gray-300 hover:text-white transition-colors">
-                                        <div className="h-8 w-8 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold border border-slate-600">
-                                            {user.fullName.charAt(0)}
-                                        </div>
-                                        <span>{user.fullName}</span>
-                                    </Link>
-                                    <button onClick={handleLogout} className="text-gray-400 hover:text-white">
-                                        <LogOut size={18} />
-                                    </button>
+                                    {/* Profile Hover */}
+                                    <Hover text="View Profile">
+                                        <Link to="/profile" className="flex items-center space-x-2 text-sm text-gray-300 hover:text-white transition-colors">
+                                            <div className="h-8 w-8 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold border border-slate-600 shadow-sm group-hover:border-accent transition-colors">
+                                                {user.fullName.charAt(0)}
+                                            </div>
+                                            <span className="font-medium tracking-wide">{user.fullName}</span>
+                                        </Link>
+                                    </Hover>
+
+                                    <Hover text="Log Out">
+                                        <button onClick={handleLogout} className="text-gray-400 hover:text-red-400 transition-colors">
+                                            <LogOut size={18} />
+                                        </button>
+                                    </Hover>
                                 </div>
                             </div>
                         ) : (

@@ -19,8 +19,13 @@ const Login = () => {
             showSnackbar('Login successful!', 'success');
 
             // Redirect based on role
-            if (data.role === 'seller') navigate('/dashboard/seller');
-            else navigate('/marketplace');
+            // Seller -> /dashboard/seller (which auto-redirects to first business)
+            // Buyer -> /marketplace
+            if (data.role === 'seller') {
+                navigate('/dashboard/seller');
+            } else {
+                navigate('/marketplace');
+            }
 
         } catch (err) {
             const msg = err.response?.data?.message || 'Login failed';
