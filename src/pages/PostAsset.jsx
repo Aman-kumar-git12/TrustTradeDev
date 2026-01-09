@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
-    ArrowLeft, Upload, DollarSign, MapPin, Tag, LayoutGrid, FileText, CheckCircle, AlertCircle, Image as ImageIcon,
+    ArrowLeft, Upload, DollarSign, MapPin, Tag, FileText, CheckCircle, AlertCircle, Image as ImageIcon,
     Factory, Truck, Cpu, Building2, Stethoscope, Smartphone, Hammer, Printer, HelpCircle
 } from 'lucide-react';
 import api from '../utils/api';
@@ -73,24 +73,24 @@ const PostAsset = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 font-sans">
+        <div className="min-h-screen bg-white dark:bg-zinc-950 py-12 px-4 sm:px-6 lg:px-8 font-sans transition-colors duration-300">
             <div className="max-w-6xl mx-auto">
                 {/* Header */}
                 <div className="flex items-center mb-8">
                     <button
                         onClick={() => navigate(-1)}
-                        className="mr-4 p-2 rounded-full hover:bg-white hover:shadow-sm text-gray-500 hover:text-primary transition-all"
+                        className="mr-4 p-2 rounded-full hover:bg-white dark:hover:bg-zinc-800 hover:shadow-sm text-gray-500 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all"
                     >
                         <ArrowLeft size={24} />
                     </button>
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">List New Asset</h1>
-                        <p className="text-gray-500 mt-1">Fill in the details to publish your asset to the marketplace.</p>
+                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white transition-colors duration-300">List New Asset</h1>
+                        <p className="text-gray-500 dark:text-gray-400 mt-1 transition-colors duration-300">Fill in the details to publish your asset to the marketplace.</p>
                     </div>
                 </div>
 
-                <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
-                    <div className="h-1 bg-gradient-to-r from-primary to-accent w-full"></div>
+                <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-gray-100 dark:border-zinc-800 overflow-hidden transition-colors duration-300">
+                    <div className="h-1 bg-gradient-to-r from-emerald-500 to-emerald-400 w-full"></div>
 
                     <form onSubmit={handleSubmit} className="p-8 md:p-10">
 
@@ -99,20 +99,20 @@ const PostAsset = () => {
                             {/* LEFT COLUMN: Asset Specification */}
                             <div className="space-y-8">
                                 <div>
-                                    <h3 className="text-xl font-bold text-gray-800 border-b pb-2 mb-6">Asset Details</h3>
+                                    <h3 className="text-xl font-bold text-gray-800 dark:text-white border-b border-gray-100 dark:border-zinc-800 pb-2 mb-6 transition-colors duration-300">Asset Details</h3>
 
                                     <div className="space-y-6">
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-700 mb-2">Asset Title</label>
+                                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">Asset Title</label>
                                             <div className="relative">
                                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                    <FileText className="h-5 w-5 text-gray-400" />
+                                                    <FileText className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                                                 </div>
                                                 <input
                                                     type="text"
                                                     required
                                                     placeholder="e.g., 2020 CNC Milling Machine"
-                                                    className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all outline-none"
+                                                    className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white rounded-xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all outline-none"
                                                     value={formData.title}
                                                     onChange={e => setFormData({ ...formData, title: e.target.value })}
                                                 />
@@ -121,16 +121,16 @@ const PostAsset = () => {
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div>
-                                                <label className="block text-sm font-bold text-gray-700 mb-2">Price (USD)</label>
+                                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">Price (USD)</label>
                                                 <div className="relative">
                                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                        <DollarSign className="h-5 w-5 text-gray-400" />
+                                                        <DollarSign className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                                                     </div>
                                                     <input
                                                         type="number"
                                                         required
                                                         placeholder="0.00"
-                                                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all outline-none"
+                                                        className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white rounded-xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all outline-none"
                                                         value={formData.price}
                                                         onChange={e => setFormData({ ...formData, price: e.target.value })}
                                                     />
@@ -138,13 +138,13 @@ const PostAsset = () => {
                                             </div>
 
                                             <div>
-                                                <label className="block text-sm font-bold text-gray-700 mb-2">Condition</label>
+                                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">Condition</label>
                                                 <div className="relative">
                                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                        <Tag className="h-5 w-5 text-gray-400" />
+                                                        <Tag className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                                                     </div>
                                                     <select
-                                                        className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all outline-none appearance-none bg-white"
+                                                        className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white rounded-xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all outline-none appearance-none"
                                                         value={formData.condition}
                                                         onChange={e => setFormData({ ...formData, condition: e.target.value })}
                                                     >
@@ -158,16 +158,16 @@ const PostAsset = () => {
                                         </div>
 
                                         <div>
-                                            <label className="block text-sm font-bold text-gray-700 mb-2">Location</label>
+                                            <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">Location</label>
                                             <div className="relative">
                                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                    <MapPin className="h-5 w-5 text-gray-400" />
+                                                    <MapPin className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                                                 </div>
                                                 <input
                                                     type="text"
                                                     required
                                                     placeholder="City, State"
-                                                    className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all outline-none"
+                                                    className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white rounded-xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all outline-none"
                                                     value={formData.location}
                                                     onChange={e => setFormData({ ...formData, location: e.target.value })}
                                                 />
@@ -178,7 +178,7 @@ const PostAsset = () => {
 
                                 {/* Category Selection Grid */}
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-3">Category</label>
+                                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-3 transition-colors duration-300">Category</label>
                                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                                         {CATEGORIES.map((cat) => (
                                             <button
@@ -186,8 +186,8 @@ const PostAsset = () => {
                                                 type="button"
                                                 onClick={() => handleCategorySelect(cat.name)}
                                                 className={`flex flex-col items-center justify-center p-3 rounded-xl border transition-all duration-200 ${!isCustomCategory && formData.category === cat.name
-                                                        ? 'border-primary bg-primary/5 text-primary shadow-sm scale-[1.02]'
-                                                        : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-600'
+                                                    ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 shadow-sm scale-[1.02]'
+                                                    : 'border-gray-200 dark:border-zinc-700 hover:border-gray-300 dark:hover:border-zinc-600 hover:bg-gray-50 dark:hover:bg-zinc-800 text-gray-600 dark:text-gray-400'
                                                     }`}
                                             >
                                                 <cat.icon size={24} className="mb-2" />
@@ -198,8 +198,8 @@ const PostAsset = () => {
                                             type="button"
                                             onClick={handleCustomCategory}
                                             className={`flex flex-col items-center justify-center p-3 rounded-xl border transition-all duration-200 ${isCustomCategory
-                                                    ? 'border-primary bg-primary/5 text-primary shadow-sm scale-[1.02]'
-                                                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50 text-gray-600'
+                                                ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 shadow-sm scale-[1.02]'
+                                                : 'border-gray-200 dark:border-zinc-700 hover:border-gray-300 dark:hover:border-zinc-600 hover:bg-gray-50 dark:hover:bg-zinc-800 text-gray-600 dark:text-gray-400'
                                                 }`}
                                         >
                                             <HelpCircle size={24} className="mb-2" />
@@ -213,7 +213,7 @@ const PostAsset = () => {
                                                 type="text"
                                                 required
                                                 placeholder="Specify custom category..."
-                                                className="w-full px-4 py-2 border border-primary/30 rounded-lg focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none bg-blue-50/30"
+                                                className="w-full px-4 py-2 border border-emerald-500/30 rounded-lg focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none bg-blue-50/30 dark:bg-emerald-900/10 text-gray-900 dark:text-white"
                                                 value={formData.category}
                                                 onChange={e => setFormData({ ...formData, category: e.target.value })}
                                                 autoFocus
@@ -225,13 +225,13 @@ const PostAsset = () => {
 
                             {/* RIGHT COLUMN: Media & Description */}
                             <div className="space-y-6">
-                                <h3 className="text-xl font-bold text-gray-800 border-b pb-2 mb-4">Media & Description</h3>
+                                <h3 className="text-xl font-bold text-gray-800 dark:text-white border-b border-gray-100 dark:border-zinc-800 pb-2 mb-4 transition-colors duration-300">Media & Description</h3>
 
                                 {/* Image Preview Box */}
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2">Asset Image</label>
+                                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">Asset Image</label>
 
-                                    <div className="mb-4 w-full h-64 bg-slate-50 border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center overflow-hidden relative group">
+                                    <div className="mb-4 w-full h-64 bg-slate-50 dark:bg-zinc-800/50 border-2 border-dashed border-gray-300 dark:border-zinc-700 rounded-xl flex items-center justify-center overflow-hidden relative group transition-colors duration-300">
                                         {formData.imageUrl ? (
                                             <>
                                                 <img
@@ -249,40 +249,40 @@ const PostAsset = () => {
                                             </>
                                         ) : (
                                             <div className="text-center p-6">
-                                                <div className="mx-auto w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mb-3 text-primary">
+                                                <div className="mx-auto w-16 h-16 bg-blue-50 dark:bg-emerald-900/20 rounded-full flex items-center justify-center mb-3 text-emerald-500 dark:text-emerald-400">
                                                     <ImageIcon size={32} />
                                                 </div>
-                                                <p className="text-sm font-medium text-gray-900">No Image Selected</p>
-                                                <p className="text-xs text-gray-500 mt-1">Paste a URL below to preview</p>
+                                                <p className="text-sm font-medium text-gray-900 dark:text-white">No Image Selected</p>
+                                                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Paste a URL below to preview</p>
                                             </div>
                                         )}
                                     </div>
 
                                     <div className="relative group">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <Upload className="h-5 w-5 text-gray-400 group-focus-within:text-primary transition-colors" />
+                                            <Upload className="h-5 w-5 text-gray-400 dark:text-gray-500 group-focus-within:text-emerald-500 transition-colors" />
                                         </div>
                                         <input
                                             type="url"
                                             placeholder="Paste image URL here (https://...)"
-                                            className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all outline-none shadow-sm"
+                                            className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white rounded-xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all outline-none shadow-sm"
                                             value={formData.imageUrl}
                                             onChange={e => setFormData({ ...formData, imageUrl: e.target.value })}
                                         />
                                     </div>
-                                    <p className="text-xs text-gray-500 mt-2 flex items-center">
+                                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 flex items-center">
                                         <AlertCircle size={12} className="mr-1" />
                                         Supported formats: JPG, PNG, WEBP.
                                     </p>
                                 </div>
 
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-2">Description</label>
+                                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">Description</label>
                                     <textarea
                                         required
                                         rows={6}
                                         placeholder="Describe the condition, history, and key features of the asset..."
-                                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all outline-none resize-none shadow-sm"
+                                        className="w-full px-4 py-3 border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-900 dark:text-white rounded-xl focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all outline-none resize-none shadow-sm"
                                         value={formData.description}
                                         onChange={e => setFormData({ ...formData, description: e.target.value })}
                                     />
@@ -291,11 +291,11 @@ const PostAsset = () => {
                         </div>
 
                         {/* Submit Button */}
-                        <div className="pt-8 border-t border-gray-100 mt-8">
+                        <div className="pt-8 border-t border-gray-100 dark:border-zinc-800 mt-8 transition-colors duration-300">
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className={`w-full md:w-auto md:min-w-[240px] float-right bg-gradient-to-r from-primary to-primary-focus text-white font-bold text-lg py-4 px-8 rounded-xl shadow-lg shadow-primary/30 hover:shadow-primary/50 transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
+                                className={`w-full md:w-auto md:min-w-[240px] float-right bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-700 hover:to-emerald-600 text-white font-bold text-lg py-4 px-8 rounded-xl shadow-lg shadow-emerald-600/30 hover:shadow-emerald-600/50 transform hover:-translate-y-0.5 transition-all duration-200 flex items-center justify-center ${loading ? 'opacity-70 cursor-not-allowed' : ''}`}
                             >
                                 {loading ? (
                                     <span className="flex items-center">

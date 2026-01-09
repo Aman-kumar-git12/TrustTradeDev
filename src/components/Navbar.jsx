@@ -25,32 +25,38 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="bg-primary text-white shadow-lg sticky top-0 z-50">
+        <nav className="bg-primary text-white shadow-lg sticky top-0 z-50 transition-colors duration-300">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16 items-center">
                     <Link to="/" className="flex items-center space-x-2">
                         <Building2 className="h-8 w-8 text-accent" />
-                        <span className="font-display font-bold text-xl tracking-tight">TrustTrade</span>
+                        <span className="font-display font-bold text-xl tracking-tight text-white">TrustTrade</span>
                     </Link>
 
                     <div className="hidden md:flex items-center space-x-8">
-                        <Link to="/marketplace" className="hover:text-accent transition-colors">Marketplace</Link>
+                        <Hover text="Browse Assets">
+                            <Link to="/marketplace" className="text-gray-300 hover:text-white transition-colors font-medium">Marketplace</Link>
+                        </Hover>
 
                         {user ? (
                             <div className="flex items-center space-x-6">
                                 {user.role === 'seller' && (
-                                    <Link to="/post-asset" className="flex items-center space-x-1 hover:text-accent">
-                                        <PlusCircle size={18} />
-                                        <span>Post Asset</span>
-                                    </Link>
+                                    <Hover text="List New Asset">
+                                        <Link to="/post-asset" className="flex items-center space-x-1 text-gray-300 hover:text-white font-medium">
+                                            <PlusCircle size={18} />
+                                            <span>Post Asset</span>
+                                        </Link>
+                                    </Hover>
                                 )}
-                                <Link
-                                    to={user.role === 'seller' ? "/dashboard/seller" : "/dashboard/buyer"}
-                                    className="flex items-center space-x-1 hover:text-accent"
-                                >
-                                    <LayoutDashboard size={18} />
-                                    <span>Dashboard</span>
-                                </Link>
+                                <Hover text="View Dashboard">
+                                    <Link
+                                        to={user.role === 'seller' ? "/dashboard/seller" : "/dashboard/buyer"}
+                                        className="flex items-center space-x-1 text-gray-300 hover:text-white font-medium"
+                                    >
+                                        <LayoutDashboard size={18} />
+                                        <span>Dashboard</span>
+                                    </Link>
+                                </Hover>
                                 <div className="flex items-center space-x-4 border-l border-primary-light pl-6">
                                     {/* Profile Hover */}
                                     <Hover text="View Profile">
@@ -71,7 +77,7 @@ const Navbar = () => {
                             </div>
                         ) : (
                             <div className="flex items-center space-x-4">
-                                <Link to="/login" className="text-gray-300 hover:text-white">Log in</Link>
+                                <Link to="/login" className="text-gray-300 hover:text-white font-medium">Log in</Link>
                                 <Link to="/register" className="bg-accent hover:bg-accent-hover text-white px-4 py-2 rounded-md font-medium transition-colors">
                                     Get Started
                                 </Link>

@@ -1,0 +1,389 @@
+import { useEffect, useState } from 'react';
+import { useParams, useNavigate, useOutletContext, useLocation } from 'react-router-dom';
+import api from '../utils/api';
+import {
+    AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
+} from 'recharts';
+import {
+    ArrowLeft, DollarSign, Clock,
+    TrendingUp, AlertTriangle, CheckCircle, Package, Users, MessageCircle
+} from 'lucide-react';
+import ProductDetailsShimmer from '../components/shimmers/ProductDetailsShimmer';
+
+const SellerProductAnalytics = () => {
+    const { assetId, range } = useParams();
+    const { businessId } = useOutletContext();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    const productTitle = location.state?.productTitle;
+
+    // Default to 'all' if no range param exists
+    const activeRange = range || 'all';
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const endpoint = activeRange === '30d' ? '30d' : 'all';
+                const res = await api.get(`/analytics/product/${assetId}/${endpoint}`);
+                if (!res.data || !res.data.asset) {
+                    // Handle error gracefully
+                    console.error("Invalid data received", res.data);
+                    return;
+                }
+                setData(res.data);
+            } catch (error) {
+                console.error("Failed to fetch product analytics", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, [assetId, activeRange]);
+
+    if (loading) return <ProductDetailsShimmer productName={productTitle} />;
+    if (!data) return <div className="text-center mt-20 text-gray-500 dark:text-gray-400">Product not found</div>;
+
+    const { asset, metrics, funnel, trends, priceIntelligence, negotiation } = data;
+
+    const formatDuration = (val) => {
+        const days = parseFloat(val);
+        if (!days || days === 0) return '0.0 Days';
+        if (days < 1) {
+            return `${(days * 24).toFixed(1)} Hrs`;
+        }
+        return `${days.toFixed(1)} Days`;
+    };
+
+    return (
+        <div className="max-w-7xl mx-auto px-4 py-8 space-y-8 animate-fade-in pb-20">
+            {/* Header */}
+            <div className="flex items-center gap-4 border-b border-gray-100 dark:border-zinc-800 pb-6 transition-colors duration-300">
+                <button
+                    onClick={() => navigate(-1)}
+                    className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-full transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                >
+                    <ArrowLeft size={24} />
+                </button>
+                <div>
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white transition-colors duration-300">{asset.title}</h1>
+                    <div className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        <span className="px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300 font-semibold text-xs uppercase border border-indigo-200 dark:border-indigo-800">
+                            {asset.category}
+                        </span>
+                        <span className="flex items-center gap-1">
+                            <Package size={14} className="text-gray-400 dark:text-gray-500" /> Stuck: {asset.availableQty} Units
+                        </span>
+                        <span>Listed on {new Date(asset.createdAt).toLocaleDateString()}</span>
+                    </div>
+                </div>
+            </div>
+
+            {/* KPI Cards */}
+            {/* Financial Performance */}
+            <div>
+                <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4 transition-colors duration-300">Financial Performance</h3>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <KPICard
+                        title="Total Revenue"
+                        value={`$${metrics.totalRevenue.toLocaleString()}`}
+                        icon={DollarSign}
+                        color="emerald"
+                        subtitle={`${metrics.totalOrders} Orders Completed`}
+                    />
+                    <KPICard
+                        title="Total Profit"
+                        value={`$${metrics.totalProfit.toLocaleString()}`}
+                        icon={TrendingUp}
+                        color={metrics.totalProfit >= 0 ? "emerald" : "red"}
+                        subtitle={metrics.totalProfit >= 0 ? "Net Gain" : "Net Loss"}
+                    />
+                    <KPICard
+                        title="Avg Profit / Order"
+                        value={`$${metrics.avgProfit.toLocaleString()}`}
+                        icon={DollarSign}
+                        color={metrics.avgProfit >= 0 ? "blue" : "red"}
+                        subtitle="Per unit margin"
+                    />
+                    <KPICard
+                        title="Avg Neg. Price"
+                        value={`$${metrics.avgNegotiatedFinalPrice.toLocaleString()}`}
+                        icon={MessageCircle}
+                        color="indigo"
+                        subtitle="On negotiated deals"
+                    />
+                </div>
+            </div>
+
+            {/* Efficiency & Timing */}
+            <div>
+                <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4 transition-colors duration-300">Efficiency & Funnel</h3>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <KPICard
+                        title="Interest to Sold"
+                        value={formatDuration(metrics.avgTimeInterestToSold)}
+                        icon={Clock}
+                        color="amber"
+                        subtitle="Avg conversion time"
+                    />
+                    <KPICard
+                        title="Negotiation to Sold"
+                        value={formatDuration(metrics.avgTimeNegToSold)}
+                        icon={Clock}
+                        color="purple"
+                        subtitle="Avg negotiation duration"
+                    />
+                    <KPICard
+                        title="Deals / 100 Interest"
+                        value={metrics.dealsPer100}
+                        icon={Users}
+                        color="pink"
+                        subtitle="Funnel Efficiency Score"
+                    />
+                    <KPICard
+                        title="Conversion Rate"
+                        value={`${metrics.conversionRate}%`}
+                        icon={TrendingUp}
+                        color="emerald"
+                        subtitle="Views to Sales Ratio"
+                    />
+                </div>
+            </div>
+
+            {/* Negotiation Health */}
+            <div>
+                <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4 transition-colors duration-300">Negotiation Health</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <KPICard
+                        title="Passed Negotiations"
+                        value={negotiation.passed}
+                        icon={CheckCircle}
+                        color="emerald"
+                        subtitle="Successfully closed deals"
+                    />
+                    <KPICard
+                        title="Failed Negotiations"
+                        value={negotiation.failed}
+                        icon={AlertTriangle}
+                        color="red"
+                        subtitle="Rejected or stalled"
+                    />
+                    <KPICard
+                        title="Avg Listing Lifecycle"
+                        value={`${metrics.avgTimeToSell} Days`}
+                        icon={Package}
+                        color="blue"
+                        subtitle="Created to Sold Time"
+                    />
+                </div>
+            </div>
+
+            {/* Main Content Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                {/* Revenue & Engagement Charts */}
+                <div className="lg:col-span-2 space-y-8">
+                    {/* Revenue Chart */}
+                    <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 transition-colors duration-300">
+                        <div className="flex justify-between items-center mb-6">
+                            <div>
+                                <h3 className="text-lg font-bold text-gray-800 dark:text-white transition-colors duration-300">Profitability Analysis</h3>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">Revenue vs. Net Profit over time</p>
+                            </div>
+                            <select
+                                value={activeRange}
+                                onChange={(e) => navigate(`/dashboard/seller/${businessId}/analytics/product/${assetId}/${e.target.value}`)}
+                                className="bg-gray-50 dark:bg-zinc-800 border bg-transparent border-gray-200 dark:border-zinc-700 text-xs font-semibold text-gray-500 dark:text-gray-400 rounded-lg focus:ring-emerald-500 cursor-pointer outline-none px-2 py-1.5 transition-colors"
+                            >
+                                <option value="30d">Last 30 Days</option>
+                                <option value="all">All Time</option>
+                            </select>
+                        </div>
+                        <div className="h-72">
+                            <ResponsiveContainer width="100%" height="100%">
+                                <AreaChart data={trends.revenue}>
+                                    <defs>
+                                        <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#10B981" stopOpacity={0.1} />
+                                            <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
+                                        </linearGradient>
+                                        <linearGradient id="colorProfit" x1="0" y1="0" x2="0" y2="1">
+                                            <stop offset="5%" stopColor="#F59E0B" stopOpacity={0.2} />
+                                            <stop offset="95%" stopColor="#F59E0B" stopOpacity={0} />
+                                        </linearGradient>
+                                    </defs>
+                                    <CartesianGrid strokeDasharray="3 3" vertical={false} strokeOpacity={0.1} stroke="#9ca3af" />
+                                    <XAxis
+                                        dataKey="date"
+                                        tickFormatter={d => new Date(d).getDate()}
+                                        axisLine={false}
+                                        tickLine={false}
+                                        tick={{ fill: '#9CA3AF', fontSize: 12 }}
+                                    />
+                                    <YAxis
+                                        axisLine={false}
+                                        tickLine={false}
+                                        tick={{ fill: '#9CA3AF', fontSize: 12 }}
+                                        tickFormatter={v => `$${v}`}
+                                    />
+                                    <Tooltip
+                                        formatter={(value, name) => [`$${value.toLocaleString()}`, name === 'amount' ? 'Revenue' : 'Profit']}
+                                        contentStyle={{
+                                            backgroundColor: '#18181b', // zinc-900
+                                            borderColor: '#27272a', // zinc-800
+                                            color: '#fff',
+                                            borderRadius: '8px',
+                                            boxShadow: '0 4px 6px -1px rgba(0,0,0,0.5)'
+                                        }}
+                                        itemStyle={{ color: '#fff' }}
+                                    />
+                                    <Area type="monotone" dataKey="amount" stroke="#10B981" fillOpacity={1} fill="url(#colorRevenue)" strokeWidth={2} name="Total Revenue" />
+                                    <Area type="monotone" dataKey="profit" stroke="#F59E0B" fillOpacity={1} fill="url(#colorProfit)" strokeWidth={2} name="Net Profit" />
+                                </AreaChart>
+                            </ResponsiveContainer>
+                        </div>
+                    </div>
+
+                    {/* Funnel Visualization */}
+                    <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 transition-colors duration-300">
+                        <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-6 transition-colors duration-300">Conversion Funnel</h3>
+                        <div className="space-y-6">
+                            <FunnelStep
+                                label="Total Views (Impressions)"
+                                value={funnel.impressions}
+                                sublabel="Target Audience Reached"
+                                colorClass="bg-gray-400 dark:bg-gray-500"
+                                percentage={100}
+                            />
+                            <FunnelStep
+                                label="Interested Leads"
+                                value={funnel.attract}
+                                sublabel={`${((funnel.attract / (funnel.impressions || 1)) * 100).toFixed(1)}% Click-through`}
+                                colorClass="bg-blue-500"
+                                percentage={Math.max(((funnel.attract / (funnel.impressions || 1)) * 100), 2)}
+                            />
+                            <FunnelStep
+                                label="Active Negotiations"
+                                value={funnel.interact}
+                                sublabel={`${((funnel.interact / (funnel.attract || 1)) * 100).toFixed(1)}% Qualified`}
+                                colorClass="bg-indigo-500"
+                                percentage={Math.max(((funnel.interact / (funnel.impressions || 1)) * 100), 2)}
+                            />
+                            <FunnelStep
+                                label="Closed Sales"
+                                value={funnel.convert}
+                                sublabel={`${((funnel.convert / (funnel.interact || 1)) * 100).toFixed(1)}% Closed`}
+                                colorClass="bg-emerald-500"
+                                percentage={Math.max(((funnel.convert / (funnel.impressions || 1)) * 100), 2)}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Sidebar: Price Intelligence & Health */}
+                <div className="space-y-6">
+                    <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 transition-colors duration-300">
+                        <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4 transition-colors duration-300">Price Intelligence</h3>
+                        <div className="space-y-4">
+                            <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-zinc-800 rounded-xl transition-colors duration-300">
+                                <span className="text-gray-500 dark:text-gray-400 text-sm">Your Price</span>
+                                <span className="font-bold text-gray-900 dark:text-white transition-colors duration-300">${asset.price.toLocaleString()}</span>
+                            </div>
+                            <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-zinc-800 rounded-xl transition-colors duration-300">
+                                <span className="text-gray-500 dark:text-gray-400 text-sm">Market Avg</span>
+                                <span className="font-bold text-gray-600 dark:text-gray-300 transition-colors duration-300">${priceIntelligence.marketAvgPrice.toLocaleString()}</span>
+                            </div>
+
+                            <div className={`p-4 rounded-xl border ${priceIntelligence.pricePosition === 'Overpriced' ? 'bg-red-50 border-red-100 text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300' : 'bg-emerald-50 border-emerald-100 text-emerald-700 dark:bg-emerald-900/20 dark:border-emerald-800 dark:text-emerald-300'} transition-colors duration-300`}>
+                                <div className="flex items-start gap-3">
+                                    <AlertTriangle size={20} className="mt-0.5 shrink-0" />
+                                    <div className="text-sm">
+                                        <p className="font-bold mb-1">
+                                            {priceIntelligence.pricePosition === 'Overpriced' ? 'Recommendation: Lower Price' : 'Price is Competitive'}
+                                        </p>
+                                        <p className="opacity-90">
+                                            {priceIntelligence.pricePosition === 'Overpriced'
+                                                ? `You are ${priceIntelligence.deviation}% above market average. Consider lowering to $${priceIntelligence.marketAvgPrice} to sell faster.`
+                                                : `Great job! You are priced competitively. This usually leads to 2x faster sales.`}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 transition-colors duration-300">
+                        <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4 transition-colors duration-300">Product Health</h3>
+                        <div className="space-y-3">
+                            <HealthItem label="Visibility" status={asset.views > 500 ? 'good' : 'warning'} text={asset.views > 500 ? 'High Traffic' : 'Needs Boost'} />
+                            <HealthItem label="Inventory" status={asset.availableQty > 5 ? 'good' : 'warning'} text={asset.availableQty > 5 ? 'In Stock' : 'Low Stock'} />
+                            <HealthItem label="Conversion" status={metrics.conversionRate > 2 ? 'good' : 'bad'} text={`${metrics.conversionRate}% Conv. Rate`} />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const KPICard = ({ title, value, icon: Icon, color, subtitle }) => {
+    const colorClasses = {
+        emerald: "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400",
+        blue: "bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400",
+        purple: "bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400",
+        amber: "bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400",
+        red: "bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400",
+        indigo: "bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400",
+        pink: "bg-pink-50 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400"
+    };
+
+    return (
+        <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 transition-colors duration-300">
+            <div className="flex justify-between items-start mb-4">
+                <div className={`p-3 rounded-xl ${colorClasses[color] || 'bg-gray-50 dark:bg-zinc-800'} transition-colors duration-300`}>
+                    <Icon size={24} />
+                </div>
+            </div>
+            <div>
+                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{title}</p>
+                <h3 className="text-2xl font-extrabold text-gray-900 dark:text-white mt-1 transition-colors duration-300">{value}</h3>
+                {subtitle && <p className="text-xs font-medium text-gray-400 dark:text-gray-500 mt-1">{subtitle}</p>}
+            </div>
+        </div>
+    );
+};
+
+const HealthItem = ({ label, status, text }) => (
+    <div className="flex items-center justify-between">
+        <span className="text-sm text-gray-500 dark:text-gray-400">{label}</span>
+        <div className="flex items-center gap-2">
+            <span className={`text-sm font-medium ${status === 'good' ? 'text-emerald-600 dark:text-emerald-400' : status === 'warning' ? 'text-amber-600 dark:text-amber-400' : 'text-red-600 dark:text-red-400'}`}>
+                {text}
+            </span>
+            <CheckCircle size={16} className={status === 'good' ? 'text-emerald-500 dark:text-emerald-400' : 'text-gray-300 dark:text-zinc-700'} />
+        </div>
+    </div>
+);
+
+const FunnelStep = ({ label, value, sublabel, colorClass, percentage }) => (
+    <div className="group">
+        <div className="flex justify-between items-end mb-1">
+            <span className="text-sm font-semibold text-gray-700 dark:text-gray-300 transition-colors duration-300">{label}</span>
+            <div className="text-right">
+                <span className="block text-lg font-bold text-gray-900 dark:text-white leading-none transition-colors duration-300">{value}</span>
+                <span className="text-xs text-gray-500 dark:text-gray-500 transition-colors duration-300">{sublabel}</span>
+            </div>
+        </div>
+        <div className="h-3 w-full bg-gray-100 dark:bg-zinc-800 rounded-full overflow-hidden transition-colors duration-300">
+            <div
+                className={`h-full ${colorClass} rounded-full transition-all duration-1000`}
+                style={{ width: `${percentage}%` }}
+            />
+        </div>
+    </div>
+);
+
+export default SellerProductAnalytics;

@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import Landing from './pages/Landing'
 import Login from './pages/Login'
@@ -10,7 +10,11 @@ import SellerDashboard from './pages/SellerDashboard'
 import SellerLeads from './pages/SellerLeads'
 import SellerListings from './pages/SellerListings'
 import SellerAssetDetails from './pages/SellerAssetDetails'
-import SellerOverview from './pages/SellerOverview'
+import SellerAnalytics from './pages/SellerAnalytics'
+import SellerProductAnalytics from './pages/SellerProductAnalytics'
+import SellerAnalyticsOverview from './pages/SellerAnalyticsOverview'
+import SellerAnalyticsProducts from './pages/SellerAnalyticsProducts'
+import SellerAnalyticsCustomers from './pages/SellerAnalyticsCustomers'
 import BuyerDashboard from './pages/BuyerDashboard'
 import Profile from './pages/Profile'
 import SelectBusinessPost from './pages/SelectBusinessPost'
@@ -22,7 +26,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
     return (
-        <div className="min-h-screen bg-slate-50">
+        <div className="min-h-screen bg-white dark:bg-[#050505] text-gray-900 dark:text-gray-200 transition-colors duration-300">
             <Navbar />
             <Routes>
                 <Route path="/" element={<Landing />} />
@@ -78,7 +82,16 @@ function App() {
                     <Route path="leads/filter" element={<SellerLeads />} />
                     <Route path="listings" element={<SellerListings />} />
                     <Route path="listings/filter" element={<SellerListings />} />
-                    <Route path="overview" element={<SellerOverview />} />
+
+                    {/* Analytics Routes */}
+                    <Route path="analytics" element={<SellerAnalytics />}>
+                        <Route index element={<Navigate to="overview/1m" replace />} />
+                        <Route path="overview" element={<Navigate to="1m" replace />} />
+                        <Route path="overview/:range" element={<SellerAnalyticsOverview />} />
+                        <Route path="products" element={<SellerAnalyticsProducts />} />
+                        <Route path="product/:assetId/:range?" element={<SellerProductAnalytics />} />
+                        <Route path="customers" element={<SellerAnalyticsCustomers />} />
+                    </Route>
                 </Route>
                 {/* Specific Asset Details Route (Standalone) */}
                 <Route path="/dashboard/seller/:businessId/listings/:id" element={
