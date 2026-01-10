@@ -20,8 +20,14 @@ const SellerProductAnalytics = () => {
 
     const productTitle = location.state?.productTitle;
 
-    // Default to 'all' if no range param exists
-    const activeRange = range || 'all';
+    // Default to '30d' if no range param exists
+    const activeRange = range || '30d';
+
+    useEffect(() => {
+        if (!range) {
+            navigate('30d', { replace: true, state: location.state });
+        }
+    }, [range, navigate, location.state]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -63,7 +69,7 @@ const SellerProductAnalytics = () => {
             {/* Header */}
             <div className="flex items-center gap-4 border-b border-gray-100 dark:border-zinc-800 pb-6 transition-colors duration-300">
                 <button
-                    onClick={() => navigate(-1)}
+                    onClick={() => navigate(`/dashboard/seller/${businessId}/analytics/products`)}
                     className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-full transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                 >
                     <ArrowLeft size={24} />
@@ -193,14 +199,6 @@ const SellerProductAnalytics = () => {
                                 <h3 className="text-lg font-bold text-gray-800 dark:text-white transition-colors duration-300">Profitability Analysis</h3>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">Revenue vs. Net Profit over time</p>
                             </div>
-                            <select
-                                value={activeRange}
-                                onChange={(e) => navigate(`/dashboard/seller/${businessId}/analytics/product/${assetId}/${e.target.value}`)}
-                                className="bg-gray-50 dark:bg-zinc-800 border bg-transparent border-gray-200 dark:border-zinc-700 text-xs font-semibold text-gray-500 dark:text-gray-400 rounded-lg focus:ring-emerald-500 cursor-pointer outline-none px-2 py-1.5 transition-colors"
-                            >
-                                <option value="30d">Last 30 Days</option>
-                                <option value="all">All Time</option>
-                            </select>
                         </div>
                         <div className="h-72">
                             <ResponsiveContainer width="100%" height="100%">

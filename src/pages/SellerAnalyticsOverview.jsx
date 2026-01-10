@@ -65,19 +65,6 @@ const SellerAnalyticsOverview = () => {
 
     return (
         <div className="space-y-6">
-            <div className="flex justify-end">
-                <div className="bg-white dark:bg-zinc-900 rounded-lg p-1 border border-gray-200 dark:border-zinc-700 flex text-xs font-medium shadow-sm transition-colors duration-300">
-                    {['24h', '15d', '1m', '1y', 'all'].map(r => (
-                        <button
-                            key={r}
-                            onClick={() => handleRangeChange(r)}
-                            className={`px-3 py-1.5 rounded-md transition-all ${timeRange === r ? 'bg-indigo-600 text-white shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-50 dark:hover:bg-zinc-800'}`}
-                        >
-                            {r === '24h' ? '24h' : r === 'all' ? 'All' : r.toUpperCase()}
-                        </button>
-                    ))}
-                </div>
-            </div>
 
             {/* KPI Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

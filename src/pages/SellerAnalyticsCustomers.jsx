@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, Link } from 'react-router-dom';
 import api from '../utils/api';
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Users, Award, Repeat } from 'lucide-react';
@@ -79,14 +79,16 @@ const SellerAnalyticsCustomers = () => {
                             <tbody className="divide-y divide-gray-100 dark:divide-zinc-800">
                                 {customers.slice(0, 5).map(c => (
                                     <tr key={c.id} className="hover:bg-gray-50/50 dark:hover:bg-zinc-800/30 transition-colors">
-                                        <td className="px-4 py-3 flex items-center space-x-3">
-                                            <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-zinc-700 overflow-hidden">
-                                                <img src={c.avatar} alt={c.name} className="h-full w-full object-cover" />
-                                            </div>
-                                            <div>
-                                                <p className="font-medium text-sm text-gray-900 dark:text-white">{c.name}</p>
-                                                <p className="text-xs text-gray-500 dark:text-gray-400">{c.company}</p>
-                                            </div>
+                                        <td className="px-4 py-3">
+                                            <Link to={`/user/${c.id}`} className="flex items-center space-x-3 group cursor-pointer">
+                                                <div className="h-8 w-8 rounded-full bg-gray-200 dark:bg-zinc-700 overflow-hidden group-hover:ring-2 ring-emerald-500 transition-all">
+                                                    <img src={c.avatar} alt={c.name} className="h-full w-full object-cover" />
+                                                </div>
+                                                <div>
+                                                    <p className="font-medium text-sm text-gray-900 dark:text-white group-hover:text-emerald-500 transition-colors">{c.name}</p>
+                                                    <p className="text-xs text-gray-500 dark:text-gray-400">{c.company}</p>
+                                                </div>
+                                            </Link>
                                         </td>
                                         <td className="px-4 py-3 text-right text-sm text-gray-600 dark:text-gray-300">{c.totalOrders}</td>
                                         <td className="px-4 py-3 text-right font-bold text-sm text-emerald-600 dark:text-emerald-400">${c.totalSpend.toLocaleString()}</td>

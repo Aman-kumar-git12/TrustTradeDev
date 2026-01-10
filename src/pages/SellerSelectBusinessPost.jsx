@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Building2, ArrowRight, Briefcase, MapPin } from 'lucide-react';
 import api from '../utils/api';
 
-const SelectBusinessPost = () => {
+const SellerSelectBusinessPost = () => {
     const [businesses, setBusinesses] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -52,11 +52,11 @@ const SelectBusinessPost = () => {
 
                             <div className="flex items-start justify-between mb-6">
                                 <div className="h-16 w-16 bg-slate-100 dark:bg-zinc-800 rounded-xl overflow-hidden shadow-inner flex items-center justify-center transition-colors duration-300">
-                                    {business.imageUrl ? (
-                                        <img src={business.imageUrl} alt={business.businessName} className="w-full h-full object-cover" />
-                                    ) : (
-                                        <Building2 className="text-slate-400 dark:text-zinc-600" size={28} />
-                                    )}
+                                    <img
+                                        src={(business.images && business.images.length > 0) ? business.images[0] : 'https://cdn-icons-png.freepik.com/512/1465/1465439.png'}
+                                        alt={business.businessName}
+                                        className="w-full h-full object-cover"
+                                    />
                                 </div>
                                 <div className="h-8 w-8 rounded-full bg-slate-50 dark:bg-zinc-800 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition-colors duration-300 border border-gray-100 dark:border-zinc-700 dark:text-gray-400">
                                     <ArrowRight size={16} />
@@ -113,4 +113,4 @@ const SelectBusinessPost = () => {
     );
 };
 
-export default SelectBusinessPost;
+export default SellerSelectBusinessPost;

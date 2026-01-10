@@ -3,7 +3,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 import { useUI } from '../context/UIContext';
 
-const DashboardRedirect = () => {
+const SellerDashboardRedirect = () => {
     const [loading, setLoading] = useState(true);
     const [businessId, setBusinessId] = useState(null);
     const { showSnackbar } = useUI();
@@ -14,7 +14,14 @@ const DashboardRedirect = () => {
             try {
                 const { data } = await api.get('/businesses');
                 if (data && data.length > 0) {
-                    setBusinessId(data[0]._id);
+                    const lastId = localStorage.getItem('lastBusinessId');
+                    const found = lastId ? data.find(b => b._id === lastId) : null;
+
+                    if (found) {
+                        setBusinessId(found._id);
+                    } else {
+                        setBusinessId(data[0]._id);
+                    }
                 } else {
                     // No businesses found, maybe redirect to create business or stay here with a message?
                     // For now, let's keep the user here to see the empty state or 'Create Business' prompt
@@ -55,4 +62,4 @@ const DashboardRedirect = () => {
     return <Navigate to="/dashboard/seller/select" replace />;
 };
 
-export default DashboardRedirect;
+export default SellerDashboardRedirect;

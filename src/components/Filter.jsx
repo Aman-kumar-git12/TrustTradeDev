@@ -6,10 +6,7 @@ const CATEGORIES = [
     'Vehicles',
     'IT Hardware',
     'Real Estate',
-    'Medical',
-    'Electronics',
-    'Manufacturing',
-    'Office Equipment'
+    'Electronics'
 ];
 
 const CONDITIONS = [
@@ -17,6 +14,13 @@ const CONDITIONS = [
     'Used - Like New',
     'Used - Good',
     'Used - Fair'
+];
+
+const STATUSES = [
+    'Pending',
+    'Negotiating',
+    'Accepted',
+    'Rejected'
 ];
 
 const Filter = ({ filters, onFilterChange, onClear, onApply, onClose }) => {
@@ -49,18 +53,49 @@ const Filter = ({ filters, onFilterChange, onClear, onApply, onClose }) => {
                         <Search className="absolute left-3 top-2.5 text-gray-400 dark:text-gray-500" size={18} />
                         <input
                             type="text"
-                            placeholder="Search assets..."
-                            className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-gray-900 dark:focus:ring-emerald-500 outline-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-white transition-colors"
+                            placeholder="Search assets or business name..."
+                            className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-white transition-colors"
                             value={filters.search || ''}
                             onChange={(e) => handleChange('search', e.target.value)}
                         />
                     </div>
                 </div>
 
+                {/* Status */}
+                <div>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 transition-colors">Status</label>
+                    <div className="space-y-2">
+                        <div className="flex items-center">
+                            <input
+                                type="radio"
+                                id="status-all"
+                                name="status"
+                                checked={!filters.status}
+                                onChange={() => handleChange('status', '')}
+                                className="text-emerald-600 dark:text-emerald-500 focus:ring-emerald-500"
+                            />
+                            <label htmlFor="status-all" className="ml-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">All Statuses</label>
+                        </div>
+                        {STATUSES.map(stat => (
+                            <div key={stat} className="flex items-center">
+                                <input
+                                    type="radio"
+                                    id={`status-${stat.toLowerCase()}`}
+                                    name="status"
+                                    checked={filters.status === stat.toLowerCase()}
+                                    onChange={() => handleChange('status', stat.toLowerCase())}
+                                    className="text-emerald-600 dark:text-emerald-500 focus:ring-emerald-500"
+                                />
+                                <label htmlFor={`status-${stat.toLowerCase()}`} className="ml-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">{stat}</label>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
                 {/* Category */}
                 <div>
                     <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 transition-colors">Category</label>
-                    <div className="space-y-2 max-h-60 overflow-y-auto custom-scrollbar pr-2 pb-2">
+                    <div className="space-y-2 pr-2 pb-2">
                         <div className="flex items-center">
                             <input
                                 type="radio"
@@ -80,7 +115,7 @@ const Filter = ({ filters, onFilterChange, onClear, onApply, onClose }) => {
                                     name="category"
                                     checked={filters.category === cat}
                                     onChange={() => handleChange('category', cat)}
-                                    className="text-gray-900 dark:text-emerald-500 focus:ring-gray-900 dark:focus:ring-emerald-500"
+                                    className="text-emerald-600 dark:text-emerald-500 focus:ring-emerald-500"
                                 />
                                 <label htmlFor={`cat-${cat}`} className="ml-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">{cat}</label>
                             </div>
@@ -95,7 +130,7 @@ const Filter = ({ filters, onFilterChange, onClear, onApply, onClose }) => {
                                     name="category"
                                     checked={isOtherActive}
                                     onChange={() => handleChange('category', 'Other')}
-                                    className="text-gray-900 dark:text-emerald-500 focus:ring-gray-900 dark:focus:ring-emerald-500"
+                                    className="text-emerald-600 dark:text-emerald-500 focus:ring-emerald-500"
                                 />
                                 <label htmlFor="cat-other" className="ml-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">Other</label>
                             </div>
@@ -107,7 +142,7 @@ const Filter = ({ filters, onFilterChange, onClear, onApply, onClose }) => {
                                         type="text"
                                         autoFocus
                                         placeholder="Type category..."
-                                        className="w-full px-3 py-1.5 text-sm border border-gray-200 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-gray-900 dark:focus:ring-emerald-500 outline-none bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-white transition-colors"
+                                        className="w-full px-3 py-1.5 text-sm border border-gray-200 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-white transition-colors"
                                         value={filters.category === 'Other' ? '' : filters.category}
                                         onChange={(e) => handleChange('category', e.target.value)}
                                     />
@@ -124,14 +159,14 @@ const Filter = ({ filters, onFilterChange, onClear, onApply, onClose }) => {
                         <input
                             type="number"
                             placeholder="Min"
-                            className="w-1/2 px-3 py-2 border border-gray-200 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-gray-900 dark:focus:ring-emerald-500 outline-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-white transition-colors"
+                            className="w-1/2 px-3 py-2 border border-gray-200 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-white transition-colors"
                             value={filters.minPrice || ''}
                             onChange={(e) => handleChange('minPrice', e.target.value)}
                         />
                         <input
                             type="number"
                             placeholder="Max"
-                            className="w-1/2 px-3 py-2 border border-gray-200 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-gray-900 dark:focus:ring-emerald-500 outline-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-white transition-colors"
+                            className="w-1/2 px-3 py-2 border border-gray-200 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-white transition-colors"
                             value={filters.maxPrice || ''}
                             onChange={(e) => handleChange('maxPrice', e.target.value)}
                         />
@@ -142,7 +177,7 @@ const Filter = ({ filters, onFilterChange, onClear, onApply, onClose }) => {
                 <div>
                     <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 transition-colors">Condition</label>
                     <select
-                        className="w-full px-3 py-2 border border-gray-200 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-gray-900 dark:focus:ring-emerald-500 outline-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-white transition-colors"
+                        className="w-full px-3 py-2 border border-gray-200 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-white transition-colors"
                         value={filters.condition || ''}
                         onChange={(e) => handleChange('condition', e.target.value)}
                     >
@@ -157,7 +192,7 @@ const Filter = ({ filters, onFilterChange, onClear, onApply, onClose }) => {
                 <div className="pt-4 border-t border-gray-100 dark:border-zinc-800 flex flex-col space-y-3">
                     <button
                         onClick={onApply}
-                        className="w-full py-2 bg-gray-900 dark:bg-emerald-600 text-white font-bold rounded-lg hover:bg-gray-800 dark:hover:bg-emerald-700 transition-colors shadow-lg shadow-gray-200/50 dark:shadow-emerald-900/20"
+                        className="w-full py-2 bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-900/10"
                     >
                         Apply Filters
                     </button>

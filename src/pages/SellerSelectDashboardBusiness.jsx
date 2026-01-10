@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Building2, ArrowRight, Briefcase, MapPin } from 'lucide-react';
 import api from '../utils/api';
 
-const SelectDashboardBusiness = () => {
+const SellerSelectDashboardBusiness = () => {
     const [businesses, setBusinesses] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -52,11 +52,11 @@ const SelectDashboardBusiness = () => {
 
                             <div className="flex items-start justify-between mb-6">
                                 <div className="h-16 w-16 bg-slate-100 rounded-xl overflow-hidden shadow-inner flex items-center justify-center">
-                                    {business.imageUrl ? (
-                                        <img src={business.imageUrl} alt={business.businessName} className="w-full h-full object-cover" />
-                                    ) : (
-                                        <Building2 className="text-slate-400" size={28} />
-                                    )}
+                                    <img
+                                        src={(business.images && business.images.length > 0) ? business.images[0] : 'https://cdn-icons-png.freepik.com/512/1465/1465439.png'}
+                                        alt={business.businessName}
+                                        className="w-full h-full object-cover"
+                                    />
                                 </div>
                                 <div className="h-8 w-8 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-colors duration-300">
                                     <ArrowRight size={16} />
@@ -104,4 +104,4 @@ const SelectDashboardBusiness = () => {
     );
 };
 
-export default SelectDashboardBusiness;
+export default SellerSelectDashboardBusiness;

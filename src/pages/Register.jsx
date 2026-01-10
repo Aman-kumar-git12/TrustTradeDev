@@ -9,8 +9,7 @@ const Register = () => {
         fullName: '',
         email: '',
         password: '',
-        role: 'buyer',
-        companyName: ''
+        role: 'buyer'
     });
     const { showSnackbar } = useUI();
     const { login } = useAuth();
@@ -25,7 +24,7 @@ const Register = () => {
             showSnackbar('Registration successful! Welcome.', 'success');
 
             if (data.role === 'seller') navigate('/dashboard/seller');
-            else navigate('/marketplace');
+            else navigate(`/dashboard/buyer/${data._id}`);
 
         } catch (err) {
             const msg = err.response?.data?.message || 'Registration failed';
@@ -90,15 +89,7 @@ const Register = () => {
                         </div>
                     </div>
 
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Company Name (Optional)</label>
-                        <input
-                            type="text"
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent outline-none"
-                            value={formData.companyName}
-                            onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
-                        />
-                    </div>
+
 
                     <button type="submit" className="w-full bg-accent hover:bg-accent-hover text-white font-bold py-3 rounded-lg transition-colors mt-4">
                         Register

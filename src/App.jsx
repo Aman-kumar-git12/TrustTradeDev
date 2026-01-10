@@ -1,11 +1,13 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar'
+import ScrollToTop from './components/ScrollToTop'
 import Landing from './pages/Landing'
+import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Marketplace from './pages/Marketplace'
 import AssetDetails from './pages/AssetDetails'
-import PostAsset from './pages/PostAsset'
+import SellerPostAsset from './pages/SellerPostAsset'
 import SellerDashboard from './pages/SellerDashboard'
 import SellerLeads from './pages/SellerLeads'
 import SellerListings from './pages/SellerListings'
@@ -17,24 +19,73 @@ import SellerAnalyticsProducts from './pages/SellerAnalyticsProducts'
 import SellerAnalyticsCustomers from './pages/SellerAnalyticsCustomers'
 import BuyerDashboard from './pages/BuyerDashboard'
 import Profile from './pages/Profile'
-import SelectBusinessPost from './pages/SelectBusinessPost'
-import SelectDashboardBusiness from './pages/SelectDashboardBusiness'
-import DashboardRedirect from './pages/DashboardRedirect'
-import MyBusinesses from './pages/MyBusinesses'
-import BusinessDetails from './pages/BusinessDetails'
+import BuyerInsights from './pages/BuyerInsights'
+import SellerSelectBusinessPost from './pages/SellerSelectBusinessPost'
+import SellerSelectDashboardBusiness from './pages/SellerSelectDashboardBusiness'
+import SellerDashboardRedirect from './pages/SellerDashboardRedirect'
+import SellerMyBusinesses from './pages/SellerMyBusinesses'
+import SellerBusinessDetails from './pages/SellerBusinessDetails'
+import PublicBusinessDetails from './pages/PublicBusinessDetails'
+import PublicBusinessListings from './pages/PublicBusinessListings'
+import PublicUserProfile from './pages/PublicUserProfile'
 import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
+    const location = useLocation();
+
+    // Determine if Navbar should be hidden based on current path
+    const shouldHideNavbar = () => {
+        const path = location.pathname;
+
+        // 1. Post Assets: /post-assets/:businessId
+        if (path.startsWith('/post-assets/')) return true;
+
+        // 2. Business Details (Public): /businessdetails/:businessId
+        if (path.startsWith('/businessdetails/')) return true;
+
+        // 3. Asset Details (Public): /assets/:id
+        if (path.startsWith('/assets/')) return true;
+
+        // 4. User Profile: /user/:userId
+        if (path.startsWith('/user/')) return true;
+
+        // 4. My Business Details (Manage Business): /my-businesses/:id
+        // We want to hide it for specific businesses but SHOW it for the main list /my-businesses
+        // And usually also show for /my-businesses/new if it's a separate creation page, but user asked for "Manage Business"
+        // which usually implies an existing ID. Let's start with hiding for ID.
+        if (path.startsWith('/my-businesses/') && path !== '/my-businesses/new') return true;
+
+        // 5. Seller Dashboard specific deep routes
+        if (path.includes('/dashboard/seller') && (path.includes('/listings/') || path.includes('/analytics/product/'))) {
+            return true;
+        }
+
+        if (path.includes('/dashboard/buyer/insights')) {
+            return true;
+        }
+
+        return false;
+    };
+
     return (
         <div className="min-h-screen bg-white dark:bg-[#050505] text-gray-900 dark:text-gray-200 transition-colors duration-300">
-            <Navbar />
+            {!shouldHideNavbar() && <Navbar />}
+            <ScrollToTop />
             <Routes>
                 <Route path="/" element={<Landing />} />
+                <Route path="/home" element={
+                    <ProtectedRoute>
+                        <Home />
+                    </ProtectedRoute>
+                } />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/marketplace" element={<Marketplace />} />
                 <Route path="/marketplace/filter" element={<Marketplace />} />
                 <Route path="/assets/:id" element={<AssetDetails />} />
+                <Route path="/businessdetails/:businessId" element={<PublicBusinessDetails />} />
+                <Route path="/businessdetails/:businessId/listings" element={<PublicBusinessListings />} />
+                <Route path="/user/:userId" element={<PublicUserProfile />} />
                 <Route path="/profile" element={
                     <ProtectedRoute>
                         <Profile />
@@ -42,34 +93,34 @@ function App() {
                 } />
                 <Route path="/my-businesses" element={
                     <ProtectedRoute role="seller">
-                        <MyBusinesses />
+                        <SellerMyBusinesses />
                     </ProtectedRoute>
                 } />
                 <Route path="/my-businesses/:id" element={
                     <ProtectedRoute role="seller">
-                        <BusinessDetails />
+                        <SellerBusinessDetails />
                     </ProtectedRoute>
                 } />
 
                 {/* Protected Routes */}
                 <Route path="/post-asset" element={
                     <ProtectedRoute role="seller">
-                        <SelectBusinessPost />
+                        <SellerSelectBusinessPost />
                     </ProtectedRoute>
                 } />
                 <Route path="/post-assets/:businessId" element={
                     <ProtectedRoute role="seller">
-                        <PostAsset />
+                        <SellerPostAsset />
                     </ProtectedRoute>
                 } />
                 <Route path="/dashboard/seller" element={
                     <ProtectedRoute role="seller">
-                        <DashboardRedirect />
+                        <SellerDashboardRedirect />
                     </ProtectedRoute>
                 } />
                 <Route path="/dashboard/seller/select" element={
                     <ProtectedRoute role="seller">
-                        <SelectDashboardBusiness />
+                        <SellerSelectDashboardBusiness />
                     </ProtectedRoute>
                 } />
                 <Route path="/dashboard/seller/:businessId" element={
@@ -99,9 +150,16 @@ function App() {
                         <SellerAssetDetails />
                     </ProtectedRoute>
                 } />
-                <Route path="/dashboard/buyer" element={
+                <Route path="/dashboard/buyer/:userId" element={
                     <ProtectedRoute role="buyer">
                         <BuyerDashboard />
+                    </ProtectedRoute>
+                }>
+                    <Route path="filter" element={<div />} />
+                </Route>
+                <Route path="/dashboard/buyer/:userId/insights/:range?" element={
+                    <ProtectedRoute role="buyer">
+                        <BuyerInsights />
                     </ProtectedRoute>
                 } />
             </Routes>

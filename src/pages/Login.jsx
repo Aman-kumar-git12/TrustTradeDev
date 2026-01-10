@@ -24,7 +24,7 @@ const Login = () => {
             if (data.role === 'seller') {
                 navigate('/dashboard/seller');
             } else {
-                navigate('/marketplace');
+                navigate(`/dashboard/buyer/${data._id}`);
             }
 
         } catch (err) {

@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 import { MapPin, Tag, Filter as FilterIcon } from 'lucide-react';
 import Filter from '../components/Filter';
+import GridShimmer from '../components/shimmers/GridShimmer';
 
 const Marketplace = () => {
     const [assets, setAssets] = useState([]);
@@ -39,6 +40,7 @@ const Marketplace = () => {
             if (activeFilters.minPrice) params.append('minPrice', activeFilters.minPrice);
             if (activeFilters.maxPrice) params.append('maxPrice', activeFilters.maxPrice);
             if (activeFilters.condition) params.append('condition', activeFilters.condition);
+            params.append('_t', Date.now()); // Prevent caching
 
             const { data } = await api.get(`/assets?${params.toString()}`);
             setAssets(data);
@@ -92,14 +94,14 @@ const Marketplace = () => {
                 </div>
                 <button
                     onClick={toggleFilter}
-                    className={`flex items-center px-4 py-2 rounded-lg border font-bold transition-all ${isFilterOpen ? 'bg-gray-900 dark:bg-emerald-600 text-white border-gray-900 dark:border-emerald-600' : 'bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-800'}`}
+                    className={`flex items-center px-4 py-2 rounded-lg border font-bold transition-all ${isFilterOpen ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-800'}`}
                 >
                     <FilterIcon size={18} className="mr-2" />
                     {isFilterOpen ? 'Hide Filters' : 'Show Filters'}
                 </button>
             </div>
 
-            <div className="flex flex-col md:flex-row-reverse gap-8 align-top">
+            <div className="flex flex-col md:flex-row-reverse gap-8 items-start">
                 {/* Filter Sidebar */}
                 {isFilterOpen && (
                     <div className="w-full md:w-1/4 flex-shrink-0 transition-all duration-300 ease-in-out block animate-fade-in">
@@ -116,10 +118,7 @@ const Marketplace = () => {
                 {/* Main Content Grid */}
                 <div className={`flex-grow transition-all duration-300 ${isFilterOpen ? 'md:w-3/4' : 'w-full'}`}>
                     {loading ? (
-                        <div className="flex justify-center py-20 text-gray-500 dark:text-gray-400">
-                            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-emerald-500 mr-3"></div>
-                            Loading assets...
-                        </div>
+                        <GridShimmer />
                     ) : (
                         <div className={`grid gap-8 ${isFilterOpen ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'}`}>
                             {assets.map((asset) => (

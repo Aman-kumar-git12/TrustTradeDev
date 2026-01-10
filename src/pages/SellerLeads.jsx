@@ -1,84 +1,153 @@
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { useOutletContext, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Inbox, CheckCircle, Clock, XCircle, TrendingUp, Users, Mail, Phone, ChevronDown, MessageCircle, AlertCircle, CheckSquare, XSquare } from 'lucide-react';
+import { Inbox, CheckCircle, Clock, XCircle, TrendingUp, Users, Mail, Phone, ChevronDown, MessageCircle, AlertCircle, CheckSquare, XSquare, ShoppingBag } from 'lucide-react';
 import api from '../utils/api';
 import LeadFilter from '../components/LeadFilter';
 import LeadsShimmer from '../components/shimmers/LeadsShimmer';
 import { useUI } from '../context/UIContext';
 
-// Simple Modal Component for Price Input
-const PriceInputModal = ({ isOpen, onClose, onSubmit, title }) => {
-    const [price, setPrice] = useState('');
+const PriceInputModal = ({ isOpen, onClose, onSubmit, title, maxQuantity, requestedQuantity, originalPrice }) => {
+    const [totalPrice, setTotalPrice] = useState('');
+    const [quantity, setQuantity] = useState(maxQuantity || 1);
 
     if (!isOpen) return null;
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSubmit(price);
-        setPrice('');
+        // Calculate unit price from total
+        const unitPrice = parseFloat(totalPrice) / quantity;
+        onSubmit(unitPrice, quantity);
+        setTotalPrice('');
+        setQuantity(maxQuantity || 1);
     };
+
+    const effectiveUnitPrice = totalPrice && quantity ? (parseFloat(totalPrice) / quantity) : 0;
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm animate-fade-in">
-            <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-md p-6 transform transition-all scale-100 border border-gray-100 dark:border-zinc-800">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{title}</h3>
-                <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">Please enter the final sale price for this asset.</p>
+            <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-2xl w-full max-w-2xl p-6 transform transition-all scale-100 border border-gray-100 dark:border-zinc-800 grid grid-cols-1 md:grid-cols-2 gap-8">
 
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-6 relative">
-                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 font-bold">$</span>
-                        <input
-                            type="number"
-                            min="0"
-                            step="0.01"
-                            required
-                            autoFocus
-                            value={price}
-                            onChange={(e) => setPrice(e.target.value)}
-                            className="w-full pl-8 pr-4 py-3 text-lg font-bold bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all"
-                            placeholder="0.00"
-                        />
+                {/* Left Column: Inputs */}
+                <div>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{title}</h3>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm mb-6">Please enter the total sale amount for this deal.</p>
+
+                    <form onSubmit={handleSubmit} id="sale-form">
+                        <div className="mb-6 relative">
+                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Total Sale Amount</label>
+                            <div className="relative">
+                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 font-bold">$</span>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    step="0.01"
+                                    required
+                                    autoFocus
+                                    value={totalPrice}
+                                    onChange={(e) => setTotalPrice(e.target.value)}
+                                    className="w-full pl-8 pr-4 py-3 text-lg font-bold bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-gray-900 dark:text-white rounded-xl focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 outline-none transition-all"
+                                    placeholder="0.00"
+                                />
+                            </div>
+                        </div>
+
+                        <div className="mb-6">
+                            <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Quantity Sold</label>
+                            <div className="flex items-center space-x-4">
+                                <button
+                                    type="button"
+                                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                                    className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-zinc-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors font-bold"
+                                >
+                                    -
+                                </button>
+                                <span className="text-xl font-bold dark:text-white w-8 text-center">{quantity}</span>
+                                <button
+                                    type="button"
+                                    onClick={() => setQuantity(Math.min(maxQuantity || 999, quantity + 1))}
+                                    className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-zinc-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors font-bold"
+                                >
+                                    +
+                                </button>
+                                {maxQuantity && (
+                                    <span className="text-xs text-gray-500 dark:text-zinc-500 font-medium">(Max: {maxQuantity})</span>
+                                )}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                {/* Right Column: Bills */}
+                <div className="space-y-4">
+                    {/* Actual Bill (Buyer Request) */}
+                    <div className="bg-white dark:bg-zinc-800/30 rounded-xl border border-dashed border-indigo-200 dark:border-indigo-800 overflow-hidden opacity-80 hover:opacity-100 transition-opacity">
+                        <div className="px-4 py-3 bg-indigo-50 dark:bg-indigo-900/10 border-b border-dashed border-indigo-100 dark:border-indigo-800 flex justify-between items-center">
+                            <span className="text-xs font-black text-indigo-800 dark:text-indigo-300 uppercase tracking-widest">Actual Bill (Request)</span>
+                            <span className="text-xs font-bold text-indigo-400">Orig. Order</span>
+                        </div>
+                        <div className="p-5 space-y-3">
+                            <div className="flex justify-between items-center text-sm">
+                                <span className="text-gray-500 font-medium">Quantity</span>
+                                <span className="font-bold text-gray-900 dark:text-white">{requestedQuantity}</span>
+                            </div>
+                            <div className="flex justify-between items-center text-sm">
+                                <span className="text-gray-500 font-medium">Total Price</span>
+                                <span className="font-bold text-indigo-600 dark:text-indigo-400 text-lg">${(originalPrice * requestedQuantity)?.toLocaleString()}</span>
+                            </div>
+                            <div className="h-px bg-indigo-100 dark:bg-indigo-900/30 border-t border-dashed my-2"></div>
+                            <div className="flex justify-between items-center">
+                                <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">Unit Price</span>
+                                <span className="text-xs font-medium text-gray-500">${originalPrice?.toLocaleString()}</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="flex gap-3 justify-end">
+                    {/* Preview Sale (Your Offer) */}
+                    <div className="bg-gray-50 dark:bg-zinc-800/50 rounded-xl border border-dashed border-emerald-300 dark:border-emerald-700/50 overflow-hidden shadow-sm">
+                        <div className="px-4 py-3 bg-emerald-50 dark:bg-emerald-900/10 border-b border-dashed border-emerald-100 dark:border-emerald-800/50 flex justify-between items-center">
+                            <span className="text-xs font-black text-emerald-800 dark:text-emerald-300 uppercase tracking-widest">Preview Sale</span>
+                            <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">Final Deal</span>
+                        </div>
+                        <div className="p-5 space-y-3">
+                            <div className="flex justify-between items-center text-sm">
+                                <span className="text-gray-500 font-medium">Quantity</span>
+                                <span className="font-bold text-gray-900 dark:text-white">{quantity}</span>
+                            </div>
+                            <div className="flex justify-between items-center text-sm">
+                                <span className="text-gray-500 font-medium">Total Price</span>
+                                <span className="font-bold text-emerald-600 dark:text-emerald-400 text-2xl">${totalPrice ? parseFloat(totalPrice).toLocaleString() : '0.00'}</span>
+                            </div>
+                            <div className="h-px bg-gray-200 dark:bg-zinc-700 border-t border-dashed"></div>
+                            <div className="flex justify-between items-center">
+                                <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">Unit Price</span>
+                                <span className="text-xs font-medium text-gray-500">${effectiveUnitPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}/item</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex justify-end gap-3 pt-4">
                         <button
                             type="button"
                             onClick={onClose}
-                            className="px-5 py-2.5 rounded-xl font-bold text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
+                            className="px-4 py-2 text-sm font-bold text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-lg transition-colors"
                         >
                             Cancel
                         </button>
                         <button
                             type="submit"
-                            className="px-5 py-2.5 rounded-xl font-bold text-white bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-200/20 transition-all transform hover:-translate-y-0.5"
+                            form="sale-form"
+                            className="px-6 py-2 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg shadow-lg shadow-emerald-200/20 transition-all hover:-translate-y-0.5"
                         >
                             Confirm Sale
                         </button>
                     </div>
-                </form>
+                </div>
             </div>
+
         </div>
     );
 };
-
-const StatCard = ({ title, value, icon: Icon, colorClass, trend }) => (
-    <div className="bg-white dark:bg-zinc-900 p-5 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-sm flex items-center justify-between group hover:shadow-md transition-all">
-        <div>
-            <p className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">{title}</p>
-            <h3 className="text-2xl font-black text-gray-900 dark:text-white">{value}</h3>
-            {trend && (
-                <span className={`text-xs font-bold ${trend > 0 ? 'text-emerald-500 dark:text-emerald-400' : 'text-rose-500 dark:text-rose-400'} flex items-center mt-1`}>
-                    {trend > 0 ? '+' : ''}{trend}%
-                    <TrendingUp size={12} className="ml-1" />
-                </span>
-            )}
-        </div>
-        <div className={`p-3 rounded-xl ${colorClass} group-hover:scale-110 transition-transform`}>
-            <Icon size={20} className="text-white" />
-        </div>
-    </div>
-);
 
 // Extracted Component for Expandable Row
 const LeadRow = ({ lead, isExpanded, onToggle, onStatusUpdate, onLeadUpdate }) => {
@@ -102,21 +171,33 @@ const LeadRow = ({ lead, isExpanded, onToggle, onStatusUpdate, onLeadUpdate }) =
         setIsPriceModalOpen(true);
     };
 
-    const handlePriceSubmit = async (priceInput) => {
+    const handlePriceSubmit = async (priceInput, quantityInput) => {
         setIsPriceModalOpen(false);
         const price = parseFloat(priceInput);
+        const quantity = parseInt(quantityInput);
 
         try {
-            const { data: newSale } = await api.post('/sales/sales', {
+            const payload = {
                 price: price,
+                quantity: quantity,
                 status: 'sold',
                 interestId: lead._id,
                 assetId: lead.asset?._id,
                 buyerId: lead.buyer?._id,
                 sellerId: lead.seller
-            });
+            };
+
+            // Using /sales because we will change backend route to '/'
+            const { data: newSale } = await api.post('/sales', payload);
             showSnackbar("Marked as Sold successfully!", "success");
-            onLeadUpdate({ ...lead, salesStatus: 'sold', saleId: newSale._id });
+            onLeadUpdate({
+                ...lead,
+                salesStatus: 'sold',
+                saleId: newSale._id,
+                soldQuantity: quantity,
+                soldPrice: price,
+                soldTotalAmount: price * quantity
+            });
         } catch (error) {
             console.error("Failed to mark as sold", error);
             showSnackbar("Failed to mark as sold", "error");
@@ -193,6 +274,9 @@ const LeadRow = ({ lead, isExpanded, onToggle, onStatusUpdate, onLeadUpdate }) =
                 onClose={() => setIsPriceModalOpen(false)}
                 onSubmit={handlePriceSubmit}
                 title={`Mark "${lead.asset.title}" as Sold`}
+                maxQuantity={lead.quantity}
+                requestedQuantity={lead.quantity}
+                originalPrice={lead.asset.price}
             />
 
             <div className={rowClasses} ref={rowRef}>
@@ -208,7 +292,12 @@ const LeadRow = ({ lead, isExpanded, onToggle, onStatusUpdate, onLeadUpdate }) =
                         </div>
                         <div className="min-w-0 overflow-hidden">
                             <h4 className="font-extrabold text-base text-gray-950 dark:text-gray-200 truncate group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors" title={lead.asset.title}>{lead.asset.title}</h4>
-                            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 md:hidden mt-0.5 block">{new Date(lead.createdAt).toLocaleDateString()}</span>
+                            <div className="flex items-center gap-2 mt-1">
+                                <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 md:hidden">{new Date(lead.createdAt).toLocaleDateString()}</span>
+                                <span className="hidden md:inline-flex items-center px-2 py-1 rounded text-xs font-bold bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-zinc-700">
+                                    Listed: ${lead.asset.price?.toLocaleString() || '0'}/unit
+                                </span>
+                            </div>
                         </div>
                     </div>
 
@@ -219,27 +308,39 @@ const LeadRow = ({ lead, isExpanded, onToggle, onStatusUpdate, onLeadUpdate }) =
                         </div>
                         <div className="min-w-0">
                             <p className="text-sm font-bold text-gray-900 dark:text-gray-200 truncate">{lead.buyer?.fullName || 'Unknown Buyer'}</p>
-                            <p className="text-[11px] font-semibold text-gray-600 dark:text-gray-400 truncate">{lead.buyer?.companyName || 'No Company'}</p>
+                            <div className="flex flex-wrap items-center gap-2 mt-1.5">
+                                {/* Quantity Badge */}
+                                <span className="flex items-center text-[10px] font-extrabold text-gray-600 dark:text-gray-300 bg-gray-100 dark:bg-zinc-800 px-2 py-0.5 rounded border border-gray-200 dark:border-zinc-700" title="Requested Quantity">
+                                    <ShoppingBag size={10} className="mr-1.5 text-emerald-500" />
+                                    Qty: {lead.quantity}
+                                </span>
+
+                                {/* Estimated Value Badge Removed as per user request */}
+                            </div>
                         </div>
                     </div>
 
                     {/* Status Badge */}
-                    <div className="flex items-center">
-                        <span className={`px-3 py-1 text-[11px] font-extrabold rounded-full border uppercase tracking-wider inline-flex items-center shadow-sm ${lead.status === 'pending' ? 'bg-amber-100 text-amber-900 border-amber-300 dark:bg-amber-900/30 dark:text-amber-200 dark:border-amber-800' :
-                            lead.status === 'accepted' ? 'bg-emerald-100 text-emerald-900 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800' :
-                                lead.status === 'negotiating' ? 'bg-blue-100 text-blue-900 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800' :
-                                    'bg-rose-100 text-rose-900 border-rose-300 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800'
-                            }`}>
-                            {lead.status === 'pending' && <span className="w-1.5 h-1.5 rounded-full bg-amber-600 dark:bg-amber-400 mr-1.5 animate-pulse"></span>}
-                            {lead.status}
-                        </span>
-                        {lead.salesStatus === 'sold' && <span className="ml-2 px-2.5 py-1 text-[10px] font-extrabold rounded-full bg-emerald-200/70 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 shadow-sm tracking-wider">SOLD</span>}
-                        {lead.salesStatus === 'unsold' && <span className="ml-2 px-2.5 py-1 text-[10px] font-extrabold rounded-full bg-rose-200/70 dark:bg-rose-900/50 text-rose-800 dark:text-rose-300 border border-rose-300 dark:border-rose-700 shadow-sm tracking-wider">UNSOLD</span>}
+                    <div className="flex flex-col items-start gap-1">
+                        <div className="flex items-center">
+                            <span className={`px-3 py-1 text-[11px] font-extrabold rounded-full border uppercase tracking-wider inline-flex items-center shadow-sm ${lead.status === 'pending' ? 'bg-amber-100 text-amber-900 border-amber-300 dark:bg-amber-900/30 dark:text-amber-200 dark:border-amber-800' :
+                                lead.status === 'accepted' ? 'bg-emerald-100 text-emerald-900 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800' :
+                                    lead.status === 'negotiating' ? 'bg-blue-100 text-blue-900 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800' :
+                                        'bg-rose-100 text-rose-900 border-rose-300 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800'
+                                }`}>
+                                {lead.status === 'pending' && <span className="w-1.5 h-1.5 rounded-full bg-amber-600 dark:bg-amber-400 mr-1.5 animate-pulse"></span>}
+                                {lead.status}
+                            </span>
+                            {lead.salesStatus === 'sold' && <span className="ml-2 px-2.5 py-1 text-[10px] font-extrabold rounded-full bg-emerald-200/70 dark:bg-emerald-900/50 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 shadow-sm tracking-wider">SOLD</span>}
+                            {lead.salesStatus === 'unsold' && <span className="ml-2 px-2.5 py-1 text-[10px] font-extrabold rounded-full bg-rose-200/70 dark:bg-rose-900/50 text-rose-800 dark:text-rose-300 border border-rose-300 dark:border-rose-700 shadow-sm tracking-wider">UNSOLD</span>}
+                        </div>
                     </div>
 
                     {/* Date (Desktop) */}
-                    <div className="hidden md:block text-xs font-semibold text-gray-600 dark:text-gray-400">
-                        {new Date(lead.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
+                    <div className="hidden md:flex flex-col justify-center items-start min-w-0">
+                        <span className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1">
+                            {new Date(lead.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}
+                        </span>
                     </div>
 
                     {/* Actions */}
@@ -336,7 +437,73 @@ const LeadRow = ({ lead, isExpanded, onToggle, onStatusUpdate, onLeadUpdate }) =
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    {/* 1. Actual Bill (Incoming Request) */}
+                                    <div className="text-sm">
+                                        <h5 className="text-xs font-extrabold text-gray-400 dark:text-zinc-500 uppercase tracking-widest mb-3">Actual Bill (Request)</h5>
+                                        <div className="bg-white dark:bg-zinc-800 p-0 rounded-xl border border-dashed border-indigo-200 dark:border-indigo-800 shadow-sm h-48 flex flex-col overflow-hidden relative">
+                                            <div className="px-5 py-3 bg-indigo-50 dark:bg-indigo-900/20 border-b border-dashed border-indigo-100 dark:border-indigo-800 flex justify-between items-center">
+                                                <span className="text-xs font-black text-indigo-800 dark:text-indigo-300 uppercase tracking-wider">Actual Bill</span>
+                                                <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">Orig. Order</span>
+                                            </div>
+                                            <div className="p-5 flex flex-col justify-center flex-1 space-y-4">
+                                                <div className="flex justify-between items-center text-sm">
+                                                    <span className="text-gray-500 font-medium">Quantity</span>
+                                                    <span className="font-bold text-gray-900 dark:text-white">{lead.quantity}</span>
+                                                </div>
+                                                <div className="flex justify-between items-center text-sm">
+                                                    <span className="text-gray-500 font-medium">Total Price</span>
+                                                    <span className="font-bold text-indigo-600 dark:text-indigo-400 font-mono text-xl">
+                                                        ${(lead.asset.price * lead.quantity).toLocaleString()}
+                                                    </span>
+                                                </div>
+                                                <div className="h-px bg-indigo-100 dark:bg-indigo-900/30 border-t border-dashed"></div>
+                                                <div className="flex justify-between items-center">
+                                                    <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">Unit Price</span>
+                                                    <span className="text-xs font-medium text-gray-500">${lead.asset.price?.toLocaleString()}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* 2. Preview Bill (Final/Estimate) */}
+                                    <div className="text-sm">
+                                        <h5 className="text-xs font-extrabold text-gray-400 dark:text-zinc-500 uppercase tracking-widest mb-3">
+                                            {lead.salesStatus === 'sold' ? 'Preview Bill (Final)' : 'Preview Sale (Quote)'}
+                                        </h5>
+                                        <div className={`bg-white dark:bg-zinc-800 p-0 rounded-xl border border-dashed shadow-sm h-48 flex flex-col overflow-hidden relative ${lead.salesStatus === 'sold' ? 'border-emerald-300 dark:border-emerald-700' : 'border-gray-200 dark:border-zinc-700'}`}>
+                                            <div className={`px-5 py-3 border-b flex justify-between items-center ${lead.salesStatus === 'sold' ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-100 dark:border-emerald-800' : 'bg-gray-50 dark:bg-zinc-800 border-gray-100 dark:border-zinc-700'}`}>
+                                                <span className={`text-xs font-black uppercase tracking-wider ${lead.salesStatus === 'sold' ? 'text-emerald-800 dark:text-emerald-300' : 'text-gray-600 dark:text-gray-400'}`}>
+                                                    {lead.salesStatus === 'sold' ? 'Preview' : 'Estimate'}
+                                                </span>
+                                                <span className={`text-xs font-bold ${lead.salesStatus === 'sold' ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-500'}`}>
+                                                    {lead.salesStatus === 'sold' ? 'Final Deal' : 'Pending'}
+                                                </span>
+                                            </div>
+                                            <div className="p-5 flex flex-col justify-center flex-1 space-y-4">
+                                                <div className="flex justify-between items-center text-sm">
+                                                    <span className="text-gray-500 font-medium">Quantity</span>
+                                                    <span className="font-bold text-gray-900 dark:text-white">
+                                                        {lead.salesStatus === 'sold' ? lead.soldQuantity : lead.quantity}
+                                                    </span>
+                                                </div>
+                                                <div className="flex justify-between items-center text-sm">
+                                                    <span className="text-gray-500 font-medium">{lead.salesStatus === 'sold' ? 'Total Paid' : 'Est. Total'}</span>
+                                                    <span className={`font-bold font-mono text-2xl ${lead.salesStatus === 'sold' ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-400 dark:text-gray-500'}`}>
+                                                        ${(lead.salesStatus === 'sold' ? lead.soldTotalAmount : (lead.asset.price * lead.quantity))?.toLocaleString()}
+                                                    </span>
+                                                </div>
+                                                <div className="h-px bg-gray-100 dark:bg-zinc-700 border-t border-dashed"></div>
+                                                <div className="flex justify-between items-center">
+                                                    <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">Unit Price</span>
+                                                    <span className="text-xs font-medium text-gray-500">
+                                                        ${(lead.salesStatus === 'sold' ? (lead.soldPrice || lead.asset.price) : lead.asset.price)?.toLocaleString()}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     {/* Contact Info */}
                                     <div className="text-sm">
                                         <h5 className="text-[10px] font-extrabold text-gray-400 dark:text-zinc-500 uppercase tracking-widest mb-3">Contact Details</h5>
@@ -374,7 +541,7 @@ const LeadRow = ({ lead, isExpanded, onToggle, onStatusUpdate, onLeadUpdate }) =
                         </motion.div>
                     )}
                 </AnimatePresence>
-            </div>
+            </div >
         </>
     );
 };
@@ -435,9 +602,22 @@ const SellerLeads = () => {
     };
 
     const handleStatusUpdate = async (id, newStatus) => {
+        const action = newStatus === 'accepted' ? 'Accept' : 'Reject';
+
+        const isConfirmed = await confirm({
+            title: `${action} Lead Request`,
+            message: `Are you sure you want to ${action.toLowerCase()} this lead? This action notifies the buyer.`,
+            confirmText: action,
+            isDangerous: newStatus === 'rejected', // Red button for reject
+            // Optional: icon: newStatus === 'accepted' ? CheckCircle : XCircle
+        });
+
+        if (!isConfirmed) return;
+
         try {
             const { data: updatedLead } = await api.put(`/interests/${id}/status`, { status: newStatus });
-            setLeads(prev => prev.map(l => l._id === id ? updatedLead : l));
+            // Merge in place to ensure we keep populated details if they aren't returned
+            setLeads(prev => prev.map(l => l._id === id ? { ...l, ...updatedLead } : l));
             showSnackbar(`Lead marked as ${newStatus}`, "success");
         } catch (error) {
             console.error("Failed to update status", error);
@@ -473,46 +653,6 @@ const SellerLeads = () => {
                     </div>
                 )}
 
-                {/* Hero Stats Section (Collapsible) */}
-                <AnimatePresence>
-                    {showStats && (
-                        <motion.div
-                            initial={{ height: 0, opacity: 0, marginBottom: 0 }}
-                            animate={{ height: 'auto', opacity: 1, marginBottom: 32 }}
-                            exit={{ height: 0, opacity: 0, marginBottom: 0 }}
-                            className="overflow-hidden"
-                            style={{ overflow: 'hidden' }} // Ensure inner content doesn't spill during anim
-                        >
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 py-1">
-                                <StatCard
-                                    title="Total Leads"
-                                    value={stats.total}
-                                    icon={Users}
-                                    colorClass="bg-blue-500"
-                                    trend={12} // hardcoded for now or calc real trend
-                                />
-                                <StatCard
-                                    title="Pending"
-                                    value={stats.pending}
-                                    icon={Clock}
-                                    colorClass="bg-amber-500"
-                                />
-                                <StatCard
-                                    title="Sold/Closed"
-                                    value={stats.accepted}
-                                    icon={CheckCircle}
-                                    colorClass="bg-emerald-500"
-                                />
-                                <StatCard
-                                    title="Conversion"
-                                    value={`${stats.conversionRate}%`}
-                                    icon={TrendingUp}
-                                    colorClass="bg-violet-500"
-                                />
-                            </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
 
                 {/* Headers */}
                 <div className="hidden md:grid grid-cols-[1.4fr_1.8fr_1fr_1.2fr_0.4fr] gap-4 px-4 pb-3 text-xs font-bold text-gray-400 dark:text-zinc-500 uppercase tracking-wider pl-6">

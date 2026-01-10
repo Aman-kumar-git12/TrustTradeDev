@@ -81,7 +81,7 @@ const SellerAnalyticsProducts = () => {
                             {products.map((product) => (
                                 <tr
                                     key={product.id}
-                                    onClick={() => navigate(`/dashboard/seller/${businessId}/analytics/product/${product.id}`, { state: { productTitle: product.title } })}
+                                    onClick={() => navigate(`/dashboard/seller/${businessId}/analytics/product/${product.id}/30d`, { state: { productTitle: product.title } })}
                                     className="hover:bg-gray-50/50 dark:hover:bg-zinc-800/30 transition-colors group cursor-pointer grid grid-cols-6 w-full items-center"
                                 >
                                     <td className="px-6 py-4 flex flex-col justify-center">

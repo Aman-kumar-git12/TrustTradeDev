@@ -124,7 +124,7 @@ const SellerListings = () => {
 
     return (
         <div className="">
-            <div className="flex flex-col md:flex-row-reverse gap-8 align-top">
+            <div className="flex flex-col md:flex-row-reverse gap-8 items-start">
                 {/* Filter Sidebar */}
                 {isFilterOpen && (
                     <div className="w-full md:w-1/4 flex-shrink-0 transition-all duration-300 ease-in-out block animate-fade-in">

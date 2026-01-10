@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { User, Mail, Building, Shield, Calendar, Clock, Edit2, Save, X, Phone, Camera, Link as LinkIcon, AlertCircle, Briefcase, MapPin, Sun, Moon } from 'lucide-react';
+import { User, Mail, Building, Shield, Calendar, Clock, Edit2, Save, X, Phone, Camera, Link as LinkIcon, AlertCircle, Briefcase, MapPin, Sun, Moon, Loader2 } from 'lucide-react';
 import api from '../utils/api';
+import ProfileShimmer from '../components/shimmers/ProfileShimmer';
 
 import { useUI } from '../context/UIContext';
 import { useAuth } from '../context/AuthContext';
@@ -16,14 +17,16 @@ const Profile = () => {
     const [loading, setLoading] = useState(true);
     const [isEditing, setIsEditing] = useState(false);
 
+    // File Upload State
+    const [uploadingImage, setUploadingImage] = useState(false);
+    const fileInputRef = useRef(null);
+
     // Form State
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
-        companyName: '',
         phone: '',
-        avatarUrl: '',
-        description: '', // Added description
+        description: '',
         password: ''
     });
 
@@ -43,10 +46,8 @@ const Profile = () => {
                 setFormData({
                     fullName: profileRes.data.fullName,
                     email: profileRes.data.email,
-                    companyName: profileRes.data.companyName || '',
                     phone: profileRes.data.phone || '',
-                    avatarUrl: profileRes.data.avatarUrl || '',
-                    description: profileRes.data.description || '', // Fetch description
+                    description: profileRes.data.description || '',
                     password: ''
                 });
             } catch (error) {
@@ -58,6 +59,41 @@ const Profile = () => {
         };
         loadData();
     }, []);
+
+    const handleFileSelect = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // Instant Upload Logic
+        try {
+            setUploadingImage(true);
+
+            // 1. Upload to Cloudinary
+            const imageFormData = new FormData();
+            imageFormData.append('image', file);
+
+            const uploadRes = await api.post('/images/upload', imageFormData);
+            const newAvatarUrl = uploadRes.data.url;
+
+            // 2. Update Profile with new URL immediately
+            const { data } = await api.put('/auth/profile', { avatarUrl: newAvatarUrl });
+
+            // 3. Update local state
+            setProfile(data);
+            showSnackbar('Profile picture updated!', 'success');
+        } catch (error) {
+            console.error('Image upload failed', error);
+            showSnackbar('Failed to upload image. Please try again.', 'error');
+        } finally {
+            setUploadingImage(false);
+            // Reset input so same file can be selected again if needed
+            if (fileInputRef.current) fileInputRef.current.value = '';
+        }
+    };
+
+    const triggerFileInput = () => {
+        fileInputRef.current.click();
+    };
 
     const handleUpdate = async (e) => {
         e.preventDefault();
@@ -75,9 +111,8 @@ const Profile = () => {
             if (!payload.password) delete payload.password;
 
             const { data } = await api.put('/auth/profile', payload);
-            setProfile(data);
-            // Removed localStorage update to ensure data consistency with DB
 
+            setProfile(data);
             setIsEditing(false);
             showSnackbar('Profile updated successfully!', 'success');
         } catch (error) {
@@ -86,11 +121,7 @@ const Profile = () => {
         }
     };
 
-    if (loading) return (
-        <div className="min-h-screen flex items-center justify-center bg-white dark:bg-zinc-950">
-            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-emerald-500"></div>
-        </div>
-    );
+    if (loading) return <ProfileShimmer />;
 
     if (!profile) return (
         <div className="min-h-screen flex items-center justify-center bg-white dark:bg-zinc-950">
@@ -118,7 +149,9 @@ const Profile = () => {
                                     <div className="flex space-x-2">
                                         <button
                                             type="button"
-                                            onClick={() => { setIsEditing(false); }}
+                                            onClick={() => {
+                                                setIsEditing(false);
+                                            }}
                                             className="bg-white dark:bg-zinc-800 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-lg text-sm font-semibold shadow-sm hover:bg-gray-50 dark:hover:bg-zinc-700 border border-gray-200 dark:border-zinc-700 transition-colors flex items-center"
                                         >
                                             <X size={16} className="mr-2" /> Cancel
@@ -146,21 +179,37 @@ const Profile = () => {
                         <div className="px-8 pb-6 bg-white dark:bg-zinc-900 relative transition-colors duration-300">
                             <div className="flex flex-col md:flex-row items-end -mt-12 mb-2">
                                 {/* Avatar */}
-                                <div className="relative z-10">
+                                <div className="relative z-10 group">
                                     <div className="h-28 w-28 rounded-xl border-4 border-white dark:border-zinc-900 bg-gray-200 dark:bg-zinc-800 shadow-lg overflow-hidden relative transition-colors duration-300">
-                                        {formData.avatarUrl ? (
-                                            <img src={formData.avatarUrl} alt={profile.fullName} className="w-full h-full object-cover" />
+                                        {profile.avatarUrl ? (
+                                            <img src={profile.avatarUrl} alt={profile.fullName} className="w-full h-full object-cover" />
                                         ) : (
                                             <div className="w-full h-full flex items-center justify-center bg-gray-100 dark:bg-zinc-800 text-gray-300 text-4xl font-bold">
                                                 {profile.fullName.charAt(0)}
                                             </div>
                                         )}
+                                        {uploadingImage && (
+                                            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                                                <Loader2 className="text-white animate-spin" size={24} />
+                                            </div>
+                                        )}
                                     </div>
-                                    {isEditing && (
-                                        <div className="absolute -bottom-2 -right-2 bg-emerald-600 text-white p-2 rounded-lg border-2 border-white dark:border-zinc-900 shadow-md cursor-pointer hover:bg-emerald-700">
-                                            <Camera size={14} />
-                                        </div>
-                                    )}
+
+                                    {/* Camera Button - Always Visible or on Hover */}
+                                    <div
+                                        onClick={triggerFileInput}
+                                        className="absolute -bottom-2 -right-2 bg-emerald-600 text-white p-2 rounded-lg border-2 border-white dark:border-zinc-900 shadow-md cursor-pointer hover:bg-emerald-700 transition-colors z-20"
+                                        title="Change Profile Picture"
+                                    >
+                                        <Camera size={14} />
+                                        <input
+                                            type="file"
+                                            ref={fileInputRef}
+                                            className="hidden"
+                                            onChange={handleFileSelect}
+                                            accept="image/*"
+                                        />
+                                    </div>
                                 </div>
 
                                 {/* Text Info */}
@@ -252,20 +301,7 @@ const Profile = () => {
                                         )}
                                     </div>
 
-                                    <div className="space-y-1.5">
-                                        <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Company</label>
-                                        {isEditing ? (
-                                            <input
-                                                type="text"
-                                                className="w-full px-3 py-2 bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none text-sm transition-all dark:text-white"
-                                                value={formData.companyName}
-                                                onChange={e => setFormData({ ...formData, companyName: e.target.value })}
-                                                placeholder="Company Name"
-                                            />
-                                        ) : (
-                                            <div className="text-gray-900 dark:text-gray-200 font-medium">{profile.companyName || 'Not provided'}</div>
-                                        )}
-                                    </div>
+
 
                                     {/* Description Field - Full Width */}
                                     <div className="md:col-span-2 space-y-1.5">
@@ -287,7 +323,7 @@ const Profile = () => {
 
                                     {isEditing && (
                                         <div className="md:col-span-2 space-y-1.5">
-                                            <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Avatar URL</label>
+                                            <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Avatar URL (Optional)</label>
                                             <div className="relative">
                                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                                     <LinkIcon size={14} className="text-gray-400" />
@@ -296,12 +332,21 @@ const Profile = () => {
                                                     type="url"
                                                     className="w-full pl-9 px-3 py-2 bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none text-sm transition-all dark:text-white"
                                                     value={formData.avatarUrl}
-                                                    onChange={e => setFormData({ ...formData, avatarUrl: e.target.value })}
+                                                    onChange={e => {
+                                                        setFormData({ ...formData, avatarUrl: e.target.value });
+                                                        // Update preview immediately if it looks like a valid URL
+                                                        if (e.target.value.startsWith('http')) {
+                                                            setProfile(prev => ({ ...prev, avatarUrl: e.target.value }));
+                                                        }
+                                                    }}
                                                     placeholder="https://example.com/image.jpg"
                                                 />
                                             </div>
+                                            <p className="text-[10px] text-gray-400">Or use the camera button on your profile picture to upload a file.</p>
                                         </div>
                                     )}
+
+                                    {/* Removed Manual Avatar URL input to avoid confusion */}
                                 </div>
                             </div>
                         </div>
@@ -412,13 +457,11 @@ const Profile = () => {
                                         <div key={b._id} className="border border-gray-200 dark:border-zinc-700 rounded-lg p-4 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors group bg-gray-50/50 dark:bg-zinc-800/50 flex flex-col">
                                             <div className="flex items-start space-x-4">
                                                 <div className="h-16 w-16 bg-gray-200 dark:bg-zinc-700 rounded-lg flex-shrink-0 overflow-hidden">
-                                                    {b.imageUrl ? (
-                                                        <img src={b.imageUrl} alt={b.businessName} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                                                    ) : (
-                                                        <div className="flex items-center justify-center h-full text-gray-400">
-                                                            <Building size={20} />
-                                                        </div>
-                                                    )}
+                                                    <img
+                                                        src={(b.images && b.images.length > 0) ? b.images[0] : 'https://cdn-icons-png.freepik.com/512/1465/1465439.png'}
+                                                        alt={b.businessName}
+                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                                                    />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
                                                     <h4 className="font-bold text-gray-900 dark:text-white truncate">{b.businessName}</h4>

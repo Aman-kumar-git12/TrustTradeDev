@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 import { MapPin, Tag, CheckCircle, ArrowLeft, Edit, Trash2, Eye, PauseCircle, PlayCircle, FileText } from 'lucide-react';
 import { useUI } from '../context/UIContext';
+import AssetDetailsShimmer from '../components/shimmers/AssetDetailsShimmer';
 
 const SellerAssetDetails = () => {
     const { id } = useParams(); // Using 'id' from route /dashboard/seller/:businessId/listings/:id
@@ -94,11 +95,7 @@ const SellerAssetDetails = () => {
         });
     };
 
-    if (loading) return (
-        <div className="flex justify-center items-center min-h-[60vh]">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-500"></div>
-        </div>
-    );
+    if (loading) return <AssetDetailsShimmer />;
 
     if (!asset) return <div className="p-12 text-center text-gray-500 dark:text-gray-400">Asset not found</div>;
 

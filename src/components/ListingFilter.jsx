@@ -1,6 +1,6 @@
 import { Search, Filter as FilterIcon, X } from 'lucide-react';
 
-const CATEGORIES = ['Industrial', 'Vehicles', 'IT Hardware', 'Real Estate', 'Medical', 'Electronics', 'Manufacturing', 'Office Equipment'];
+const CATEGORIES = ['Industrial', 'Vehicles', 'IT Hardware', 'Real Estate', 'Electronics'];
 const STATUSES = ['active', 'inactive'];
 
 const ListingFilter = ({ filters, onFilterChange, onClear, onApply, onClose }) => {
