@@ -17,10 +17,13 @@ import {
     Trash2,
     Search,
     Filter as FilterIcon,
-    BarChart2
+    BarChart2,
+    ShieldCheck,
+    Zap
 } from 'lucide-react';
 import api from '../utils/api';
 import { useTheme } from '../context/ThemeContext';
+import Hover from '../components/Hover';
 import { useUI } from '../context/UIContext';
 import Filter from '../components/Filter';
 
@@ -389,7 +392,7 @@ const BuyerDashboard = () => {
             const fetchStats = async () => {
                 try {
                     const { data } = await api.get('/analytics/buyer/overview/all');
-                    setDashboardStats(data.kpi);
+                    setDashboardStats(data);
                 } catch (error) {
                     console.error("Failed to fetch dashboard stats", error);
                 }
@@ -453,13 +456,13 @@ const BuyerDashboard = () => {
                     </div>
                 </div>
 
-                <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-                    {/* Tab Switcher */}
-                    <div className="flex p-1 bg-gray-100 dark:bg-zinc-900 rounded-xl w-fit border border-gray-200 dark:border-zinc-800">
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-8 gap-6">
+                    {/* Navigation Hub: Interests, Orders, Intelligence Grouped */}
+                    <div className="flex p-1.5 bg-gray-100 dark:bg-zinc-900 rounded-[1.2rem] border border-gray-200 dark:border-zinc-800/50 items-center gap-1">
                         <button
                             onClick={() => { setActiveTab('interests'); setExpandedId(null); }}
-                            className={`px-6 py-2.5 rounded-lg text-sm font-bold transition-all flex items-center ${activeTab === 'interests'
-                                ? 'bg-white dark:bg-zinc-800 text-emerald-600 shadow-sm'
+                            className={`px-5 py-2 rounded-[0.9rem] text-sm font-bold transition-all flex items-center ${activeTab === 'interests'
+                                ? 'bg-white dark:bg-zinc-800 text-emerald-600 dark:text-emerald-400 shadow-sm'
                                 : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
                                 }`}
                         >
@@ -471,8 +474,8 @@ const BuyerDashboard = () => {
                         </button>
                         <button
                             onClick={() => { setActiveTab('orders'); setExpandedId(null); }}
-                            className={`px-6 py-2.5 rounded-lg text-sm font-bold transition-all flex items-center ${activeTab === 'orders'
-                                ? 'bg-white dark:bg-zinc-800 text-emerald-600 shadow-sm'
+                            className={`px-5 py-2 rounded-[0.9rem] text-sm font-bold transition-all flex items-center ${activeTab === 'orders'
+                                ? 'bg-white dark:bg-zinc-800 text-emerald-600 dark:text-emerald-400 shadow-sm'
                                 : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
                                 }`}
                         >
@@ -482,8 +485,23 @@ const BuyerDashboard = () => {
                                 {orders.length}
                             </span>
                         </button>
+
+                        <div className="w-px h-5 bg-gray-200 dark:bg-zinc-800 mx-1 md:block hidden" />
+
+                        <Hover text="Intelligence Hub">
+                            <button
+                                onClick={() => navigate(`/dashboard/buyer/${userId}/insights/1m`)}
+                                className={`flex items-center px-5 py-2.5 rounded-[0.9rem] font-bold text-sm transition-all shadow-sm group ${location.pathname.includes('/insights')
+                                    ? 'bg-white dark:bg-zinc-800 text-emerald-600 dark:text-emerald-400'
+                                    : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 dark:bg-zinc-800/50 hover:bg-gray-200 dark:hover:bg-zinc-800'}`}
+                            >
+                                <Zap size={16} className="mr-2 group-hover:scale-110 transition-transform" />
+                                Intelligence Hub
+                            </button>
+                        </Hover>
                     </div>
 
+                    {/* Right Side: Actions Group */}
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => setShowStats(!showStats)}
@@ -522,26 +540,26 @@ const BuyerDashboard = () => {
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                                 <StatCard
                                     title="Total Requests"
-                                    value={dashboardStats?.totalInterests || 0}
+                                    value={dashboardStats?.kpi?.totalInterests || 0}
                                     icon={ShoppingBag}
                                     colorClass="bg-emerald-500"
                                 />
                                 <StatCard
                                     title="Accepted"
-                                    value={dashboardStats?.acceptedInterests || 0}
+                                    value={dashboardStats?.kpi?.acceptedInterests || 0}
                                     icon={CheckCircle}
                                     colorClass="bg-blue-500"
                                 />
                                 <StatCard
                                     title="Total Value Paid"
-                                    value={`$${(dashboardStats?.totalSpent || 0).toLocaleString()}`}
+                                    value={`$${(dashboardStats?.kpi?.totalSpent || 0).toLocaleString()}`}
                                     icon={TrendingUp}
                                     colorClass="bg-indigo-500"
                                 />
                                 <StatCard
-                                    title="Success Rate"
-                                    value={`${dashboardStats?.conversionRate || 0}%`}
-                                    icon={Clock}
+                                    title="Trust Score"
+                                    value={dashboardStats?.trustScore?.totalScore || 0}
+                                    icon={ShieldCheck}
                                     colorClass="bg-amber-500"
                                 />
                             </div>
