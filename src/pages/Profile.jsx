@@ -11,7 +11,7 @@ import { useTheme } from '../context/ThemeContext';
 const Profile = () => {
     const { confirm, showSnackbar } = useUI();
     const { login } = useAuth();
-    const { theme, toggleTheme } = useTheme();
+    const { theme, mode, setMode } = useTheme();
     const [profile, setProfile] = useState(null);
     const [businesses, setBusinesses] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -133,11 +133,28 @@ const Profile = () => {
     );
 
     return (
-        <div className="min-h-[calc(100vh-64px)] bg-white dark:bg-zinc-950 py-8 px-4 sm:px-6 lg:px-8 font-sans transition-colors duration-300">
-            <div className="max-w-6xl mx-auto">
+        <div className="min-h-[calc(100vh-64px)] bg-white dark:bg-zinc-950 bluish:bg-[#0a0f1d] py-8 px-4 sm:px-6 lg:px-8 font-sans transition-colors duration-300 relative overflow-hidden">
+            {/* Dynamic Background Elements - Bluish Theme Only */}
+            <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden hidden bluish:block">
+                <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob"></div>
+                <div className="absolute top-[20%] right-[-10%] w-96 h-96 bg-purple-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob animation-delay-2000"></div>
+                <div className="absolute bottom-[-10%] left-[20%] w-96 h-96 bg-blue-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob animation-delay-4000"></div>
+
+                {/* Background Image & Overlay */}
+                <div className="absolute inset-0">
+                    <img
+                        src="https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=2000"
+                        alt="Background"
+                        className="absolute inset-0 w-full h-full object-cover opacity-10 mix-blend-overlay"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-tr from-[#0a0f1d] via-[#0a0f1d]/90 to-[#0f172a]/80"></div>
+                </div>
+            </div>
+
+            <div className="max-w-6xl mx-auto relative z-10">
                 <form onSubmit={handleUpdate}>
                     {/* Header Section */}
-                    <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-200 dark:border-zinc-800 overflow-hidden mb-6 transition-colors duration-300">
+                    <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e]/80 bluish:backdrop-blur-md rounded-xl shadow-sm bluish:shadow-xl border border-gray-200 dark:border-zinc-800 bluish:border-white/10 overflow-hidden mb-6 transition-colors duration-300">
                         {/* Cover Area */}
                         <div className="h-48 bg-slate-900 relative">
                             {/* Texture/Image */}
@@ -158,7 +175,7 @@ const Profile = () => {
                                         </button>
                                         <button
                                             type="submit"
-                                            className="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-sm hover:bg-emerald-700 transition-colors flex items-center"
+                                            className="bg-blue-600 dark:bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-sm hover:bg-blue-700 dark:hover:bg-emerald-700 transition-colors flex items-center"
                                         >
                                             <Save size={16} className="mr-2" /> Save
                                         </button>
@@ -176,11 +193,11 @@ const Profile = () => {
                         </div>
 
                         {/* Profile Info Bar */}
-                        <div className="px-8 pb-6 bg-white dark:bg-zinc-900 relative transition-colors duration-300">
+                        <div className="px-8 pb-6 bg-white dark:bg-zinc-900 bluish:bg-transparent relative transition-colors duration-300">
                             <div className="flex flex-col md:flex-row items-end -mt-12 mb-2">
                                 {/* Avatar */}
                                 <div className="relative z-10 group">
-                                    <div className="h-28 w-28 rounded-xl border-4 border-white dark:border-zinc-900 bg-gray-200 dark:bg-zinc-800 shadow-lg overflow-hidden relative transition-colors duration-300">
+                                    <div className="h-28 w-28 rounded-xl border-4 border-white dark:border-zinc-900 bluish:border-[#131b2e] bg-gray-200 dark:bg-zinc-800 bluish:bg-[#1e293b] shadow-lg overflow-hidden relative transition-colors duration-300">
                                         {profile.avatarUrl ? (
                                             <img src={profile.avatarUrl} alt={profile.fullName} className="w-full h-full object-cover" />
                                         ) : (
@@ -198,7 +215,7 @@ const Profile = () => {
                                     {/* Camera Button - Always Visible or on Hover */}
                                     <div
                                         onClick={triggerFileInput}
-                                        className="absolute -bottom-2 -right-2 bg-emerald-600 text-white p-2 rounded-lg border-2 border-white dark:border-zinc-900 shadow-md cursor-pointer hover:bg-emerald-700 transition-colors z-20"
+                                        className="absolute -bottom-2 -right-2 bg-blue-600 dark:bg-emerald-600 bluish:bg-blue-600 text-white p-2 rounded-lg border-2 border-white dark:border-zinc-900 bluish:border-[#131b2e] shadow-md cursor-pointer hover:bg-blue-700 dark:hover:bg-emerald-700 bluish:hover:bg-blue-700 transition-colors z-20"
                                         title="Change Profile Picture"
                                     >
                                         <Camera size={14} />
@@ -216,13 +233,13 @@ const Profile = () => {
                                 <div className="md:ml-6 mt-4 md:mt-0 flex-1">
                                     <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                                         <div>
-                                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white transition-colors duration-300">{profile.fullName}</h1>
+                                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white bluish:text-white transition-colors duration-300">{profile.fullName}</h1>
                                             <div className="flex items-center text-gray-500 dark:text-gray-400 text-sm mt-1">
                                                 <Mail size={14} className="mr-1.5" />
                                                 <span className="mr-4">{profile.email}</span>
                                                 <span className={`px-2.5 py-0.5 rounded-md text-xs font-semibold uppercase tracking-wide border ${profile.role === 'seller'
-                                                    ? 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/20 dark:text-amber-400 dark:border-amber-800'
-                                                    : 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800'
+                                                    ? 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/20 dark:text-amber-400 dark:border-amber-800 bluish:bg-amber-900/20 bluish:text-amber-400 bluish:border-amber-800'
+                                                    : 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800 bluish:bg-blue-900/20 bluish:text-blue-400 bluish:border-blue-800'
                                                     }`}>
                                                     {profile.role}
                                                 </span>
@@ -232,13 +249,13 @@ const Profile = () => {
                                         {/* Simple Stats */}
                                         {profile.role === 'seller' && (
                                             <div className="flex gap-4 mt-4 md:mt-0">
-                                                <div className="text-center px-4 py-2 bg-gray-50 dark:bg-zinc-800 rounded-lg border border-gray-100 dark:border-zinc-700 transition-colors duration-300">
-                                                    <div className="text-xl font-bold text-gray-900 dark:text-white">{businesses.length}</div>
-                                                    <div className="text-xs text-gray-500 dark:text-gray-400 font-medium">Businesses</div>
+                                                <div className="text-center px-4 py-2 bg-gray-50 dark:bg-zinc-800 bluish:bg-white/5 rounded-lg border border-gray-100 dark:border-zinc-700 bluish:border-white/5 transition-colors duration-300">
+                                                    <div className="text-xl font-bold text-gray-900 dark:text-white bluish:text-white">{businesses.length}</div>
+                                                    <div className="text-xs text-gray-500 dark:text-gray-400 bluish:text-gray-400 font-medium">Businesses</div>
                                                 </div>
-                                                <div className="text-center px-4 py-2 bg-gray-50 dark:bg-zinc-800 rounded-lg border border-gray-100 dark:border-zinc-700 transition-colors duration-300">
-                                                    <div className="text-xl font-bold text-emerald-600 dark:text-emerald-400">Active</div>
-                                                    <div className="text-xs text-gray-500 dark:text-gray-400 font-medium">Status</div>
+                                                <div className="text-center px-4 py-2 bg-gray-50 dark:bg-zinc-800 bluish:bg-white/5 rounded-lg border border-gray-100 dark:border-zinc-700 bluish:border-white/5 transition-colors duration-300">
+                                                    <div className="text-xl font-bold text-blue-600 dark:text-emerald-400 bluish:text-blue-400">Active</div>
+                                                    <div className="text-xs text-gray-500 dark:text-gray-400 bluish:text-gray-400 font-medium">Status</div>
                                                 </div>
                                             </div>
                                         )}
@@ -252,23 +269,23 @@ const Profile = () => {
                         {/* Main Column - Personal Info */}
                         <div className="lg:col-span-2 flex flex-col">
                             {/* Personal Info Card */}
-                            <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-200 dark:border-zinc-800 p-6 flex-1 h-full transition-colors duration-300">
-                                <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-5 flex items-center border-b border-gray-100 dark:border-zinc-800 pb-3">
-                                    <User size={20} className="mr-2 text-emerald-600" /> Personal Information
+                            <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e]/80 bluish:backdrop-blur-md rounded-xl shadow-sm bluish:shadow-lg border border-gray-200 dark:border-zinc-800 bluish:border-white/10 p-6 flex-1 h-full transition-colors duration-300">
+                                <h2 className="text-lg font-bold text-gray-900 dark:text-white bluish:text-white mb-5 flex items-center border-b border-gray-100 dark:border-zinc-800 bluish:border-white/5 pb-3">
+                                    <User size={20} className="mr-2 text-blue-600 dark:text-emerald-500 bluish:text-blue-500" /> Personal Information
                                 </h2>
 
                                 <div className="grid md:grid-cols-2 gap-6">
                                     <div className="space-y-1.5">
-                                        <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Full Name</label>
+                                        <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 bluish:text-gray-400 uppercase">Full Name</label>
                                         {isEditing ? (
                                             <input
                                                 type="text"
-                                                className="w-full px-3 py-2 bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none text-sm transition-all dark:text-white"
+                                                className="w-full px-3 py-2 bg-white dark:bg-zinc-800 bluish:bg-white/5 border border-gray-300 dark:border-zinc-700 bluish:border-white/10 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-emerald-500 bluish:focus:ring-blue-500 focus:border-transparent outline-none text-sm transition-all dark:text-white bluish:text-white"
                                                 value={formData.fullName}
                                                 onChange={e => setFormData({ ...formData, fullName: e.target.value })}
                                             />
                                         ) : (
-                                            <div className="text-gray-900 dark:text-gray-200 font-medium">{profile.fullName}</div>
+                                            <div className="text-gray-900 dark:text-gray-200 bluish:text-gray-200 font-medium">{profile.fullName}</div>
                                         )}
                                     </div>
 
@@ -278,11 +295,11 @@ const Profile = () => {
                                             <input
                                                 type="email"
                                                 disabled
-                                                className="w-full px-3 py-2 bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg text-gray-500 dark:text-gray-400 text-sm cursor-not-allowed"
+                                                className="w-full px-3 py-2 bg-gray-50 dark:bg-zinc-800 bluish:bg-white/5 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 rounded-lg text-gray-500 dark:text-gray-400 bluish:text-gray-400 text-sm cursor-not-allowed"
                                                 value={formData.email}
                                             />
                                         ) : (
-                                            <div className="text-gray-900 dark:text-gray-200 font-medium">{profile.email}</div>
+                                            <div className="text-gray-900 dark:text-gray-200 bluish:text-gray-200 font-medium">{profile.email}</div>
                                         )}
                                     </div>
 
@@ -291,13 +308,13 @@ const Profile = () => {
                                         {isEditing ? (
                                             <input
                                                 type="text"
-                                                className="w-full px-3 py-2 bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none text-sm transition-all dark:text-white"
+                                                className="w-full px-3 py-2 bg-white dark:bg-zinc-800 bluish:bg-white/5 border border-gray-300 dark:border-zinc-700 bluish:border-white/10 rounded-lg focus:ring-2 focus:ring-blue-500 bluish:focus:ring-blue-500 focus:border-transparent outline-none text-sm transition-all dark:text-white bluish:text-white"
                                                 value={formData.phone}
                                                 onChange={e => setFormData({ ...formData, phone: e.target.value })}
                                                 placeholder="+1 (555) 000-0000"
                                             />
                                         ) : (
-                                            <div className="text-gray-900 dark:text-gray-200 font-medium">{profile.phone || 'Not provided'}</div>
+                                            <div className="text-gray-900 dark:text-gray-200 bluish:text-gray-200 font-medium">{profile.phone || 'Not provided'}</div>
                                         )}
                                     </div>
 
@@ -309,13 +326,13 @@ const Profile = () => {
                                         {isEditing ? (
                                             <textarea
                                                 rows="4"
-                                                className="w-full px-3 py-2 bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none text-sm transition-all resize-none dark:text-white"
+                                                className="w-full px-3 py-2 bg-white dark:bg-zinc-800 bluish:bg-white/5 border border-gray-300 dark:border-zinc-700 bluish:border-white/10 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-emerald-500 bluish:focus:ring-blue-500 focus:border-transparent outline-none text-sm transition-all resize-none dark:text-white bluish:text-white"
                                                 value={formData.description}
                                                 onChange={e => setFormData({ ...formData, description: e.target.value })}
                                                 placeholder="Share a bit about yourself..."
                                             />
                                         ) : (
-                                            <div className="text-gray-900 dark:text-gray-200 font-medium text-sm leading-relaxed whitespace-pre-wrap">
+                                            <div className="text-gray-900 dark:text-gray-200 bluish:text-gray-200 font-medium text-sm leading-relaxed whitespace-pre-wrap">
                                                 {profile.description || 'No description provided.'}
                                             </div>
                                         )}
@@ -330,7 +347,7 @@ const Profile = () => {
                                                 </div>
                                                 <input
                                                     type="url"
-                                                    className="w-full pl-9 px-3 py-2 bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none text-sm transition-all dark:text-white"
+                                                    className="w-full pl-9 px-3 py-2 bg-white dark:bg-zinc-800 bluish:bg-white/5 border border-gray-300 dark:border-zinc-700 bluish:border-white/10 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-emerald-500 bluish:focus:ring-blue-500 focus:border-transparent outline-none text-sm transition-all dark:text-white bluish:text-white"
                                                     value={formData.avatarUrl}
                                                     onChange={e => {
                                                         setFormData({ ...formData, avatarUrl: e.target.value });
@@ -354,31 +371,37 @@ const Profile = () => {
                         {/* Sidebar Column */}
                         <div className="space-y-6">
                             {/* Appearance Card (Theme Toggle) */}
-                            <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-200 dark:border-zinc-800 p-6 transition-colors duration-300">
-                                <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-5 flex items-center border-b border-gray-100 dark:border-zinc-800 pb-3">
-                                    {theme === 'dark' ? <Moon size={20} className="mr-2 text-indigo-400" /> : <Sun size={20} className="mr-2 text-amber-500" />}
+                            <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e]/80 bluish:backdrop-blur-md rounded-xl shadow-sm bluish:shadow-lg border border-gray-200 dark:border-zinc-800 bluish:border-white/10 p-6 transition-colors duration-300">
+                                <h2 className="text-lg font-bold text-gray-900 dark:text-white bluish:text-white mb-5 flex items-center border-b border-gray-100 dark:border-zinc-800 bluish:border-white/5 pb-3">
+                                    {theme === 'dark' || theme === 'bluish' ? <Moon size={20} className="mr-2 text-indigo-400 bluish:text-blue-400" /> : <Sun size={20} className="mr-2 text-amber-500" />}
                                     Appearance
                                 </h2>
-                                <div className="flex items-center justify-between">
-                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                        {theme === 'dark' ? 'Dark Mode' : 'Light Mode'}
-                                    </span>
-                                    <button
-                                        type="button"
-                                        onClick={toggleTheme}
-                                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 ${theme === 'dark' ? 'bg-emerald-600' : 'bg-gray-200'}`}
-                                    >
-                                        <span
-                                            className={`${theme === 'dark' ? 'translate-x-6' : 'translate-x-1'} inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
-                                        />
-                                    </button>
+                                <div className="grid grid-cols-3 gap-2 bg-gray-100 dark:bg-zinc-800 bluish:bg-white/5 p-1 rounded-lg">
+                                    {['light', 'dark', 'default'].map((m) => (
+                                        <button
+                                            key={m}
+                                            type="button"
+                                            onClick={() => setMode(m)}
+                                            className={`py-2 px-3 rounded-md text-sm font-semibold transition-all duration-200 ${mode === m
+                                                ? 'bg-white dark:bg-emerald-600 bluish:bg-blue-600 text-gray-900 dark:text-white bluish:text-white shadow-sm'
+                                                : 'text-gray-500 dark:text-gray-400 bluish:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 bluish:hover:text-white'
+                                                }`}
+                                        >
+                                            {m === 'default' ? 'Default' : m.charAt(0).toUpperCase() + m.slice(1)}
+                                        </button>
+                                    ))}
                                 </div>
+                                <p className="text-xs text-gray-400 dark:text-gray-500 mt-3 text-center">
+                                    {mode === 'default'
+                                        ? `Using device settings (${theme === 'dark' ? 'Dark' : 'Light'})`
+                                        : `Manually set to ${mode} mode`}
+                                </p>
                             </div>
 
                             {/* Security Card */}
-                            <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-200 dark:border-zinc-800 p-6 transition-colors duration-300">
-                                <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-5 flex items-center border-b border-gray-100 dark:border-zinc-800 pb-3">
-                                    <Shield size={20} className="mr-2 text-emerald-600" /> Security
+                            <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e]/80 bluish:backdrop-blur-md rounded-xl shadow-sm bluish:shadow-lg border border-gray-200 dark:border-zinc-800 bluish:border-white/10 p-6 transition-colors duration-300">
+                                <h2 className="text-lg font-bold text-gray-900 dark:text-white bluish:text-white mb-5 flex items-center border-b border-gray-100 dark:border-zinc-800 bluish:border-white/5 pb-3">
+                                    <Shield size={20} className="mr-2 text-blue-600 dark:text-emerald-500 bluish:text-blue-500" /> Security
                                 </h2>
 
                                 {isEditing ? (
@@ -387,7 +410,7 @@ const Profile = () => {
                                         <input
                                             type="password"
                                             placeholder="Min 6 characters"
-                                            className="w-full px-3 py-2 bg-white dark:bg-zinc-800 border border-gray-300 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent outline-none text-sm transition-all dark:text-white"
+                                            className="w-full px-3 py-2 bg-white dark:bg-zinc-800 bluish:bg-white/5 border border-gray-300 dark:border-zinc-700 bluish:border-white/10 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-emerald-500 bluish:focus:ring-blue-500 focus:border-transparent outline-none text-sm transition-all dark:text-white bluish:text-white"
                                             value={formData.password}
                                             onChange={e => setFormData({ ...formData, password: e.target.value })}
                                         />
@@ -396,7 +419,7 @@ const Profile = () => {
                                 ) : (
                                     <div className="space-y-3">
                                         <div className="flex justify-between items-center py-1">
-                                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Password</span>
+                                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300 bluish:text-gray-300">Password</span>
                                             <span className="text-xs text-gray-400 font-mono">••••••••</span>
                                         </div>
                                         <div className="flex justify-between items-center py-1">
@@ -408,28 +431,28 @@ const Profile = () => {
                             </div>
 
                             {/* Activity Card */}
-                            <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-200 dark:border-zinc-800 p-6 transition-colors duration-300">
-                                <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-5 flex items-center border-b border-gray-100 dark:border-zinc-800 pb-3">
-                                    <Clock size={20} className="mr-2 text-purple-600" /> Activity
+                            <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e]/80 bluish:backdrop-blur-md rounded-xl shadow-sm bluish:shadow-lg border border-gray-200 dark:border-zinc-800 bluish:border-white/10 p-6 transition-colors duration-300">
+                                <h2 className="text-lg font-bold text-gray-900 dark:text-white bluish:text-white mb-5 flex items-center border-b border-gray-100 dark:border-zinc-800 bluish:border-white/5 pb-3">
+                                    <Clock size={20} className="mr-2 text-purple-600 bluish:text-purple-400" /> Activity
                                 </h2>
                                 <div className="space-y-4">
                                     <div className="flex items-start">
-                                        <div className="bg-blue-50 dark:bg-blue-900/20 p-1.5 rounded-md mr-3 text-blue-600 dark:text-blue-400">
+                                        <div className="bg-blue-50 dark:bg-emerald-900/20 bluish:bg-blue-900/20 p-1.5 rounded-md mr-3 text-blue-600 dark:text-emerald-400 bluish:text-blue-400">
                                             <Calendar size={16} />
                                         </div>
                                         <div>
-                                            <div className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase">Joined</div>
-                                            <div className="text-sm text-gray-900 dark:text-gray-200 font-semibold">{new Date(profile.createdAt).toLocaleDateString()}</div>
+                                            <div className="text-xs text-gray-500 dark:text-gray-400 bluish:text-gray-400 font-medium uppercase">Joined</div>
+                                            <div className="text-sm text-gray-900 dark:text-gray-200 bluish:text-gray-200 font-semibold">{new Date(profile.createdAt).toLocaleDateString()}</div>
                                         </div>
                                     </div>
                                     <div className="flex items-start">
-                                        <div className="bg-green-50 dark:bg-emerald-900/20 p-1.5 rounded-md mr-3 text-emerald-600 dark:text-emerald-400">
+                                        <div className="bg-green-50 dark:bg-emerald-900/20 bluish:bg-blue-900/20 p-1.5 rounded-md mr-3 text-blue-600 dark:text-emerald-400 bluish:text-blue-400">
                                             <Clock size={16} />
                                         </div>
                                         <div>
-                                            <div className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase">Last Active</div>
-                                            <div className="text-sm text-gray-900 dark:text-gray-200 font-semibold flex items-center">
-                                                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-1.5"></span>
+                                            <div className="text-xs text-gray-500 dark:text-gray-400 bluish:text-gray-400 font-medium uppercase">Last Active</div>
+                                            <div className="text-sm text-gray-900 dark:text-gray-200 bluish:text-gray-200 font-semibold flex items-center">
+                                                <span className="w-1.5 h-1.5 bg-blue-500 dark:bg-emerald-500 bluish:bg-blue-400 rounded-full mr-1.5"></span>
                                                 Now
                                             </div>
                                         </div>
@@ -441,12 +464,12 @@ const Profile = () => {
 
                     {/* My Businesses Section - Full Width Bottom */}
                     {profile.role === 'seller' && (
-                        <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-200 dark:border-zinc-800 p-6 transition-colors duration-300">
-                            <div className="flex items-center justify-between mb-5 border-b border-gray-100 dark:border-zinc-800 pb-3">
-                                <h2 className="text-lg font-bold text-gray-900 dark:text-white flex items-center">
-                                    <Building size={20} className="mr-2 text-amber-600" /> My Businesses
+                        <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e]/80 bluish:backdrop-blur-md rounded-xl shadow-sm bluish:shadow-lg border border-gray-200 dark:border-zinc-800 bluish:border-white/10 p-6 transition-colors duration-300">
+                            <div className="flex items-center justify-between mb-5 border-b border-gray-100 dark:border-zinc-800 bluish:border-white/5 pb-3">
+                                <h2 className="text-lg font-bold text-gray-900 dark:text-white bluish:text-white flex items-center">
+                                    <Building size={20} className="mr-2 text-amber-600 bluish:text-amber-400" /> My Businesses
                                 </h2>
-                                <Link to="/my-businesses" className="text-sm font-semibold text-emerald-600 hover:text-emerald-500 transition-colors">
+                                <Link to="/my-businesses" className="text-sm font-semibold text-blue-600 dark:text-emerald-400 bluish:text-blue-400 hover:text-blue-500 dark:hover:text-emerald-300 transition-colors">
                                     Manage All
                                 </Link>
                             </div>
@@ -454,9 +477,9 @@ const Profile = () => {
                             {businesses.length > 0 ? (
                                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                                     {businesses.slice(0, 3).map((b) => (
-                                        <div key={b._id} className="border border-gray-200 dark:border-zinc-700 rounded-lg p-4 hover:border-emerald-300 dark:hover:border-emerald-700 transition-colors group bg-gray-50/50 dark:bg-zinc-800/50 flex flex-col">
+                                        <div key={b._id} className="border border-gray-200 dark:border-zinc-700 bluish:border-white/10 rounded-lg p-4 hover:border-blue-300 dark:hover:border-blue-700 bluish:hover:border-blue-500/50 transition-colors group bg-gray-50/50 dark:bg-zinc-800/50 bluish:bg-white/5 flex flex-col">
                                             <div className="flex items-start space-x-4">
-                                                <div className="h-16 w-16 bg-gray-200 dark:bg-zinc-700 rounded-lg flex-shrink-0 overflow-hidden">
+                                                <div className="h-16 w-16 bg-gray-200 dark:bg-zinc-700 bluish:bg-[#1e293b] rounded-lg flex-shrink-0 overflow-hidden">
                                                     <img
                                                         src={(b.images && b.images.length > 0) ? b.images[0] : 'https://cdn-icons-png.freepik.com/512/1465/1465439.png'}
                                                         alt={b.businessName}
@@ -464,20 +487,20 @@ const Profile = () => {
                                                     />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <h4 className="font-bold text-gray-900 dark:text-white truncate">{b.businessName}</h4>
-                                                    <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 mt-1 mb-3">
+                                                    <h4 className="font-bold text-gray-900 dark:text-white bluish:text-white truncate">{b.businessName}</h4>
+                                                    <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 bluish:text-gray-400 mt-1 mb-3">
                                                         <MapPin size={12} className="mr-1" />
                                                         <span className="truncate">{b.location.city}, {b.location.place}</span>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <Link to={`/my-businesses/${b._id}`} className="mt-auto pt-3 text-xs font-semibold text-emerald-600 hover:underline border-t border-gray-200 dark:border-zinc-700 flex items-center justify-center">
+                                            <Link to={`/my-businesses/${b._id}`} className="mt-auto pt-3 text-xs font-semibold text-blue-600 dark:text-emerald-400 hover:underline border-t border-gray-200 dark:border-zinc-700 bluish:border-white/10 bluish:text-blue-400 flex items-center justify-center">
                                                 View Details
                                             </Link>
                                         </div>
                                     ))}
                                     {businesses.length > 3 && (
-                                        <Link to="/my-businesses" className="border border-dashed border-gray-300 dark:border-zinc-700 rounded-lg p-4 flex flex-col items-center justify-center text-gray-500 hover:text-emerald-600 hover:border-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/10 transition-all text-sm font-medium h-full">
+                                        <Link to="/my-businesses" className="border border-dashed border-gray-300 dark:border-zinc-700 rounded-lg p-4 flex flex-col items-center justify-center text-gray-500 hover:text-blue-600 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-all text-sm font-medium h-full">
                                             <span>+{businesses.length - 3} More</span>
                                         </Link>
                                     )}

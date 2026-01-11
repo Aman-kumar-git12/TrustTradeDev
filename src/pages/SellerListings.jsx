@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Eye, PauseCircle, PlayCircle, FolderOpen, Trash2 } from 'lucide-react';
-import { useOutletContext, useNavigate } from 'react-router-dom';
+import { useOutletContext, useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../utils/api';
 import { useUI } from '../context/UIContext';
 import ListingFilter from '../components/ListingFilter';
@@ -10,6 +10,7 @@ const SellerListings = () => {
     const [listings, setListings] = useState([]);
     const [loading, setLoading] = useState(true);
     const { isFilterOpen, businessId } = useOutletContext();
+    const [searchParams, setSearchParams] = useSearchParams();
     const navigate = useNavigate();
     const { showSnackbar, confirm } = useUI();
 
@@ -22,13 +23,14 @@ const SellerListings = () => {
         maxPrice: ''
     });
 
-    const fetchListings = async () => {
+    const fetchListings = async (params) => {
         if (!businessId) return;
         setLoading(true);
         try {
+            const activeFilters = params || filters;
             // Construct query params from filters state
             const queryParams = new URLSearchParams();
-            Object.entries(filters).forEach(([key, value]) => {
+            Object.entries(activeFilters).forEach(([key, value]) => {
                 if (value) queryParams.append(key, value);
             });
 
@@ -43,27 +45,23 @@ const SellerListings = () => {
     };
 
     useEffect(() => {
-        fetchListings();
+        setFilters({ search: '', status: '', category: '', minPrice: '', maxPrice: '' });
+        fetchListings({}); // Pass empty to override potential stale state
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [businessId]);
 
     const handleApplyFilters = () => {
         fetchListings();
+        // Optional: Close filter panel here if desired
+        // navigate(/dashboard/seller/${businessId}/listings);
     };
 
     const handleClearFilters = () => {
-        setFilters({ search: '', status: '', category: '', minPrice: '', maxPrice: '' });
+        const emptyFilters = { search: '', status: '', category: '', minPrice: '', maxPrice: '' };
+        setFilters(emptyFilters);
         // Trigger fetch with empty filters immediately
-        api.get(`/dashboard/business/${businessId}/assets`).then(res => setListings(res.data));
+        fetchListings(emptyFilters);
     };
-
-    // Auto-clear filters when sidebar is closed
-    useEffect(() => {
-        if (!isFilterOpen) {
-            handleClearFilters();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isFilterOpen]);
 
     const handleStatusChange = async (id, newStatus) => {
         const isActivating = newStatus === 'active';
@@ -133,7 +131,11 @@ const SellerListings = () => {
                             onFilterChange={setFilters}
                             onClear={handleClearFilters}
                             onApply={handleApplyFilters}
-                            onClose={() => navigate(`/dashboard/seller/${businessId}/listings`)}
+                            onClose={() => {
+                                const newParams = new URLSearchParams(searchParams);
+                                newParams.delete('filter');
+                                setSearchParams(newParams);
+                            }}
                         />
                     </div>
                 )}
@@ -151,7 +153,7 @@ const SellerListings = () => {
                                 <div
                                     key={asset._id}
                                     onClick={() => navigate(`/dashboard/seller/${businessId}/listings/${asset._id}`)}
-                                    className="bg-white dark:bg-zinc-900 p-6 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row md:items-center justify-between group cursor-pointer"
+                                    className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 p-6 rounded-2xl border border-gray-100 dark:border-zinc-800 bluish:border-white/5 shadow-sm hover:shadow-md transition-all flex flex-col md:flex-row md:items-center justify-between group cursor-pointer"
                                 >
                                     <div className="flex items-start gap-4 mb-4 md:mb-0">
                                         <div className="h-24 w-24 rounded-xl bg-gray-100 dark:bg-zinc-800 overflow-hidden flex-shrink-0 relative transition-colors duration-300">
@@ -164,29 +166,29 @@ const SellerListings = () => {
                                             )}
                                         </div>
                                         <div>
-                                            <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                                            <h3 className="font-bold text-lg text-gray-900 dark:text-white bluish:text-white group-hover:text-blue-600 dark:group-hover:text-emerald-400 bluish:group-hover:text-blue-500 transition-colors">
                                                 {asset.title}
                                             </h3>
-                                            <div className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400 mt-1">
-                                                <span className="font-semibold text-gray-900 dark:text-gray-200">${asset.price.toLocaleString()}</span>
+                                            <div className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400 bluish:text-slate-400 mt-1">
+                                                <span className="font-semibold text-gray-900 dark:text-gray-200 bluish:text-slate-200">${asset.price.toLocaleString()}</span>
                                                 <span>•</span>
                                                 <span>{asset.condition}</span>
                                             </div>
                                             <div className="flex items-center gap-3 mt-2 text-xs">
-                                                <span className="bg-slate-100 dark:bg-zinc-800 px-2 py-0.5 rounded flex items-center gap-1 text-gray-600 dark:text-gray-300 transition-colors">
+                                                <span className="bg-slate-100 dark:bg-zinc-800 bluish:bg-white/10 px-2 py-0.5 rounded flex items-center gap-1 text-gray-600 dark:text-gray-300 bluish:text-slate-300 transition-colors">
                                                     <Eye size={12} /> {asset.views || 0} views
                                                 </span>
-                                                <span className="text-gray-400 dark:text-gray-500">
+                                                <span className="text-gray-400 dark:text-gray-500 bluish:text-slate-500">
                                                     Listed {new Date(asset.createdAt).toLocaleDateString()}
                                                 </span>
                                             </div>
 
                                             <div className="mt-3">
                                                 <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-medium border ${asset.status === 'active'
-                                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800'
+                                                    ? 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800 bluish:bg-blue-50 bluish:text-blue-700 bluish:border-blue-200 bluish:dark:bg-blue-900/30 bluish:dark:text-blue-300 bluish:dark:border-blue-800'
                                                     : 'bg-red-50 text-red-600 border-red-200 dark:bg-red-900/30 dark:text-red-300 dark:border-red-800'
                                                     } transition-colors duration-300`}>
-                                                    <span className={`h-1.5 w-1.5 rounded-full ${asset.status === 'active' ? 'bg-emerald-500' : 'bg-red-500'
+                                                    <span className={`h-1.5 w-1.5 rounded-full ${asset.status === 'active' ? 'bg-blue-500 dark:bg-emerald-500' : 'bg-red-500'
                                                         }`}></span>
                                                     {asset.status.charAt(0).toUpperCase() + asset.status.slice(1)}
                                                 </span>
@@ -207,7 +209,7 @@ const SellerListings = () => {
                                         ) : (
                                             <button
                                                 onClick={() => handleStatusChange(asset._id, 'active')}
-                                                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 transition-colors text-sm font-medium"
+                                                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-50 dark:bg-emerald-900/20 text-blue-600 dark:text-emerald-400 hover:bg-blue-100 dark:hover:bg-emerald-900/40 bluish:bg-blue-50 bluish:dark:bg-blue-900/20 bluish:text-blue-600 bluish:dark:text-blue-400 bluish:hover:bg-blue-100 bluish:dark:hover:bg-blue-900/40 transition-colors text-sm font-medium"
                                                 title="Re-activate Listing"
                                             >
                                                 <PlayCircle size={16} /> <span className="hidden md:inline">Activate</span>
@@ -246,7 +248,7 @@ const SellerListings = () => {
                                         </button>
                                         <button
                                             onClick={() => navigate('/post-asset')}
-                                            className="px-6 py-2 bg-emerald-600 text-white rounded-lg font-bold shadow-lg shadow-emerald-600/30 hover:shadow-xl hover:translate-y-[-2px] transition-all"
+                                            className="px-6 py-2 bg-blue-600 dark:bg-emerald-600 bluish:bg-blue-600 text-white rounded-lg font-bold shadow-lg shadow-blue-600/30 dark:shadow-emerald-600/30 bluish:shadow-blue-600/30 hover:shadow-xl hover:translate-y-[-2px] transition-all"
                                         >
                                             Post New Asset
                                         </button>

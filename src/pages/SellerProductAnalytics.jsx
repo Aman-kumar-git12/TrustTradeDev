@@ -8,6 +8,7 @@ import {
     ArrowLeft, DollarSign, Clock,
     TrendingUp, AlertTriangle, CheckCircle, Package, Users, MessageCircle
 } from 'lucide-react';
+import KPICard from '../components/KPICard';
 import ProductDetailsShimmer from '../components/shimmers/ProductDetailsShimmer';
 
 const SellerProductAnalytics = () => {
@@ -97,14 +98,14 @@ const SellerProductAnalytics = () => {
                         title="Total Revenue"
                         value={`$${metrics.totalRevenue.toLocaleString()}`}
                         icon={DollarSign}
-                        color="emerald"
+                        color="blue"
                         subtitle={`${metrics.totalOrders} Orders Completed`}
                     />
                     <KPICard
                         title="Total Profit"
                         value={`$${metrics.totalProfit.toLocaleString()}`}
                         icon={TrendingUp}
-                        color={metrics.totalProfit >= 0 ? "emerald" : "red"}
+                        color={metrics.totalProfit >= 0 ? "blue" : "red"}
                         subtitle={metrics.totalProfit >= 0 ? "Net Gain" : "Net Loss"}
                     />
                     <KPICard
@@ -153,7 +154,7 @@ const SellerProductAnalytics = () => {
                         title="Conversion Rate"
                         value={`${metrics.conversionRate}%`}
                         icon={TrendingUp}
-                        color="emerald"
+                        color="blue"
                         subtitle="Views to Sales Ratio"
                     />
                 </div>
@@ -167,7 +168,7 @@ const SellerProductAnalytics = () => {
                         title="Passed Negotiations"
                         value={negotiation.passed}
                         icon={CheckCircle}
-                        color="emerald"
+                        color="blue"
                         subtitle="Successfully closed deals"
                     />
                     <KPICard
@@ -193,11 +194,11 @@ const SellerProductAnalytics = () => {
                 {/* Revenue & Engagement Charts */}
                 <div className="lg:col-span-2 space-y-8">
                     {/* Revenue Chart */}
-                    <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 transition-colors duration-300">
+                    <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 bluish:border-white/5 transition-colors duration-300">
                         <div className="flex justify-between items-center mb-6">
                             <div>
-                                <h3 className="text-lg font-bold text-gray-800 dark:text-white transition-colors duration-300">Profitability Analysis</h3>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">Revenue vs. Net Profit over time</p>
+                                <h3 className="text-lg font-bold text-gray-800 dark:text-white bluish:text-white transition-colors duration-300">Profitability Analysis</h3>
+                                <p className="text-sm text-gray-500 dark:text-gray-400 bluish:text-slate-400">Revenue vs. Net Profit over time</p>
                             </div>
                         </div>
                         <div className="h-72">
@@ -246,8 +247,8 @@ const SellerProductAnalytics = () => {
                     </div>
 
                     {/* Funnel Visualization */}
-                    <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 transition-colors duration-300">
-                        <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-6 transition-colors duration-300">Conversion Funnel</h3>
+                    <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 bluish:border-white/5 transition-colors duration-300">
+                        <h3 className="text-lg font-bold text-gray-800 dark:text-white bluish:text-white mb-6 transition-colors duration-300">Conversion Funnel</h3>
                         <div className="space-y-6">
                             <FunnelStep
                                 label="Total Views (Impressions)"
@@ -260,7 +261,7 @@ const SellerProductAnalytics = () => {
                                 label="Interested Leads"
                                 value={funnel.attract}
                                 sublabel={`${((funnel.attract / (funnel.impressions || 1)) * 100).toFixed(1)}% Click-through`}
-                                colorClass="bg-blue-500"
+                                colorClass="bg-blue-500 dark:bg-emerald-500 bluish:bg-blue-500"
                                 percentage={Math.max(((funnel.attract / (funnel.impressions || 1)) * 100), 2)}
                             />
                             <FunnelStep
@@ -274,7 +275,7 @@ const SellerProductAnalytics = () => {
                                 label="Closed Sales"
                                 value={funnel.convert}
                                 sublabel={`${((funnel.convert / (funnel.interact || 1)) * 100).toFixed(1)}% Closed`}
-                                colorClass="bg-emerald-500"
+                                colorClass="bg-blue-500 dark:bg-emerald-500 bluish:bg-blue-500"
                                 percentage={Math.max(((funnel.convert / (funnel.impressions || 1)) * 100), 2)}
                             />
                         </div>
@@ -283,19 +284,19 @@ const SellerProductAnalytics = () => {
 
                 {/* Sidebar: Price Intelligence & Health */}
                 <div className="space-y-6">
-                    <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 transition-colors duration-300">
-                        <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4 transition-colors duration-300">Price Intelligence</h3>
+                    <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 bluish:border-white/5 transition-colors duration-300">
+                        <h3 className="text-lg font-bold text-gray-800 dark:text-white bluish:text-white mb-4 transition-colors duration-300">Price Intelligence</h3>
                         <div className="space-y-4">
-                            <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-zinc-800 rounded-xl transition-colors duration-300">
-                                <span className="text-gray-500 dark:text-gray-400 text-sm">Your Price</span>
-                                <span className="font-bold text-gray-900 dark:text-white transition-colors duration-300">${asset.price.toLocaleString()}</span>
+                            <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-zinc-800 bluish:bg-slate-800/50 rounded-xl transition-colors duration-300">
+                                <span className="text-gray-500 dark:text-gray-400 bluish:text-slate-400 text-sm">Your Price</span>
+                                <span className="font-bold text-gray-900 dark:text-white bluish:text-white transition-colors duration-300">${asset.price.toLocaleString()}</span>
                             </div>
-                            <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-zinc-800 rounded-xl transition-colors duration-300">
-                                <span className="text-gray-500 dark:text-gray-400 text-sm">Market Avg</span>
-                                <span className="font-bold text-gray-600 dark:text-gray-300 transition-colors duration-300">${priceIntelligence.marketAvgPrice.toLocaleString()}</span>
+                            <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-zinc-800 bluish:bg-slate-800/50 rounded-xl transition-colors duration-300">
+                                <span className="text-gray-500 dark:text-gray-400 bluish:text-slate-400 text-sm">Market Avg</span>
+                                <span className="font-bold text-gray-600 dark:text-gray-300 bluish:text-slate-300 transition-colors duration-300">${priceIntelligence.marketAvgPrice.toLocaleString()}</span>
                             </div>
 
-                            <div className={`p-4 rounded-xl border ${priceIntelligence.pricePosition === 'Overpriced' ? 'bg-red-50 border-red-100 text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300' : 'bg-emerald-50 border-emerald-100 text-emerald-700 dark:bg-emerald-900/20 dark:border-emerald-800 dark:text-emerald-300'} transition-colors duration-300`}>
+                            <div className={`p-4 rounded-xl border ${priceIntelligence.pricePosition === 'Overpriced' ? 'bg-red-50 border-red-100 text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300' : 'bg-blue-50 border-blue-100 text-blue-700 dark:bg-emerald-900/20 dark:border-emerald-800 dark:text-emerald-300'} transition-colors duration-300`}>
                                 <div className="flex items-start gap-3">
                                     <AlertTriangle size={20} className="mt-0.5 shrink-0" />
                                     <div className="text-sm">
@@ -313,8 +314,8 @@ const SellerProductAnalytics = () => {
                         </div>
                     </div>
 
-                    <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 transition-colors duration-300">
-                        <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4 transition-colors duration-300">Product Health</h3>
+                    <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 bluish:border-white/5 transition-colors duration-300">
+                        <h3 className="text-lg font-bold text-gray-800 dark:text-white bluish:text-white mb-4 transition-colors duration-300">Product Health</h3>
                         <div className="space-y-3">
                             <HealthItem label="Visibility" status={asset.views > 500 ? 'good' : 'warning'} text={asset.views > 500 ? 'High Traffic' : 'Needs Boost'} />
                             <HealthItem label="Inventory" status={asset.availableQty > 5 ? 'good' : 'warning'} text={asset.availableQty > 5 ? 'In Stock' : 'Low Stock'} />
@@ -327,41 +328,16 @@ const SellerProductAnalytics = () => {
     );
 };
 
-const KPICard = ({ title, value, icon: Icon, color, subtitle }) => {
-    const colorClasses = {
-        emerald: "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400",
-        blue: "bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400",
-        purple: "bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400",
-        amber: "bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400",
-        red: "bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400",
-        indigo: "bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400",
-        pink: "bg-pink-50 text-pink-600 dark:bg-pink-900/30 dark:text-pink-400"
-    };
 
-    return (
-        <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 transition-colors duration-300">
-            <div className="flex justify-between items-start mb-4">
-                <div className={`p-3 rounded-xl ${colorClasses[color] || 'bg-gray-50 dark:bg-zinc-800'} transition-colors duration-300`}>
-                    <Icon size={24} />
-                </div>
-            </div>
-            <div>
-                <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{title}</p>
-                <h3 className="text-2xl font-extrabold text-gray-900 dark:text-white mt-1 transition-colors duration-300">{value}</h3>
-                {subtitle && <p className="text-xs font-medium text-gray-400 dark:text-gray-500 mt-1">{subtitle}</p>}
-            </div>
-        </div>
-    );
-};
 
 const HealthItem = ({ label, status, text }) => (
     <div className="flex items-center justify-between">
         <span className="text-sm text-gray-500 dark:text-gray-400">{label}</span>
         <div className="flex items-center gap-2">
-            <span className={`text-sm font-medium ${status === 'good' ? 'text-emerald-600 dark:text-emerald-400' : status === 'warning' ? 'text-amber-600 dark:text-amber-400' : 'text-red-600 dark:text-red-400'}`}>
+            <span className={`text-sm font-medium ${status === 'good' ? 'text-blue-600 dark:text-emerald-400' : status === 'warning' ? 'text-amber-600 dark:text-amber-400' : 'text-red-600 dark:text-red-400'}`}>
                 {text}
             </span>
-            <CheckCircle size={16} className={status === 'good' ? 'text-emerald-500 dark:text-emerald-400' : 'text-gray-300 dark:text-zinc-700'} />
+            <CheckCircle size={16} className={status === 'good' ? 'text-blue-500 dark:text-emerald-400' : 'text-gray-300 dark:text-zinc-700'} />
         </div>
     </div>
 );

@@ -23,7 +23,7 @@ const STATUSES = [
     'Rejected'
 ];
 
-const Filter = ({ filters, onFilterChange, onClear, onApply, onClose }) => {
+const Filter = ({ filters, onFilterChange, onClear, onApply, onClose, accentColor = 'emerald', hideStatus }) => {
     const handleChange = (key, value) => {
         onFilterChange({ ...filters, [key]: value });
     };
@@ -33,6 +33,11 @@ const Filter = ({ filters, onFilterChange, onClear, onApply, onClose }) => {
     const hasCategory = !!filters.category;
     const isStandardCategory = CATEGORIES.includes(filters.category);
     const isOtherActive = hasCategory && !isStandardCategory;
+
+    const accentRing = accentColor === 'blue' ? 'focus:ring-blue-500' : 'focus:ring-emerald-500';
+    const accentText = accentColor === 'blue' ? 'text-blue-600 dark:text-blue-500' : 'text-blue-600 dark:text-emerald-500';
+    const accentRadio = accentColor === 'blue' ? 'text-blue-600 dark:text-blue-500 focus:ring-blue-500' : 'text-blue-600 dark:text-emerald-500 focus:ring-emerald-500';
+    const accentButton = accentColor === 'blue' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-600 dark:bg-emerald-600 hover:bg-blue-700 dark:hover:bg-emerald-700';
 
     return (
         <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-200 dark:border-zinc-800 p-6 h-fit sticky top-24 transition-colors duration-300">
@@ -54,7 +59,7 @@ const Filter = ({ filters, onFilterChange, onClear, onApply, onClose }) => {
                         <input
                             type="text"
                             placeholder="Search assets or business name..."
-                            className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-white transition-colors"
+                            className={`w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-zinc-700 rounded-lg focus:ring-2 ${accentRing} outline-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-white transition-colors`}
                             value={filters.search || ''}
                             onChange={(e) => handleChange('search', e.target.value)}
                         />
@@ -62,35 +67,37 @@ const Filter = ({ filters, onFilterChange, onClear, onApply, onClose }) => {
                 </div>
 
                 {/* Status */}
-                <div>
-                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 transition-colors">Status</label>
-                    <div className="space-y-2">
-                        <div className="flex items-center">
-                            <input
-                                type="radio"
-                                id="status-all"
-                                name="status"
-                                checked={!filters.status}
-                                onChange={() => handleChange('status', '')}
-                                className="text-emerald-600 dark:text-emerald-500 focus:ring-emerald-500"
-                            />
-                            <label htmlFor="status-all" className="ml-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">All Statuses</label>
-                        </div>
-                        {STATUSES.map(stat => (
-                            <div key={stat} className="flex items-center">
+                {!hideStatus && (
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 transition-colors">Status</label>
+                        <div className="space-y-2">
+                            <div className="flex items-center">
                                 <input
                                     type="radio"
-                                    id={`status-${stat.toLowerCase()}`}
+                                    id="status-all"
                                     name="status"
-                                    checked={filters.status === stat.toLowerCase()}
-                                    onChange={() => handleChange('status', stat.toLowerCase())}
-                                    className="text-emerald-600 dark:text-emerald-500 focus:ring-emerald-500"
+                                    checked={!filters.status}
+                                    onChange={() => handleChange('status', '')}
+                                    className={accentRadio}
                                 />
-                                <label htmlFor={`status-${stat.toLowerCase()}`} className="ml-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">{stat}</label>
+                                <label htmlFor="status-all" className="ml-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">All Statuses</label>
                             </div>
-                        ))}
+                            {STATUSES.map(stat => (
+                                <div key={stat} className="flex items-center">
+                                    <input
+                                        type="radio"
+                                        id={`status-${stat.toLowerCase()}`}
+                                        name="status"
+                                        checked={filters.status === stat.toLowerCase()}
+                                        onChange={() => handleChange('status', stat.toLowerCase())}
+                                        className={accentRadio}
+                                    />
+                                    <label htmlFor={`status-${stat.toLowerCase()}`} className="ml-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">{stat}</label>
+                                </div>
+                            ))}
+                        </div>
                     </div>
-                </div>
+                )}
 
                 {/* Category */}
                 <div>
@@ -103,7 +110,7 @@ const Filter = ({ filters, onFilterChange, onClear, onApply, onClose }) => {
                                 name="category"
                                 checked={!filters.category}
                                 onChange={() => handleChange('category', '')}
-                                className="text-gray-900 dark:text-emerald-500 focus:ring-gray-900 dark:focus:ring-emerald-500"
+                                className={`text-gray-900 focus:ring-gray-900 ${accentColor === 'blue' ? 'dark:text-blue-500 dark:focus:ring-blue-500' : 'dark:text-emerald-500 dark:focus:ring-emerald-500'}`}
                             />
                             <label htmlFor="cat-all" className="ml-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">All Categories</label>
                         </div>
@@ -115,7 +122,7 @@ const Filter = ({ filters, onFilterChange, onClear, onApply, onClose }) => {
                                     name="category"
                                     checked={filters.category === cat}
                                     onChange={() => handleChange('category', cat)}
-                                    className="text-emerald-600 dark:text-emerald-500 focus:ring-emerald-500"
+                                    className={accentRadio}
                                 />
                                 <label htmlFor={`cat-${cat}`} className="ml-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">{cat}</label>
                             </div>
@@ -130,7 +137,7 @@ const Filter = ({ filters, onFilterChange, onClear, onApply, onClose }) => {
                                     name="category"
                                     checked={isOtherActive}
                                     onChange={() => handleChange('category', 'Other')}
-                                    className="text-emerald-600 dark:text-emerald-500 focus:ring-emerald-500"
+                                    className={accentRadio}
                                 />
                                 <label htmlFor="cat-other" className="ml-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">Other</label>
                             </div>
@@ -142,7 +149,7 @@ const Filter = ({ filters, onFilterChange, onClear, onApply, onClose }) => {
                                         type="text"
                                         autoFocus
                                         placeholder="Type category..."
-                                        className="w-full px-3 py-1.5 text-sm border border-gray-200 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-white transition-colors"
+                                        className={`w-full px-3 py-1.5 text-sm border border-gray-200 dark:border-zinc-700 rounded-lg focus:ring-2 ${accentRing} outline-none bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-white transition-colors`}
                                         value={filters.category === 'Other' ? '' : filters.category}
                                         onChange={(e) => handleChange('category', e.target.value)}
                                     />
@@ -159,14 +166,14 @@ const Filter = ({ filters, onFilterChange, onClear, onApply, onClose }) => {
                         <input
                             type="number"
                             placeholder="Min"
-                            className="w-1/2 px-3 py-2 border border-gray-200 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-white transition-colors"
+                            className={`w-1/2 px-3 py-2 border border-gray-200 dark:border-zinc-700 rounded-lg focus:ring-2 ${accentRing} outline-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-white transition-colors`}
                             value={filters.minPrice || ''}
                             onChange={(e) => handleChange('minPrice', e.target.value)}
                         />
                         <input
                             type="number"
                             placeholder="Max"
-                            className="w-1/2 px-3 py-2 border border-gray-200 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-white transition-colors"
+                            className={`w-1/2 px-3 py-2 border border-gray-200 dark:border-zinc-700 rounded-lg focus:ring-2 ${accentRing} outline-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-white transition-colors`}
                             value={filters.maxPrice || ''}
                             onChange={(e) => handleChange('maxPrice', e.target.value)}
                         />
@@ -177,7 +184,7 @@ const Filter = ({ filters, onFilterChange, onClear, onApply, onClose }) => {
                 <div>
                     <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 transition-colors">Condition</label>
                     <select
-                        className="w-full px-3 py-2 border border-gray-200 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-white transition-colors"
+                        className={`w-full px-3 py-2 border border-gray-200 dark:border-zinc-700 rounded-lg focus:ring-2 ${accentRing} outline-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-white transition-colors`}
                         value={filters.condition || ''}
                         onChange={(e) => handleChange('condition', e.target.value)}
                     >
@@ -192,7 +199,7 @@ const Filter = ({ filters, onFilterChange, onClear, onApply, onClose }) => {
                 <div className="pt-4 border-t border-gray-100 dark:border-zinc-800 flex flex-col space-y-3">
                     <button
                         onClick={onApply}
-                        className="w-full py-2 bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-700 transition-colors shadow-lg shadow-emerald-900/10"
+                        className={`w-full py-2 ${accentButton} text-white font-bold rounded-lg transition-colors shadow-lg shadow-blue-900/10 dark:shadow-emerald-900/10`}
                     >
                         Apply Filters
                     </button>

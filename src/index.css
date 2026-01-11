@@ -47,12 +47,41 @@
   }
 
   html.dark ::-webkit-scrollbar-thumb {
-    background: #10b981;
+    background: #3b82f6;
     border-radius: 20px;
     border: 3px solid #050505;
   }
 
   html.dark ::-webkit-scrollbar-thumb:hover {
-    background: #059669;
+    background: #2563eb;
+  }
+
+  /* Bluish Theme Base Styles */
+  html.bluish body {
+    @apply bg-[#0a0f1d] text-slate-50;
+  }
+
+  html.bluish h1,
+  html.bluish h2,
+  html.bluish h3,
+  html.bluish h4,
+  html.bluish h5,
+  html.bluish h6 {
+    @apply text-white;
+  }
+
+  html.bluish ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  html.bluish ::-webkit-scrollbar-track {
+    background: #0f172a;
+  }
+
+  html.bluish ::-webkit-scrollbar-thumb {
+    background: #3b82f6;
+    border-radius: 20px;
+    border: 3px solid #0f172a;
   }
 }

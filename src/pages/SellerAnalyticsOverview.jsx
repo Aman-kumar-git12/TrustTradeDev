@@ -68,7 +68,7 @@ const SellerAnalyticsOverview = () => {
 
             {/* KPI Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <KPICard title="Total Revenue" value={`$${kpi.totalRevenue.toLocaleString()}`} icon={DollarSign} color="emerald" subtitle="Gross Income" />
+                <KPICard title="Total Revenue" value={`$${kpi.totalRevenue.toLocaleString()}`} icon={DollarSign} color="primary" subtitle="Gross Income" />
                 <KPICard title="Net Profit" value={`$${kpi.totalProfit.toLocaleString()}`} icon={Briefcase} color="indigo" subtitle={`Margin: ${kpi.netMargin}%`} highlight />
                 <KPICard title="Total Orders" value={kpi.totalUnitsSold} icon={ShoppingBag} color="blue" subtitle={`Avg: $${kpi.avgDealSize}`} />
                 <KPICard title="Unique Customers" value={kpi.customers} icon={Users} color="purple" subtitle={`Best Month: ${kpi.bestMonth}`} />
@@ -77,10 +77,10 @@ const SellerAnalyticsOverview = () => {
             {/* Charts */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Main Revenue/Profit Chart */}
-                <div className="lg:col-span-2 bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 transition-colors duration-300">
+                <div className="lg:col-span-2 bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 bluish:border-white/5 transition-colors duration-300">
                     <div className="mb-6">
-                        <h3 className="text-lg font-bold text-gray-800 dark:text-white">Financial Performance</h3>
-                        <p className="text-sm text-gray-500 dark:text-gray-400">Revenue vs Profit over {timeRangeLabels[timeRange].toLowerCase()}</p>
+                        <h3 className="text-lg font-bold text-gray-800 dark:text-white bluish:text-white">Financial Performance</h3>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 bluish:text-slate-400">Revenue vs Profit over {timeRangeLabels[timeRange].toLowerCase()}</p>
                     </div>
                     <div className="h-80">
                         <ResponsiveContainer width="100%" height="100%">
@@ -107,27 +107,27 @@ const SellerAnalyticsOverview = () => {
                 </div>
 
                 {/* Secondary Stats Card */}
-                <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 flex flex-col justify-center space-y-8 transition-colors duration-300">
+                <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 bluish:border-white/5 flex flex-col justify-center space-y-8 transition-colors duration-300">
                     <div>
-                        <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+                        <p className="text-sm font-medium text-gray-500 dark:text-gray-400 bluish:text-slate-400 mb-2">
                             {timeRange === '1d' ? 'Peak Sales Hour' : timeRange === '15d' ? 'Best Sales Day' : timeRange === '1m' ? 'Best Sales Week' : 'Best Sales Month'}
                         </p>
                         <div className="flex items-center space-x-3">
-                            <div className="p-3 bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 rounded-xl"><Award size={24} /></div>
+                            <div className="p-3 bg-amber-50 dark:bg-amber-900/20 bluish:bg-amber-500/10 text-amber-600 dark:text-amber-400 bluish:text-amber-400 rounded-xl"><Award size={24} /></div>
                             <div>
-                                <p className="text-2xl font-bold text-gray-900 dark:text-white">{kpi.bestMonth}</p>
-                                <p className="text-xs text-gray-500 dark:text-gray-500">Highest Revenue Recorded</p>
+                                <p className="text-2xl font-bold text-gray-900 dark:text-white bluish:text-white">{kpi.bestMonth}</p>
+                                <p className="text-xs text-gray-500 dark:text-gray-500 bluish:text-slate-500">Highest Revenue Recorded</p>
                             </div>
                         </div>
                     </div>
-                    <div className="h-px bg-gray-100 dark:bg-zinc-800"></div>
+                    <div className="h-px bg-gray-100 dark:bg-zinc-800 bluish:bg-white/5"></div>
                     <div>
-                        <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Net Margin Health</p>
+                        <p className="text-sm font-medium text-gray-500 dark:text-gray-400 bluish:text-slate-400 mb-2">Net Margin Health</p>
                         <div className="flex items-center space-x-3">
-                            <div className="p-3 bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 rounded-xl"><TrendingUp size={24} /></div>
+                            <div className="p-3 bg-indigo-50 dark:bg-indigo-900/20 bluish:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 bluish:text-indigo-400 rounded-xl"><TrendingUp size={24} /></div>
                             <div>
-                                <p className="text-2xl font-bold text-gray-900 dark:text-white">{kpi.netMargin}%</p>
-                                <p className="text-xs text-gray-500 dark:text-gray-500">Profitability Ratio</p>
+                                <p className="text-2xl font-bold text-gray-900 dark:text-white bluish:text-white">{kpi.netMargin}%</p>
+                                <p className="text-xs text-gray-500 dark:text-gray-500 bluish:text-slate-500">Profitability Ratio</p>
                             </div>
                         </div>
                     </div>
@@ -138,64 +138,64 @@ const SellerAnalyticsOverview = () => {
             <h3 className="text-xl font-bold text-gray-800 dark:text-white pt-2">Performance Breakdown</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {/* Product Efficiency Card */}
-                <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 transition-colors duration-300">
-                    <h4 className="font-semibold text-gray-700 dark:text-gray-200 mb-4 flex items-center gap-2">
-                        <DollarSign size={18} className="text-gray-400 dark:text-zinc-500" /> Financial Efficiency
+                <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 bluish:border-white/5 transition-colors duration-300">
+                    <h4 className="font-semibold text-gray-700 dark:text-gray-200 bluish:text-slate-200 mb-4 flex items-center gap-2">
+                        <DollarSign size={18} className="text-gray-400 dark:text-zinc-500 bluish:text-slate-500" /> Financial Efficiency
                     </h4>
                     <div className="space-y-4">
-                        <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-zinc-800 rounded-lg transition-colors">
-                            <span className="text-sm text-gray-500 dark:text-gray-400">Avg Profit / Item</span>
-                            <span className="font-bold text-emerald-600 dark:text-emerald-400">+${kpi.avgProfit?.toLocaleString() || 0}</span>
+                        <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-zinc-800 bluish:bg-slate-800/50 rounded-lg transition-colors">
+                            <span className="text-sm text-gray-500 dark:text-gray-400 bluish:text-slate-400">Avg Profit / Item</span>
+                            <span className="font-bold text-blue-600 dark:text-emerald-400 bluish:text-blue-400">+${kpi.avgProfit?.toLocaleString() || 0}</span>
                         </div>
-                        <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-zinc-800 rounded-lg transition-colors">
-                            <span className="text-sm text-gray-500 dark:text-gray-400">Avg Discount</span>
-                            <span className="font-bold text-amber-600 dark:text-amber-400">${kpi.avgDiscount?.toLocaleString() || 0}</span>
+                        <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-zinc-800 bluish:bg-slate-800/50 rounded-lg transition-colors">
+                            <span className="text-sm text-gray-500 dark:text-gray-400 bluish:text-slate-400">Avg Discount</span>
+                            <span className="font-bold text-amber-600 dark:text-amber-400 bluish:text-amber-400">${kpi.avgDiscount?.toLocaleString() || 0}</span>
                         </div>
-                        <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-zinc-800 rounded-lg transition-colors">
-                            <span className="text-sm text-gray-500 dark:text-gray-400">Total Loss</span>
-                            <span className="font-bold text-red-500 dark:text-red-400">-${kpi.totalLoss?.toLocaleString() || 0}</span>
+                        <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-zinc-800 bluish:bg-slate-800/50 rounded-lg transition-colors">
+                            <span className="text-sm text-gray-500 dark:text-gray-400 bluish:text-slate-400">Total Loss</span>
+                            <span className="font-bold text-red-500 dark:text-red-400 bluish:text-red-400">-${kpi.totalLoss?.toLocaleString() || 0}</span>
                         </div>
-                        <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-zinc-800 rounded-lg transition-colors">
-                            <span className="text-sm text-gray-500 dark:text-gray-400">Items / Customer</span>
-                            <span className="font-bold text-blue-600 dark:text-blue-400">{kpi.avgProductsPerCustomer || 0}</span>
+                        <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-zinc-800 bluish:bg-slate-800/50 rounded-lg transition-colors">
+                            <span className="text-sm text-gray-500 dark:text-gray-400 bluish:text-slate-400">Items / Customer</span>
+                            <span className="font-bold text-blue-600 dark:text-emerald-400 bluish:text-blue-400">{kpi.avgProductsPerCustomer || 0}</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Volume Leaders */}
-                <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 transition-colors duration-300">
-                    <h4 className="font-semibold text-gray-700 dark:text-gray-200 mb-4 flex items-center gap-2">
-                        <ShoppingBag size={18} className="text-gray-400 dark:text-zinc-500" /> Volume Leaders
+                <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 bluish:border-white/5 transition-colors duration-300">
+                    <h4 className="font-semibold text-gray-700 dark:text-gray-200 bluish:text-slate-200 mb-4 flex items-center gap-2">
+                        <ShoppingBag size={18} className="text-gray-400 dark:text-zinc-500 bluish:text-slate-500" /> Volume Leaders
                     </h4>
                     <div className="space-y-4">
-                        <div className="p-3 bg-indigo-50/50 dark:bg-indigo-900/20 rounded-lg transition-colors">
-                            <p className="text-xs text-indigo-500 dark:text-indigo-400 font-bold mb-1 uppercase tracking-wider">Highest Volume</p>
-                            <p className="font-bold text-gray-900 dark:text-white truncate">{data.rankings?.topSelling?.title || 'N/A'}</p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">{data.rankings?.topSelling?.count || 0} units sold</p>
+                        <div className="p-3 bg-indigo-50/50 dark:bg-indigo-900/20 bluish:bg-indigo-900/10 rounded-lg transition-colors">
+                            <p className="text-xs text-indigo-500 dark:text-indigo-400 bluish:text-indigo-400 font-bold mb-1 uppercase tracking-wider">Highest Volume</p>
+                            <p className="font-bold text-gray-900 dark:text-white bluish:text-white truncate">{data.rankings?.topSelling?.title || 'N/A'}</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 bluish:text-slate-400">{data.rankings?.topSelling?.count || 0} units sold</p>
                         </div>
-                        <div className="p-3 bg-orange-50/50 dark:bg-orange-900/20 rounded-lg transition-colors">
-                            <p className="text-xs text-orange-500 dark:text-orange-400 font-bold mb-1 uppercase tracking-wider">Lowest Volume</p>
-                            <p className="font-bold text-gray-900 dark:text-white truncate">{data.rankings?.leastSelling?.title || 'N/A'}</p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">{data.rankings?.leastSelling?.count || 0} units sold</p>
+                        <div className="p-3 bg-orange-50/50 dark:bg-orange-900/20 bluish:bg-orange-900/10 rounded-lg transition-colors">
+                            <p className="text-xs text-orange-500 dark:text-orange-400 bluish:text-orange-400 font-bold mb-1 uppercase tracking-wider">Lowest Volume</p>
+                            <p className="font-bold text-gray-900 dark:text-white bluish:text-white truncate">{data.rankings?.leastSelling?.title || 'N/A'}</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 bluish:text-slate-400">{data.rankings?.leastSelling?.count || 0} units sold</p>
                         </div>
                     </div>
                 </div>
 
                 {/* Profit Drivers */}
-                <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 transition-colors duration-300">
-                    <h4 className="font-semibold text-gray-700 dark:text-gray-200 mb-4 flex items-center gap-2">
-                        <TrendingUp size={18} className="text-gray-400 dark:text-zinc-500" /> Profit Drivers
+                <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 bluish:border-white/5 transition-colors duration-300">
+                    <h4 className="font-semibold text-gray-700 dark:text-gray-200 bluish:text-slate-200 mb-4 flex items-center gap-2">
+                        <TrendingUp size={18} className="text-gray-400 dark:text-zinc-500 bluish:text-slate-500" /> Profit Drivers
                     </h4>
                     <div className="space-y-4">
-                        <div className="p-3 bg-emerald-50/50 dark:bg-emerald-900/20 rounded-lg transition-colors">
-                            <p className="text-xs text-emerald-500 dark:text-emerald-400 font-bold mb-1 uppercase tracking-wider">Most Profitable</p>
-                            <p className="font-bold text-gray-900 dark:text-white truncate">{data.rankings?.mostProfitable?.title || 'N/A'}</p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">+${data.rankings?.mostProfitable?.profit?.toLocaleString() || 0}</p>
+                        <div className="p-3 bg-blue-50/50 dark:bg-emerald-900/20 bluish:bg-blue-900/10 rounded-lg transition-colors">
+                            <p className="text-xs text-blue-500 dark:text-emerald-400 bluish:text-blue-400 font-bold mb-1 uppercase tracking-wider">Most Profitable</p>
+                            <p className="font-bold text-gray-900 dark:text-white bluish:text-white truncate">{data.rankings?.mostProfitable?.title || 'N/A'}</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 bluish:text-slate-400">+${data.rankings?.mostProfitable?.profit?.toLocaleString() || 0}</p>
                         </div>
-                        <div className="p-3 bg-red-50/50 dark:bg-red-900/20 rounded-lg transition-colors">
-                            <p className="text-xs text-red-500 dark:text-red-400 font-bold mb-1 uppercase tracking-wider">Least Profitable</p>
-                            <p className="font-bold text-gray-900 dark:text-white truncate">{data.rankings?.leastProfitable?.title || 'N/A'}</p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">${data.rankings?.leastProfitable?.profit?.toLocaleString() || 0}</p>
+                        <div className="p-3 bg-red-50/50 dark:bg-red-900/20 bluish:bg-red-900/10 rounded-lg transition-colors">
+                            <p className="text-xs text-red-500 dark:text-red-400 bluish:text-red-400 font-bold mb-1 uppercase tracking-wider">Least Profitable</p>
+                            <p className="font-bold text-gray-900 dark:text-white bluish:text-white truncate">{data.rankings?.leastProfitable?.title || 'N/A'}</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 bluish:text-slate-400">${data.rankings?.leastProfitable?.profit?.toLocaleString() || 0}</p>
                         </div>
                     </div>
                 </div>
@@ -227,9 +227,9 @@ const SellerAnalyticsOverview = () => {
                     <div className="bg-gray-100 dark:bg-zinc-800 p-1 rounded-lg flex text-sm font-medium transition-colors">
                         <button
                             onClick={() => setPerformanceView('promote')}
-                            className={`px-4 py-2 rounded-md transition-all flex items-center gap-2 ${performanceView === 'promote' ? 'bg-white dark:bg-zinc-600 text-emerald-600 dark:text-emerald-400 shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'}`}
+                            className={`px-4 py-2 rounded-md transition-all flex items-center gap-2 ${performanceView === 'promote' ? 'bg-white dark:bg-zinc-600 text-blue-600 dark:text-emerald-400 bluish:text-blue-600 shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'}`}
                         >
-                            <span className={`w-2 h-2 rounded-full ${performanceView === 'promote' ? 'bg-emerald-500' : 'bg-gray-400 dark:bg-gray-500'}`}></span> Promote
+                            <span className={`w-2 h-2 rounded-full ${performanceView === 'promote' ? 'bg-blue-500 dark:bg-emerald-500 bluish:bg-blue-500' : 'bg-gray-400 dark:bg-gray-500'}`}></span> Promote
                         </button>
                         <button
                             onClick={() => setPerformanceView('kill')}
@@ -274,8 +274,8 @@ const SellerAnalyticsOverview = () => {
                         }));
 
                         return (
-                            <div key={idx} className="bg-white dark:bg-zinc-900 p-5 rounded-xl border border-gray-200 dark:border-zinc-800 shadow-sm h-80 flex flex-col transition-colors duration-300">
-                                <h4 className="text-xs font-bold text-gray-400 dark:text-gray-500 mb-4 uppercase tracking-wider">{col.title}</h4>
+                            <div key={idx} className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 p-5 rounded-xl border border-gray-200 dark:border-zinc-800 bluish:border-white/5 shadow-sm h-80 flex flex-col transition-colors duration-300">
+                                <h4 className="text-xs font-bold text-gray-400 dark:text-gray-500 bluish:text-slate-500 mb-4 uppercase tracking-wider">{col.title}</h4>
                                 <div className="flex-1 min-h-0 relative">
                                     {viewFormat === 'chart' ? (
                                         <ResponsiveContainer width="100%" height="100%">
@@ -306,10 +306,10 @@ const SellerAnalyticsOverview = () => {
                                     ) : (
                                         <div className="space-y-3 overflow-y-auto h-full pr-2 custom-scrollbar">
                                             {(col.data || []).map((p, i) => (
-                                                <div key={i} className="flex justify-between items-center text-sm border-b border-gray-50 dark:border-zinc-800 last:border-0 pb-2 last:pb-0">
+                                                <div key={i} className="flex justify-between items-center text-sm border-b border-gray-50 dark:border-zinc-800 bluish:border-slate-800 last:border-0 pb-2 last:pb-0">
                                                     <div className="flex items-center gap-3 min-w-0">
-                                                        <span className="text-gray-400 dark:text-gray-600 font-mono text-xs w-4 flex-shrink-0">#{i + 1}</span>
-                                                        <span className="truncate text-gray-700 dark:text-gray-300 font-medium" title={p.title}>{p.title}</span>
+                                                        <span className="text-gray-400 dark:text-gray-600 bluish:text-slate-600 font-mono text-xs w-4 flex-shrink-0">#{i + 1}</span>
+                                                        <span className="truncate text-gray-700 dark:text-gray-300 bluish:text-slate-300 font-medium" title={p.title}>{p.title}</span>
                                                     </div>
                                                     <span className={`font-bold flex-shrink-0`} style={{ color: col.color }}>
                                                         {col.prefix ? `${col.unit}${Math.abs(p[col.dataKey] || 0).toLocaleString()}` : `${(p[col.dataKey] || 0).toLocaleString()}${col.unit === '%' ? '%' : ' ' + col.unit}`}
@@ -326,16 +326,16 @@ const SellerAnalyticsOverview = () => {
             </div>
 
             {/* Market Trends Section */}
-            <div className="pt-4 pb-8 border-t border-gray-100 dark:border-zinc-800 mt-8 transition-colors">
-                <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-6 flex items-center gap-2">
-                    <TrendingUp className="text-blue-600 dark:text-blue-500" /> Market Trends & Insights
+            <div className="pt-4 pb-8 border-t border-gray-100 dark:border-zinc-800 bluish:border-white/5 mt-8 transition-colors">
+                <h3 className="text-xl font-bold text-gray-800 dark:text-white bluish:text-white mb-6 flex items-center gap-2">
+                    <TrendingUp className="text-blue-600 dark:text-emerald-400 bluish:text-blue-500" /> Market Trends & Insights
                 </h3>
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     {/* Category Distribution */}
-                    <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 transition-colors duration-300">
-                        <h4 className="font-semibold text-gray-700 dark:text-gray-200 mb-6 flex items-center gap-2">
-                            <Tag size={18} className="text-gray-400 dark:text-zinc-500" /> Revenue by Category
+                    <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 bluish:border-white/5 transition-colors duration-300">
+                        <h4 className="font-semibold text-gray-700 dark:text-gray-200 bluish:text-slate-200 mb-6 flex items-center gap-2">
+                            <Tag size={18} className="text-gray-400 dark:text-zinc-500 bluish:text-slate-500" /> Revenue by Category
                         </h4>
                         <div className="h-64">
                             <ResponsiveContainer width="100%" height="100%">
@@ -365,9 +365,9 @@ const SellerAnalyticsOverview = () => {
                     </div>
 
                     {/* Sales by Location */}
-                    <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 transition-colors duration-300">
-                        <h4 className="font-semibold text-gray-700 dark:text-gray-200 mb-6 flex items-center gap-2">
-                            <MapPin size={18} className="text-gray-400 dark:text-zinc-500" /> Sales by Location
+                    <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 bluish:border-white/5 transition-colors duration-300">
+                        <h4 className="font-semibold text-gray-700 dark:text-gray-200 bluish:text-slate-200 mb-6 flex items-center gap-2">
+                            <MapPin size={18} className="text-gray-400 dark:text-zinc-500 bluish:text-slate-500" /> Sales by Location
                         </h4>
                         <div className="h-64">
                             <ResponsiveContainer width="100%" height="100%">
@@ -391,8 +391,8 @@ const SellerAnalyticsOverview = () => {
                     </div>
 
                     {/* Price Trend Chart */}
-                    <div className="bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 lg:col-span-2 transition-colors duration-300">
-                        <h4 className="font-semibold text-gray-700 dark:text-gray-200 mb-6">Average Selling Price Trend</h4>
+                    <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 bluish:border-white/5 lg:col-span-2 transition-colors duration-300">
+                        <h4 className="font-semibold text-gray-700 dark:text-gray-200 bluish:text-slate-200 mb-6">Average Selling Price Trend</h4>
                         <div className="h-72">
                             <ResponsiveContainer width="100%" height="100%">
                                 <AreaChart data={data.chartData}>

@@ -2,15 +2,15 @@ import { ArrowUpRight, ArrowDownRight } from 'lucide-react';
 
 const KPICard = ({ title, value, icon: Icon, color, subtitle, highlight }) => {
     const colorClasses = {
-        emerald: "bg-emerald-50 text-emerald-600 dark:bg-emerald-900/20 dark:text-emerald-400",
-        blue: "bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400",
+        blue: "bg-blue-50 text-blue-600 dark:bg-emerald-900/20 dark:text-emerald-400",
         purple: "bg-purple-50 text-purple-600 dark:bg-purple-900/20 dark:text-purple-400",
         amber: "bg-amber-50 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400",
-        indigo: "bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-400"
+        indigo: "bg-indigo-50 text-indigo-600 dark:bg-indigo-900/20 dark:text-indigo-400",
+        primary: "bg-blue-50 text-blue-600 dark:bg-emerald-900/20 dark:text-emerald-400 bluish:bg-blue-50 bluish:text-blue-600 bluish:dark:bg-blue-900/20 bluish:dark:text-blue-400"
     };
 
     return (
-        <div className={`bg-white dark:bg-zinc-900 p-6 rounded-2xl shadow-sm border transition-all hover:shadow-md duration-300 ${highlight ? 'border-indigo-100 ring-2 ring-indigo-50 dark:border-indigo-900/50 dark:ring-indigo-900/20' : 'border-gray-100 dark:border-zinc-800'}`}>
+        <div className={`bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 p-6 rounded-2xl shadow-sm border transition-all hover:shadow-md duration-300 ${highlight ? 'border-indigo-100 ring-2 ring-indigo-50 dark:border-indigo-900/50 dark:ring-indigo-900/20 bluish:border-indigo-500/30' : 'border-gray-100 dark:border-zinc-800 bluish:border-white/5'}`}>
             <div className="flex justify-between items-start mb-4">
                 <div className={`p-3 rounded-xl ${colorClasses[color]}`}>
                     <Icon size={24} />

@@ -10,7 +10,7 @@ const Navbar = () => {
     const location = useLocation();
     const { confirm, showSnackbar } = useUI();
     const { user, logout } = useAuth();
-    const { theme } = useTheme();
+    const { theme, mode } = useTheme();
 
     const handleLogout = async () => {
         const isConfirmed = await confirm({
@@ -47,23 +47,30 @@ const Navbar = () => {
     };
 
     const isDark = theme === 'dark';
+    const isBluish = theme === 'bluish' || mode === 'bluish';
+
     const isLanding = location.pathname === '/';
-    const accentColor = isLanding ? 'blue' : 'emerald';
-    const accentClass = isLanding
-        ? (isDark ? 'text-blue-500' : 'text-blue-600')
-        : (isDark ? 'text-emerald-500' : 'text-emerald-600');
-    const accentBgClass = isLanding
-        ? (isDark ? 'bg-blue-500/10' : 'bg-blue-600/10')
-        : (isDark ? 'bg-emerald-500/10' : 'bg-emerald-600/10');
+    const isPublicBusiness = location.pathname.startsWith('/businessdetails/') || location.pathname.startsWith('/assets/');
+
+    // Theme Standardization Logic:
+    // Dark Mode = Emerald
+    // Bluish/Light Mode = Blue
+    const accentColor = isDark && !isBluish ? 'emerald' : 'blue';
+
+    const accentClass = accentColor === 'emerald' ? 'text-emerald-500' : 'text-blue-500';
+    const accentBgClass = accentColor === 'emerald' ? 'bg-emerald-500/10' : 'bg-blue-500/10';
+
     const hideMarketplace = location.pathname === '/register' || location.pathname === '/login';
-    const buttonClass = isLanding
-        ? 'bg-blue-600 hover:bg-blue-700 shadow-blue-500/20 hover:shadow-blue-500/40'
-        : 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-500/20 hover:shadow-emerald-500/40';
+    const buttonClass = accentColor === 'emerald'
+        ? 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-500/20 hover:shadow-emerald-500/40'
+        : 'bg-blue-600 hover:bg-blue-700 shadow-blue-500/20 hover:shadow-blue-500/40';
 
     return (
-        <nav className={`sticky top-0 z-[999] border-b shadow-2xl transition-all duration-300 ${isDark
-            ? 'bg-gray-900 border-white/5 text-white backdrop-blur-md'
-            : 'bg-gray-900 border-white/5 text-white'
+        <nav className={`sticky top-0 z-[999] border-b shadow-2xl transition-all duration-300 ${isBluish
+            ? 'bg-[#0f172a] border-white/5 text-white backdrop-blur-md'
+            : isDark
+                ? 'bg-gray-900 border-white/5 text-white backdrop-blur-md'
+                : 'bg-gray-900 border-white/5 text-white'
             }`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between h-16 items-center">

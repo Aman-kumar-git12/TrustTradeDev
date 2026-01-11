@@ -26,12 +26,13 @@ import { useTheme } from '../context/ThemeContext';
 import Hover from '../components/Hover';
 import { useUI } from '../context/UIContext';
 import Filter from '../components/Filter';
+import BuyerDashboardShimmer from '../components/shimmers/BuyerDashboardShimmer';
 
 const StatCard = ({ title, value, icon: Icon, colorClass }) => (
-    <div className="bg-white dark:bg-zinc-900 p-5 rounded-2xl border border-gray-100 dark:border-zinc-800 shadow-sm flex items-center justify-between group hover:shadow-md transition-all">
+    <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 p-5 rounded-2xl border border-gray-100 dark:border-zinc-800 bluish:border-white/5 shadow-sm flex items-center justify-between group hover:shadow-md transition-all">
         <div>
-            <p className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1">{title}</p>
-            <h3 className="text-2xl font-black text-gray-900 dark:text-white">{value}</h3>
+            <p className="text-xs font-bold text-gray-400 dark:text-gray-500 bluish:text-slate-400 uppercase tracking-wider mb-1">{title}</p>
+            <h3 className="text-2xl font-black text-gray-900 dark:text-white bluish:text-white">{value}</h3>
         </div>
         <div className={`p-3 rounded-xl ${colorClass} group-hover:scale-110 transition-transform`}>
             <Icon size={20} className="text-white" />
@@ -45,17 +46,17 @@ const InterestCard = ({ interest, isExpanded, onToggle, onDelete }) => {
 
     const getStatusColor = (status) => {
         switch (status) {
-            case 'accepted': return 'bg-emerald-100/80 text-emerald-900 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800';
+            case 'accepted': return 'bg-blue-100/80 text-blue-900 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800 bluish:bg-blue-900/30 bluish:text-blue-300 bluish:border-blue-800';
             case 'rejected': return 'bg-rose-100/80 text-rose-900 border-rose-300 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800';
-            case 'negotiating': return 'bg-blue-100/80 text-blue-900 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800';
+            case 'negotiating': return 'bg-blue-100/80 text-blue-900 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800 bluish:bg-blue-900/30 bluish:text-blue-300 bluish:border-blue-800';
             default: return 'bg-amber-100/80 text-amber-900 border-amber-300 dark:bg-amber-900/30 dark:text-amber-200 dark:border-amber-800';
         }
     };
 
     return (
-        <div className={`bg-white dark:bg-[#161616] rounded-2xl border transition-all duration-300 overflow-hidden ${isExpanded
-            ? 'border-emerald-500 shadow-xl ring-1 ring-emerald-500/10'
-            : 'border-gray-100 dark:border-zinc-800 hover:border-emerald-500/30 shadow-sm hover:shadow-md'
+        <div className={`bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 rounded-2xl border transition-all duration-300 overflow-hidden ${isExpanded
+            ? 'border-blue-500 dark:border-blue-500 bluish:border-blue-500 shadow-xl ring-1 ring-blue-500/10 dark:ring-blue-500/10 bluish:ring-blue-500/10'
+            : 'border-gray-100 dark:border-zinc-800 bluish:border-white/5 hover:border-blue-500/30 dark:hover:border-blue-500/30 bluish:hover:border-blue-500/30 shadow-sm hover:shadow-md'
             }`}>
             <div
                 className="p-5 flex flex-col md:flex-row md:items-center gap-6 cursor-pointer"
@@ -72,7 +73,7 @@ const InterestCard = ({ interest, isExpanded, onToggle, onDelete }) => {
 
                 {/* Info Area */}
                 <div className="flex-1 min-w-0">
-                    <div className="flex items-center space-x-2 text-[10px] font-extrabold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-1">
+                    <div className="flex items-center space-x-2 text-[10px] font-extrabold text-blue-600 dark:text-blue-400 bluish:text-blue-400 uppercase tracking-widest mb-1">
                         <Tag size={10} />
                         <span>{interest.asset?.category || 'General'}</span>
                     </div>
@@ -80,7 +81,7 @@ const InterestCard = ({ interest, isExpanded, onToggle, onDelete }) => {
                         {interest.asset?.title}
                     </h4>
                     <div className="flex items-center text-[11px] font-bold text-gray-500 dark:text-zinc-500 mb-2">
-                        <Building2 size={12} className="mr-1 text-emerald-500" />
+                        <Building2 size={12} className="mr-1 text-blue-500 dark:text-blue-500 bluish:text-blue-400" />
                         <span>{interest.asset?.business?.businessName || 'Independent Seller'}</span>
                     </div>
                     <div className="flex items-center text-sm font-semibold text-gray-500 dark:text-gray-400">
@@ -89,7 +90,7 @@ const InterestCard = ({ interest, isExpanded, onToggle, onDelete }) => {
                         <MapPin size={14} className="mr-1" />
                         <span>{interest.asset?.location}</span>
                         <span className="mx-2">•</span>
-                        <ShoppingBag size={14} className="mr-1 text-emerald-500" />
+                        <ShoppingBag size={14} className="mr-1 text-blue-500 dark:text-blue-500 bluish:text-blue-400" />
                         <span>Qty: {interest.quantity}</span>
                     </div>
                 </div>
@@ -97,7 +98,7 @@ const InterestCard = ({ interest, isExpanded, onToggle, onDelete }) => {
                 {/* Status and Action */}
                 <div className="flex items-center justify-between md:justify-end gap-4 min-w-[200px]">
                     {interest.salesStatus === 'sold' ? (
-                        <span className="flex items-center px-3 py-1 text-[10px] font-extrabold rounded-full border border-emerald-500 bg-emerald-500/10 text-emerald-500 uppercase tracking-wider">
+                        <span className="flex items-center px-3 py-1 text-[10px] font-extrabold rounded-full border border-blue-500 dark:border-blue-500 bluish:border-blue-400 bg-blue-500/10 dark:bg-blue-500/10 bluish:bg-blue-400/10 text-blue-500 dark:text-blue-500 bluish:text-blue-400 uppercase tracking-wider">
                             <CheckCircle size={12} className="mr-1" />
                             Paid & Secure
                         </span>
@@ -106,7 +107,7 @@ const InterestCard = ({ interest, isExpanded, onToggle, onDelete }) => {
                             {interest.status}
                         </span>
                     )}
-                    <div className={`p-2 rounded-lg transition-transform ${isExpanded ? 'rotate-180 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600' : 'text-gray-400'}`}>
+                    <div className={`p-2 rounded-lg transition-transform ${isExpanded ? 'rotate-180 bg-blue-50 dark:bg-blue-900/20 bluish:bg-blue-500/10 text-blue-600 dark:text-blue-400 bluish:text-blue-400' : 'text-gray-400'}`}>
                         <ChevronDown size={20} />
                     </div>
                 </div>
@@ -131,8 +132,8 @@ const InterestCard = ({ interest, isExpanded, onToggle, onDelete }) => {
 
                                     {/* Sold Details for Analysis */}
                                     {(interest.status === 'accepted' || interest.salesStatus === 'sold') && (
-                                        <div className="mt-4 p-3 bg-emerald-50 dark:bg-emerald-900/10 rounded-xl border border-emerald-100 dark:border-emerald-900/30">
-                                            <h6 className="text-[10px] font-extrabold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mb-2">Deal Summary</h6>
+                                        <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-900/30">
+                                            <h6 className="text-[10px] font-extrabold text-blue-600 dark:text-blue-400 bluish:text-blue-400 uppercase tracking-widest mb-2">Deal Summary</h6>
                                             <div className="grid grid-cols-3 gap-2 text-center">
                                                 <div>
                                                     <p className="text-[10px] text-gray-500 uppercase">Unit Price</p>
@@ -144,7 +145,7 @@ const InterestCard = ({ interest, isExpanded, onToggle, onDelete }) => {
                                                 </div>
                                                 <div>
                                                     <p className="text-[10px] text-gray-500 uppercase">Total</p>
-                                                    <p className="font-bold text-emerald-600 dark:text-emerald-400">${(interest.soldTotalAmount || (interest.soldPrice * interest.soldQuantity) || 0).toLocaleString()}</p>
+                                                    <p className="font-bold text-blue-600 dark:text-blue-400 bluish:text-blue-400">${(interest.soldTotalAmount || (interest.soldPrice * interest.soldQuantity) || 0).toLocaleString()}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -156,12 +157,12 @@ const InterestCard = ({ interest, isExpanded, onToggle, onDelete }) => {
                                     <h5 className="text-[10px] font-extrabold text-gray-400 dark:text-zinc-500 uppercase tracking-widest mb-3">Seller Details</h5>
                                     {interest.status === 'accepted' || interest.salesStatus === 'sold' ? (
                                         <div className="space-y-4">
-                                            <div className="p-3 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-800 dark:text-emerald-200 text-xs font-bold rounded-xl border border-emerald-200 dark:border-emerald-800/50 mb-2">
+                                            <div className="p-3 bg-blue-100 dark:bg-blue-900/30 bluish:bg-blue-900/30 text-blue-800 dark:text-blue-200 bluish:text-blue-200 text-xs font-bold rounded-xl border border-blue-200 dark:border-blue-800/50 bluish:border-blue-800/50 mb-2">
                                                 🎉 Your request has been accepted! Contact the number below, otherwise our team will contact you in a while.
                                             </div>
 
                                             <div className="flex items-center p-3 bg-white dark:bg-zinc-800 rounded-xl border border-gray-100 dark:border-zinc-700 shadow-sm">
-                                                <div className="h-10 w-10 rounded-full bg-emerald-500 flex items-center justify-center text-white mr-4 shadow-md font-bold text-lg">
+                                                <div className="h-10 w-10 rounded-full bg-blue-500 dark:bg-blue-600 bluish:bg-blue-600 flex items-center justify-center text-white mr-4 shadow-md font-bold text-lg">
                                                     {interest.seller?.fullName?.charAt(0)}
                                                 </div>
                                                 <div>
@@ -171,12 +172,12 @@ const InterestCard = ({ interest, isExpanded, onToggle, onDelete }) => {
                                             </div>
                                             <div className="flex flex-col gap-2">
                                                 <a href={`mailto:${interest.seller?.email}`} className="flex items-center p-3 text-sm font-bold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-zinc-800 rounded-lg transition-colors border border-transparent hover:border-gray-200 dark:hover:border-zinc-700">
-                                                    <Mail size={16} className="mr-3 text-emerald-500" />
+                                                    <Mail size={16} className="mr-3 text-blue-500 dark:text-blue-400 bluish:text-blue-400" />
                                                     {interest.seller?.email}
                                                 </a>
                                                 {interest.seller?.phone && (
                                                     <a href={`tel:${interest.seller?.phone}`} className="flex items-center p-3 text-sm font-bold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-zinc-800 rounded-lg transition-colors border border-transparent hover:border-gray-200 dark:hover:border-zinc-700">
-                                                        <Phone size={16} className="mr-3 text-emerald-500" />
+                                                        <Phone size={16} className="mr-3 text-blue-500 dark:text-blue-400 bluish:text-blue-400" />
                                                         {interest.seller.phone}
                                                     </a>
                                                 )}
@@ -218,9 +219,9 @@ const InterestCard = ({ interest, isExpanded, onToggle, onDelete }) => {
 
 const OrderCard = ({ order, isExpanded, onToggle }) => {
     return (
-        <div className={`bg-white dark:bg-[#161616] rounded-2xl border transition-all duration-300 overflow-hidden ${isExpanded
-            ? 'border-emerald-500 shadow-xl ring-1 ring-emerald-500/10'
-            : 'border-gray-100 dark:border-zinc-800 hover:border-emerald-500/30 shadow-sm hover:shadow-md'
+        <div className={`bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 rounded-2xl border transition-all duration-300 overflow-hidden ${isExpanded
+            ? 'border-blue-500 dark:border-blue-500 bluish:border-blue-500 shadow-xl ring-1 ring-blue-500/10 dark:ring-blue-500/10 bluish:ring-blue-500/10'
+            : 'border-gray-100 dark:border-zinc-800 bluish:border-white/5 hover:border-blue-500/30 dark:hover:border-blue-500/30 bluish:hover:border-blue-500/30 shadow-sm hover:shadow-md'
             }`}>
             <div
                 className="p-5 flex flex-col md:flex-row md:items-center gap-6 cursor-pointer"
@@ -237,7 +238,7 @@ const OrderCard = ({ order, isExpanded, onToggle }) => {
 
                 {/* Info Area */}
                 <div className="flex-1 min-w-0">
-                    <div className="flex items-center space-x-2 text-[10px] font-extrabold text-blue-600 dark:text-blue-400 uppercase tracking-widest mb-1">
+                    <div className="flex items-center space-x-2 text-[10px] font-extrabold text-blue-600 dark:text-blue-400 bluish:text-blue-400 uppercase tracking-widest mb-1">
                         <CheckCircle size={10} />
                         <span>Completed Order</span>
                     </div>
@@ -245,13 +246,13 @@ const OrderCard = ({ order, isExpanded, onToggle }) => {
                         {order.asset?.title}
                     </h4>
                     <div className="flex items-center text-[11px] font-bold text-gray-500 dark:text-zinc-500 mb-2">
-                        <Building2 size={12} className="mr-1 text-emerald-500" />
+                        <Building2 size={12} className="mr-1 text-blue-500 dark:text-blue-500 bluish:text-blue-400" />
                         <span>{order.asset?.business?.businessName || 'Independent Seller'}</span>
                     </div>
                     <div className="flex items-center text-sm font-semibold text-gray-500 dark:text-gray-400">
                         <span className="text-gray-900 dark:text-white font-bold">${order.price?.toLocaleString()}</span>
                         <span className="mx-2">•</span>
-                        <ShoppingBag size={14} className="mr-1 text-emerald-500" />
+                        <ShoppingBag size={14} className="mr-1 text-blue-500 dark:text-blue-500 bluish:text-blue-400" />
                         <span>Qty: {order.quantity}</span>
                         <span className="mx-2">•</span>
                         <Clock size={14} className="mr-1" />
@@ -261,11 +262,11 @@ const OrderCard = ({ order, isExpanded, onToggle }) => {
 
                 {/* Status and Action */}
                 <div className="flex items-center justify-between md:justify-end gap-4 min-w-[200px]">
-                    <span className="flex items-center px-3 py-1 text-[10px] font-extrabold rounded-full border border-emerald-500 bg-emerald-500/10 text-emerald-500 uppercase tracking-wider">
+                    <span className="flex items-center px-3 py-1 text-[10px] font-extrabold rounded-full border border-blue-500 dark:border-blue-500 bluish:border-blue-400 bg-blue-500/10 dark:bg-blue-500/10 bluish:bg-blue-400/10 text-blue-500 dark:text-blue-500 bluish:text-blue-400 uppercase tracking-wider">
                         <CheckCircle size={12} className="mr-1" />
                         Paid & Secured
                     </span>
-                    <div className={`p-2 rounded-lg transition-transform ${isExpanded ? 'rotate-180 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600' : 'text-gray-400'}`}>
+                    <div className={`p-2 rounded-lg transition-transform ${isExpanded ? 'rotate-180 bg-blue-50 dark:bg-blue-900/20 bluish:bg-blue-500/10 text-blue-600 dark:text-blue-400 bluish:text-blue-400' : 'text-gray-400'}`}>
                         <ChevronDown size={20} />
                     </div>
                 </div>
@@ -286,7 +287,7 @@ const OrderCard = ({ order, isExpanded, onToggle }) => {
                                     <div className="p-4 bg-gray-50 dark:bg-zinc-800/30 rounded-xl border border-gray-100 dark:border-zinc-800">
                                         <div className="flex justify-between items-center mb-2 pb-2 border-b border-gray-200 dark:border-zinc-700">
                                             <span className="text-xs text-gray-400 font-mono">ID: #{order._id.slice(-8).toUpperCase()}</span>
-                                            <span className="text-xs font-bold text-emerald-600 bg-emerald-100 dark:bg-emerald-900/30 px-2 py-0.5 rounded">PAID</span>
+                                            <span className="text-xs font-bold text-blue-600 dark:text-blue-400 bluish:text-blue-400 bg-blue-100 dark:bg-blue-900/30 bluish:bg-blue-900/30 px-2 py-0.5 rounded">PAID</span>
                                         </div>
                                         <div className="flex justify-between items-center mb-2">
                                             <span className="text-xs text-gray-500">Unit Price</span>
@@ -298,26 +299,26 @@ const OrderCard = ({ order, isExpanded, onToggle }) => {
                                         </div>
                                         <div className="pt-2 border-t border-gray-200 dark:border-zinc-700 flex justify-between items-center">
                                             <span className="text-xs font-bold text-gray-900 dark:text-white uppercase">Total Paid</span>
-                                            <span className="text-lg font-black text-emerald-600 dark:text-emerald-400">${(order.totalAmount || (order.price * order.quantity)).toLocaleString()}</span>
+                                            <span className="text-lg font-black text-blue-600 dark:text-blue-400 bluish:text-blue-400">${(order.totalAmount || (order.price * order.quantity)).toLocaleString()}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <div>
                                     <h5 className="text-[10px] font-extrabold text-gray-400 dark:text-zinc-500 uppercase tracking-widest mb-3">Seller Contact</h5>
-                                    <div className="p-4 bg-emerald-500/5 rounded-xl border border-emerald-500/10">
+                                    <div className="p-4 bg-blue-500/5 rounded-xl border border-blue-500/10">
                                         <div className="flex items-center mb-3">
-                                            <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-white text-xs font-bold mr-3">
+                                            <div className="w-8 h-8 rounded-full bg-blue-500 dark:bg-blue-600 bluish:bg-blue-600 flex items-center justify-center text-white text-xs font-bold mr-3">
                                                 {order.seller?.fullName?.charAt(0)}
                                             </div>
                                             <span className="text-sm font-bold dark:text-white">{order.seller?.fullName}</span>
                                         </div>
                                         <div className="space-y-2">
-                                            <a href={`mailto:${order.seller?.email}`} className="flex items-center text-xs text-emerald-500 font-bold hover:underline mb-2">
+                                            <a href={`mailto:${order.seller?.email}`} className="flex items-center text-xs text-blue-500 dark:text-blue-400 bluish:text-blue-400 font-bold hover:underline mb-2">
                                                 <Mail size={12} className="mr-2" />
                                                 {order.seller?.email}
                                             </a>
                                             {order.seller?.phone && (
-                                                <a href={`tel:${order.seller?.phone}`} className="flex items-center text-xs text-emerald-500 font-bold hover:underline">
+                                                <a href={`tel:${order.seller?.phone}`} className="flex items-center text-xs text-blue-500 dark:text-blue-400 bluish:text-blue-400 font-bold hover:underline">
                                                     <Phone size={12} className="mr-2" />
                                                     {order.seller.phone}
                                                 </a>
@@ -459,54 +460,71 @@ const BuyerDashboard = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50/50 dark:bg-[#050505] transition-colors duration-300 pb-20">
-            <div className="max-w-7xl mx-auto px-4 py-12">
+        <div className="min-h-screen bg-gray-50 dark:bg-black bluish:bg-[#0a0f1d] transition-colors duration-300 pb-20 relative overflow-hidden">
+            {/* Dynamic Background Elements */}
+            <div className="fixed inset-0 z-0 pointer-events-none">
+                <img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=2670&auto=format&fit=crop" alt="Background" className="w-full h-full object-cover opacity-5 dark:opacity-20 mix-blend-overlay" />
+                <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-gray-50/90 to-gray-50 dark:from-black dark:via-black/90 dark:to-black bluish:from-[#0a0f1d] bluish:via-[#0a0f1d]/90 bluish:to-[#0a0f1d]"></div>
+            </div>
+            <div className="max-w-7xl mx-auto px-4 py-12 relative z-10">
                 {/* Header & Tabs Section */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-6">
                     <div>
-                        <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight mb-2">Buyer Command</h1>
-                        <p className="text-gray-500 dark:text-gray-400 font-semibold">Track your interests and finalized acquisitions.</p>
+                        <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white bluish:text-white tracking-tight mb-2 bluish:drop-shadow-lg">Buyer Command</h1>
+                        <p className="text-gray-500 dark:text-gray-400 bluish:text-gray-400 font-semibold">Track your interests and finalized acquisitions.</p>
                     </div>
                 </div>
 
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-8 gap-6">
                     {/* Navigation Hub: Interests, Orders, Intelligence Grouped */}
-                    <div className="flex p-1.5 bg-gray-100 dark:bg-zinc-900 rounded-[1.2rem] border border-gray-200 dark:border-zinc-800/50 items-center gap-1">
-                        <button
-                            onClick={() => { setActiveTab('interests'); setExpandedId(null); }}
-                            className={`px-5 py-2 rounded-[0.9rem] text-sm font-bold transition-all flex items-center ${activeTab === 'interests'
-                                ? 'bg-white dark:bg-zinc-800 text-emerald-600 dark:text-emerald-400 shadow-sm'
-                                : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
-                                }`}
-                        >
-                            <Tag size={16} className="mr-2" />
-                            My Interests
-                            <span className="ml-2 px-1.5 py-0.5 text-[10px] bg-emerald-500/10 rounded-md">
-                                {activityCounts.interests}
-                            </span>
-                        </button>
-                        <button
-                            onClick={() => { setActiveTab('orders'); setExpandedId(null); }}
-                            className={`px-5 py-2 rounded-[0.9rem] text-sm font-bold transition-all flex items-center ${activeTab === 'orders'
-                                ? 'bg-white dark:bg-zinc-800 text-emerald-600 dark:text-emerald-400 shadow-sm'
-                                : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
-                                }`}
-                        >
-                            <ShoppingBag size={16} className="mr-2" />
-                            My Orders
-                            <span className="ml-2 px-1.5 py-0.5 text-[10px] bg-emerald-500/10 rounded-md">
-                                {activityCounts.orders}
-                            </span>
-                        </button>
+                    <div className="flex p-1 bg-gray-100 dark:bg-zinc-900 bluish:bg-[#1e293b]/50 rounded-xl w-fit border border-gray-200 dark:border-zinc-800 bluish:border-white/5 items-center relative">
+                        {[
+                            { id: 'interests', label: 'My Interests', icon: Tag, count: activityCounts.interests },
+                            { id: 'orders', label: 'My Orders', icon: ShoppingBag, count: activityCounts.orders }
+                        ].map((tab) => (
+                            <button
+                                key={tab.id}
+                                onClick={() => {
+                                    setActiveTab(tab.id);
+                                    setExpandedId(null);
+                                    setShowStats(false);
+                                    setFilters({
+                                        search: '',
+                                        category: '',
+                                        minPrice: '',
+                                        maxPrice: '',
+                                        condition: '',
+                                        status: ''
+                                    });
+                                }}
+                                className="relative px-6 py-2.5 rounded-lg text-sm font-bold transition-all flex items-center z-10"
+                            >
+                                {activeTab === tab.id && (
+                                    <motion.div
+                                        layoutId="buyer-tab-pill"
+                                        className="absolute inset-0 bg-white dark:bg-zinc-800 bluish:bg-blue-500/20 rounded-lg shadow-sm border border-gray-200 dark:border-zinc-700 bluish:border-blue-500/20"
+                                        initial={false}
+                                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                    />
+                                )}
+                                <span className={`relative flex items-center z-20 ${activeTab === tab.id ? 'text-blue-600 dark:text-emerald-400 bluish:text-blue-400' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}>
+                                    <tab.icon size={16} className="mr-2" />
+                                    {tab.label}
+                                    <span className={`ml-2 px-1.5 py-0.5 text-[10px] rounded-md transition-colors ${activeTab === tab.id ? 'bg-blue-100 dark:bg-emerald-900/30 bluish:bg-blue-500/20' : 'bg-gray-200 dark:bg-zinc-800'}`}>
+                                        {tab.count}
+                                    </span>
+                                </span>
+                            </button>
+                        ))}
 
-                        <div className="w-px h-5 bg-gray-200 dark:bg-zinc-800 mx-1 md:block hidden" />
+                        <div className="w-px h-5 bg-gray-200 dark:bg-zinc-800 mx-2 md:block hidden" />
 
                         <Hover text="Intelligence Hub">
                             <button
                                 onClick={() => navigate(`/dashboard/buyer/${userId}/insights/1m`)}
-                                className={`flex items-center px-5 py-2.5 rounded-[0.9rem] font-bold text-sm transition-all shadow-sm group ${location.pathname.includes('/insights')
-                                    ? 'bg-white dark:bg-zinc-800 text-emerald-600 dark:text-emerald-400'
-                                    : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 dark:bg-zinc-800/50 hover:bg-gray-200 dark:hover:bg-zinc-800'}`}
+                                className={`flex items-center px-6 py-2.5 rounded-lg font-bold text-sm transition-all shadow-sm group ${location.pathname.includes('/insights')
+                                    ? 'bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-emerald-500/20 dark:to-emerald-500/5 bluish:from-blue-500/20 bluish:to-blue-500/5 text-blue-600 dark:text-emerald-400 bluish:text-blue-400 border border-blue-100/50 dark:border-emerald-500/20 bluish:border-blue-500/20'
+                                    : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
                             >
                                 <Zap size={16} className="mr-2 group-hover:scale-110 transition-transform" />
                                 Intelligence Hub
@@ -518,9 +536,9 @@ const BuyerDashboard = () => {
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => setShowStats(!showStats)}
-                            className={`flex items-center px-4 py-2.5 rounded-xl border font-bold text-sm transition-all shadow-sm hover:shadow-md ${showStats ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800' : 'bg-white dark:bg-zinc-900 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-zinc-700 hover:border-gray-300 dark:hover:border-zinc-500'}`}
+                            className={`flex items-center px-4 py-2.5 rounded-xl border font-bold text-sm transition-all shadow-sm hover:shadow-md ${showStats ? 'bg-blue-50 dark:bg-emerald-900/20 text-blue-700 dark:text-emerald-400 border-blue-200 dark:border-emerald-800 bluish:bg-blue-50 bluish:dark:bg-[#1e293b] bluish:text-blue-400 bluish:border-blue-500/30' : 'bg-white dark:bg-zinc-900 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-zinc-700 hover:border-gray-300 dark:hover:border-zinc-500 bluish:bg-[#1e293b]/50 bluish:border-white/10 bluish:text-blue-200 bluish:hover:bg-blue-500/10 bluish:hover:border-blue-500/30'}`}
                         >
-                            <TrendingUp size={18} className={`mr-2 transition-transform ${showStats ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-500 dark:text-gray-400'}`} />
+                            <TrendingUp size={18} className={`mr-2 transition-transform ${showStats ? 'text-blue-600 dark:text-emerald-400 bluish:text-blue-400' : 'text-gray-500 dark:text-gray-400 bluish:text-blue-300'}`} />
                             {showStats ? 'Hide Insights' : 'View Insights'}
                         </button>
 
@@ -534,9 +552,9 @@ const BuyerDashboard = () => {
                                 }
                                 setSearchParams(newParams);
                             }}
-                            className={`flex items-center px-5 py-2.5 rounded-xl border font-bold text-sm transition-all shadow-sm hover:shadow-md group ${isFilterOpen ? 'bg-gray-900 dark:bg-emerald-600 text-white border-gray-900 dark:border-emerald-600' : 'bg-white dark:bg-zinc-900 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-zinc-700 hover:border-gray-300 dark:hover:border-zinc-500'}`}
+                            className={`flex items-center px-5 py-2.5 rounded-xl border font-bold text-sm transition-all shadow-sm hover:shadow-md group ${isFilterOpen ? 'bg-gray-900 dark:bg-emerald-600 bluish:bg-blue-600 text-white border-gray-900 dark:border-emerald-600 bluish:border-blue-600' : 'bg-white dark:bg-zinc-900 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-zinc-700 hover:border-gray-300 dark:hover:border-zinc-500 bluish:bg-[#1e293b]/50 bluish:border-white/10 bluish:text-blue-200 bluish:hover:bg-blue-500/10 bluish:hover:border-blue-500/30'}`}
                         >
-                            <FilterIcon size={18} className={`mr-2 transition-transform group-hover:scale-110 ${isFilterOpen ? 'text-white' : 'text-gray-500 dark:text-gray-400'}`} />
+                            <FilterIcon size={18} className={`mr-2 transition-transform group-hover:scale-110 ${isFilterOpen ? 'text-white' : 'text-gray-500 dark:text-gray-400 bluish:text-blue-300'}`} />
                             {isFilterOpen ? 'Hide Filters' : 'Show Filters'}
                         </button>
                     </div>
@@ -555,13 +573,13 @@ const BuyerDashboard = () => {
                                     title="Total Requests"
                                     value={dashboardStats?.kpi?.totalInterests || 0}
                                     icon={ShoppingBag}
-                                    colorClass="bg-emerald-500"
+                                    colorClass="bg-blue-500 dark:bg-emerald-500"
                                 />
                                 <StatCard
                                     title="Accepted"
                                     value={dashboardStats?.kpi?.acceptedInterests || 0}
                                     icon={CheckCircle}
-                                    colorClass="bg-blue-500"
+                                    colorClass="bg-blue-500 dark:bg-emerald-500"
                                 />
                                 <StatCard
                                     title="Total Value Paid"
@@ -588,6 +606,8 @@ const BuyerDashboard = () => {
                                 onFilterChange={handleFilterChange}
                                 onClear={handleClearFilters}
                                 onApply={() => fetchAllData(activeTab, filters)}
+                                accentColor="blue"
+                                hideStatus={activeTab === 'orders'}
                                 onClose={() => {
                                     const newParams = new URLSearchParams(searchParams);
                                     newParams.delete('filter');
@@ -599,9 +619,7 @@ const BuyerDashboard = () => {
 
                     <div className="flex-grow space-y-4 relative min-h-[400px]">
                         {loading ? (
-                            <div className="absolute inset-0 bg-white/50 dark:bg-black/50 z-50 rounded-3xl flex items-start justify-center pt-20 backdrop-blur-[1px] transition-all duration-300">
-                                <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-emerald-500 shadow-lg shadow-emerald-500/20"></div>
-                            </div>
+                            <BuyerDashboardShimmer />
                         ) : displayData.length === 0 ? (
                             <div className="bg-white dark:bg-zinc-900 rounded-3xl border border-dashed border-gray-300 dark:border-zinc-800 p-20 text-center shadow-sm">
                                 <div className="w-20 h-20 bg-gray-50 dark:bg-zinc-800/50 rounded-full flex items-center justify-center mx-auto mb-6 text-gray-400">
@@ -627,7 +645,7 @@ const BuyerDashboard = () => {
                                 ) : activeTab === 'interests' && (
                                     <a
                                         href="/marketplace"
-                                        className="inline-flex items-center px-8 py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-bold transition-all shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 transform hover:-translate-y-1"
+                                        className="inline-flex items-center px-8 py-3 bg-blue-600 dark:bg-blue-600 bluish:bg-blue-600 hover:bg-blue-700 dark:hover:bg-blue-700 bluish:hover:bg-blue-700 text-white rounded-xl font-bold transition-all shadow-lg shadow-blue-500/20 dark:shadow-blue-500/20 bluish:shadow-blue-500/20 hover:shadow-blue-500/40 dark:hover:shadow-blue-500/40 bluish:hover:shadow-blue-500/40 transform hover:-translate-y-1"
                                     >
                                         Browse Marketplace
                                         <ArrowRight className="ml-2" size={18} />

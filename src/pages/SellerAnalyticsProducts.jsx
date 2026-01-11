@@ -45,8 +45,8 @@ const SellerAnalyticsProducts = () => {
     const SortIcon = ({ column }) => {
         if (filters.sortBy !== column) return <ArrowUpDown size={14} className="ml-1 text-gray-400 dark:text-zinc-600 opacity-50 group-hover:opacity-100 transition-opacity" />;
         return filters.order === 'asc'
-            ? <ArrowUp size={14} className="ml-1 text-emerald-600 dark:text-emerald-400" />
-            : <ArrowDown size={14} className="ml-1 text-emerald-600 dark:text-emerald-400" />;
+            ? <ArrowUp size={14} className="ml-1 text-blue-600 dark:text-emerald-400 bluish:text-blue-600" />
+            : <ArrowDown size={14} className="ml-1 text-blue-600 dark:text-emerald-400 bluish:text-blue-600" />;
     };
 
     const HeaderCell = ({ label, column, align = 'center' }) => (
@@ -64,7 +64,7 @@ const SellerAnalyticsProducts = () => {
 
     return (
         <div className="space-y-6">
-            <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 overflow-hidden transition-colors duration-300">
+            <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 bluish:border-white/5 overflow-hidden transition-colors duration-300">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
                         <thead className="bg-gray-50/50 dark:bg-zinc-800/50 text-xs uppercase text-gray-500 dark:text-gray-400 font-semibold tracking-wider block w-full border-b border-gray-100 dark:border-zinc-800">
@@ -89,10 +89,10 @@ const SellerAnalyticsProducts = () => {
                                     </td>
                                     <td className="px-6 py-4 text-center">
                                         <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold border uppercase tracking-wider ${product.status === 'Active'
-                                            ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/20 dark:text-emerald-400 dark:border-emerald-800'
+                                            ? 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-emerald-900/20 dark:text-emerald-400 dark:border-emerald-800 bluish:bg-blue-50 bluish:text-blue-700 bluish:border-blue-200'
                                             : 'bg-rose-50 text-rose-600 border-rose-200 dark:bg-rose-900/20 dark:text-rose-400 dark:border-rose-800'
                                             }`}>
-                                            <span className={`h-1.5 w-1.5 rounded-full ${product.status === 'Active' ? 'bg-emerald-500' : 'bg-rose-500'
+                                            <span className={`h-1.5 w-1.5 rounded-full ${product.status === 'Active' ? 'bg-blue-500 dark:bg-emerald-500 bluish:bg-blue-500' : 'bg-rose-500'
                                                 }`}></span>
                                             {product.status}
                                         </span>
@@ -100,12 +100,12 @@ const SellerAnalyticsProducts = () => {
                                     <td className="px-6 py-4 text-center font-bold text-gray-900 dark:text-white">
                                         {product.soldPrice ? `$${product.soldPrice.toLocaleString()}` : '-'}
                                     </td>
-                                    <td className={`px-6 py-4 text-center font-bold ${product.profit < 0 ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'}`}>
+                                    <td className={`px-6 py-4 text-center font-bold ${product.profit < 0 ? 'text-rose-600 dark:text-rose-400' : 'text-blue-600 dark:text-emerald-400 bluish:text-blue-600'}`}>
                                         {product.profit ? `$${product.profit.toLocaleString()}` : '-'}
                                     </td>
                                     <td className="px-6 py-4 text-center text-sm">
                                         {product.margin ? (
-                                            <span className={`${product.margin > 20 ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'} font-bold`}>
+                                            <span className={`${product.margin > 20 ? 'text-blue-600 dark:text-emerald-400 bluish:text-blue-600' : 'text-amber-600 dark:text-amber-400'} font-bold`}>
                                                 {product.margin}%
                                             </span>
                                         ) : '-'}

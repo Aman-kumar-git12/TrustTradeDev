@@ -63,7 +63,7 @@ const PublicUserProfile = () => {
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">User Not Found</h2>
                 <button
                     onClick={() => navigate(-1)}
-                    className="mt-4 px-6 py-2 bg-emerald-600 text-white rounded-xl font-bold"
+                    className="mt-4 px-6 py-2 bg-blue-600 dark:bg-emerald-600 text-white rounded-xl font-bold"
                 >
                     Go Back
                 </button>
@@ -72,12 +72,35 @@ const PublicUserProfile = () => {
     );
 
     return (
-        <div className="min-h-[calc(100vh-64px)] bg-slate-50 dark:bg-zinc-950 font-sans transition-colors duration-300 relative z-0">
-            {/* Header / Cover */}
-            <div className="h-60 bg-gradient-to-r from-zinc-900 to-zinc-800 relative">
-                <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
+        <div className="min-h-[calc(100vh-64px)] bg-slate-50 dark:bg-black bluish:bg-[#0a0f1d] selection:bg-blue-500/30 dark:selection:bg-emerald-500/30 bluish:selection:bg-blue-500/30 font-sans transition-colors duration-300 relative z-0 overflow-hidden">
+            {/* Dynamic Background Elements - Bluish Theme Only */}
+            <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden hidden bluish:block">
+                <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob"></div>
+                <div className="absolute top-[20%] right-[-10%] w-96 h-96 bg-purple-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob animation-delay-2000"></div>
+                <div className="absolute bottom-[-10%] left-[20%] w-96 h-96 bg-emerald-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob animation-delay-4000"></div>
 
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-between py-6">
+                {/* Background Image & Overlay */}
+                <div className="absolute inset-0">
+                    <img
+                        src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2670&auto=format&fit=crop"
+                        alt="Background"
+                        className="absolute inset-0 w-full h-full object-cover opacity-10 mix-blend-overlay"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f1d]/90 via-[#0a0f1d]/80 to-[#0a0f1d]"></div>
+                </div>
+            </div>
+
+            {/* Page Background (Standard Modes) */}
+            <div className="fixed inset-0 z-0 pointer-events-none bluish:hidden">
+                <img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=2670&auto=format&fit=crop" alt="Background" className="w-full h-full object-cover opacity-5 dark:opacity-20 mix-blend-overlay" />
+                <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-gray-50/90 to-gray-50 dark:from-black dark:via-black/90 dark:to-black"></div>
+            </div>
+
+            {/* Header / Cover */}
+            <div className="h-60 relative z-10">
+                <div className="absolute inset-0 bg-gradient-to-b from-black/60 to-transparent"></div>
+
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-between py-6 relative z-20">
                     <button
                         onClick={() => navigate(-1)}
                         className="self-start px-4 py-2 bg-black/20 backdrop-blur-md rounded-full text-white text-sm font-bold border border-white/10 hover:bg-black/30 transition-colors flex items-center"
@@ -87,10 +110,10 @@ const PublicUserProfile = () => {
                 </div>
             </div>
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 relative z-10">
                 {/* Profile Card - Overlapping Header */}
                 <div className="relative -mt-20 mb-12">
-                    <div className="bg-white dark:bg-zinc-900 rounded-3xl shadow-xl border border-gray-100 dark:border-zinc-800 p-8 flex flex-col md:flex-row items-center md:items-end gap-6 md:gap-8">
+                    <div className="bg-white dark:bg-zinc-900 bluish:bg-slate-900/80 bluish:backdrop-blur-md rounded-3xl shadow-xl border border-gray-100 dark:border-zinc-800 bluish:border-white/5 p-8 flex flex-col md:flex-row items-center md:items-end gap-6 md:gap-8 transition-all duration-300">
                         {/* Avatar */}
                         <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-white dark:bg-zinc-800 p-1.5 shadow-lg border-4 border-white dark:border-zinc-700 -mt-16 md:-mt-24 flex-shrink-0 relative">
                             {user.avatarUrl ? (
@@ -105,7 +128,7 @@ const PublicUserProfile = () => {
                                 </div>
                             )}
                             {/* Role Badge on Avatar */}
-                            <div className={`absolute bottom-2 right-2 p-2 rounded-full border-4 border-white dark:border-zinc-900 ${user.role === 'seller' ? 'bg-emerald-500' : 'bg-blue-500'
+                            <div className={`absolute bottom-2 right-2 p-2 rounded-full border-4 border-white dark:border-zinc-900 ${user.role === 'seller' ? 'bg-blue-500 dark:bg-emerald-500' : 'bg-blue-500 dark:bg-emerald-500'
                                 }`}>
                                 <ShieldCheck size={16} className="text-white" />
                             </div>
@@ -116,8 +139,8 @@ const PublicUserProfile = () => {
                             <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{user.fullName}</h1>
                             <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
                                 <span className={`px-3 py-1 rounded-full text-sm font-bold flex items-center ${user.role === 'seller'
-                                    ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
-                                    : 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+                                    ? 'bg-blue-100 text-blue-700 dark:bg-emerald-900/30 dark:text-emerald-400'
+                                    : 'bg-blue-100 text-blue-700 dark:bg-emerald-900/30 dark:text-emerald-400'
                                     }`}>
                                     <ShieldCheck size={14} className="mr-1.5" />
                                     {user.role === 'seller' ? 'Verified Seller' : 'Verified Buyer'}
@@ -140,12 +163,12 @@ const PublicUserProfile = () => {
                         {/* Contact Info */}
                         <div className="flex flex-col gap-2 text-sm text-gray-600 dark:text-gray-300 md:items-end">
                             <div className="flex items-center gap-2">
-                                <Mail size={16} className="text-emerald-500" />
+                                <Mail size={16} className="text-blue-500 dark:text-emerald-500" />
                                 <span>{user.email}</span>
                             </div>
                             {user.phone && (
                                 <div className="flex items-center gap-2">
-                                    <Phone size={16} className="text-emerald-500" />
+                                    <Phone size={16} className="text-blue-500 dark:text-emerald-500" />
                                     <span>{user.phone}</span>
                                 </div>
                             )}
@@ -158,7 +181,7 @@ const PublicUserProfile = () => {
                 {user.role === 'seller' && (
                     <div className="space-y-6">
                         <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
-                            <Building2 className="mr-3 text-emerald-500" />
+                            <Building2 className="mr-3 text-blue-500 dark:text-emerald-500" />
                             Businesses by {user.fullName}
                         </h2>
 
@@ -168,7 +191,7 @@ const PublicUserProfile = () => {
                                     <Link
                                         to={`/businessdetails/${business._id}`}
                                         key={business._id}
-                                        className="bg-white dark:bg-zinc-900 rounded-2xl p-4 shadow-sm hover:shadow-xl dark:shadow-none border border-gray-100 dark:border-zinc-800 transition-all group hover:-translate-y-1"
+                                        className="bg-white dark:bg-zinc-900 bluish:bg-slate-900/80 bluish:backdrop-blur-md rounded-2xl p-4 shadow-sm hover:shadow-xl dark:shadow-none border border-gray-100 dark:border-zinc-800 bluish:border-white/5 transition-all group hover:-translate-y-1"
                                     >
                                         <div className="aspect-video bg-gray-100 dark:bg-zinc-800 rounded-xl overflow-hidden mb-4 relative">
                                             <img
@@ -177,7 +200,7 @@ const PublicUserProfile = () => {
                                                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                                             />
                                         </div>
-                                        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                                        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1 group-hover:text-blue-600 dark:group-hover:text-emerald-400 transition-colors">
                                             {business.businessName}
                                         </h3>
                                         <p className="text-gray-500 dark:text-gray-400 text-sm line-clamp-2">
@@ -189,7 +212,7 @@ const PublicUserProfile = () => {
                         ) : (
                             <div className="text-center py-12 bg-white dark:bg-zinc-900 rounded-3xl border border-gray-100 dark:border-zinc-800">
                                 <Building2 size={48} className="mx-auto text-gray-300 dark:text-gray-600 mb-4" />
-                                <p className="text-gray-500 dark:text-gray-400">This seller hasn't set up any businesses yet.</p>
+                                <p className="text-gray-500 dark:text-gray-400">This seller hasn&apos;t set up any businesses yet.</p>
                             </div>
                         )}
                     </div>
@@ -201,24 +224,24 @@ const PublicUserProfile = () => {
                         {/* Reputation Card */}
                         <div className="lg:col-span-1 space-y-6">
                             <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
-                                <ShieldCheck className="mr-3 text-blue-500" />
+                                <ShieldCheck className="mr-3 text-blue-500 dark:text-emerald-500" />
                                 Verified Reputation
                             </h2>
-                            <div className="bg-white dark:bg-zinc-900 rounded-3xl p-8 border border-gray-100 dark:border-zinc-800 shadow-sm text-center relative">
+                            <div className="bg-white dark:bg-zinc-900 bluish:bg-slate-900/80 bluish:backdrop-blur-md rounded-3xl p-8 border border-gray-100 dark:border-zinc-800 bluish:border-white/5 shadow-sm text-center relative">
                                 <button
                                     onClick={() => { setModalType('trust'); setShowInfoModal(true); }}
-                                    className="absolute top-6 right-6 p-2 text-emerald-500 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                                    className="absolute top-6 right-6 p-2 text-blue-500 dark:text-emerald-500 hover:text-blue-600 dark:hover:text-emerald-400 transition-colors"
                                 >
                                     <Info size={16} />
                                 </button>
                                 {user.trustScore !== null ? (
                                     <>
                                         <div className="relative inline-block mb-6">
-                                            <div className="w-24 h-24 rounded-full border-4 border-emerald-500/20 flex items-center justify-center relative">
+                                            <div className="w-24 h-24 rounded-full border-4 border-blue-500/20 dark:border-emerald-500/20 flex items-center justify-center relative">
                                                 <span className="text-3xl font-black text-gray-900 dark:text-white">{user.trustScore}</span>
-                                                <div className="absolute -inset-2 border-2 border-dashed border-emerald-500/30 rounded-full animate-spin-slow" />
+                                                <div className="absolute -inset-2 border-2 border-dashed border-blue-500/30 dark:border-emerald-500/30 rounded-full animate-spin-slow" />
                                             </div>
-                                            <div className="absolute -bottom-2 -right-2 bg-emerald-500 text-white p-1.5 rounded-full shadow-lg">
+                                            <div className="absolute -bottom-2 -right-2 bg-blue-500 dark:bg-emerald-500 text-white p-1.5 rounded-full shadow-lg">
                                                 <ShieldCheck size={16} />
                                             </div>
                                         </div>
@@ -229,7 +252,7 @@ const PublicUserProfile = () => {
                                     </>
                                 ) : (
                                     <>
-                                        <div className="w-20 h-20 bg-blue-100 dark:bg-blue-900/20 rounded-full flex items-center justify-center mx-auto mb-6 text-blue-500">
+                                        <div className="w-20 h-20 bg-blue-100 dark:bg-emerald-900/20 rounded-full flex items-center justify-center mx-auto mb-6 text-blue-500 dark:text-emerald-500">
                                             <ShoppingBag size={40} />
                                         </div>
                                         <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Verified Buyer</h3>
@@ -265,7 +288,7 @@ const PublicUserProfile = () => {
                                         </h2>
                                         <button
                                             onClick={() => { setModalType('milestones'); setShowInfoModal(true); }}
-                                            className="p-1 text-emerald-500 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                                            className="p-1 text-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                                         >
                                             <Info size={16} />
                                         </button>
@@ -273,8 +296,8 @@ const PublicUserProfile = () => {
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         {[
                                             { countThresh: 1, label: "Active Inquirer", icon: Activity, color: "bg-gray-100 text-gray-600 dark:bg-zinc-900/30 dark:text-gray-400", desc: "Achieve 1 Badge" },
-                                            { countThresh: 3, label: "Verified Trader", icon: ShieldCheck, color: "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400", desc: "Achieve 3 Badges" },
-                                            { countThresh: 5, label: "Market Stalwart", icon: Star, color: "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400", desc: "Achieve 5 Badges" },
+                                            { countThresh: 3, label: "Verified Trader", icon: ShieldCheck, color: "bg-blue-100 text-blue-600 dark:bg-emerald-900/30 dark:text-emerald-400", desc: "Achieve 3 Badges" },
+                                            { countThresh: 5, label: "Market Stalwart", icon: Star, color: "bg-blue-100 text-blue-600 dark:bg-emerald-900/30 dark:text-emerald-400", desc: "Achieve 5 Badges" },
                                             { countThresh: 10, label: "Elite Veteran", icon: Medal, color: "bg-zinc-100 text-zinc-600 dark:bg-zinc-900/30 dark:text-zinc-400", desc: "Achieve 10 Badges" },
                                             { threshold: 100, label: "Sentinel of Truth", icon: Crown, color: "bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400", desc: "Trust Score: 100" }
                                         ].filter(m => {
@@ -284,7 +307,7 @@ const PublicUserProfile = () => {
                                         }).map((m, idx) => (
                                             <div
                                                 key={idx}
-                                                className="p-5 rounded-[2rem] border bg-white dark:bg-zinc-900 border-gray-100 dark:border-zinc-800 shadow-sm transition-all"
+                                                className="p-5 rounded-[2rem] border bg-white dark:bg-zinc-900 bluish:bg-slate-900/80 bluish:backdrop-blur-md border-gray-100 dark:border-zinc-800 bluish:border-white/5 shadow-sm transition-all"
                                             >
                                                 <div className="flex items-center gap-4">
                                                     <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${m.color}`}>
@@ -311,31 +334,31 @@ const PublicUserProfile = () => {
                                 <div className="space-y-6 pt-6">
                                     <div className="flex items-center justify-between">
                                         <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
-                                            <Zap className="mr-3 text-emerald-500" />
+                                            <Zap className="mr-3 text-blue-500 dark:text-emerald-500" />
                                             Earned Achievements
-                                            <span className="ml-3 px-2 py-0.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-xs font-black rounded-full border border-emerald-200 dark:border-emerald-900/30 shadow-sm">
+                                            <span className="ml-3 px-2 py-0.5 bg-blue-100 dark:bg-emerald-900/30 text-blue-600 dark:text-emerald-400 text-xs font-black rounded-full border border-blue-200 dark:border-emerald-900/30 shadow-sm">
                                                 {user.achievements?.length || 0}
                                             </span>
                                         </h2>
                                         <button
                                             onClick={() => { setModalType('achievements'); setShowInfoModal(true); }}
-                                            className="p-1 text-emerald-500 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                                            className="p-1 text-blue-500 dark:text-emerald-500 hover:text-blue-600 dark:hover:text-emerald-400 transition-colors"
                                         >
                                             <Info size={16} />
                                         </button>
                                     </div>
                                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-center">
                                         {[
-                                            { id: 'first_deal', label: 'First Deal', icon: ShoppingBag, color: 'text-emerald-500 bg-emerald-50 dark:bg-emerald-900/10' },
+                                            { id: 'first_deal', label: 'First Deal', icon: ShoppingBag, color: 'text-blue-500 bg-blue-50 dark:text-emerald-500 dark:bg-emerald-900/10' },
                                             { id: 'active_buyer', label: 'Active Buyer', icon: Zap, color: 'text-amber-500 bg-amber-50 dark:bg-amber-900/10' },
-                                            { id: 'negotiation_pro', label: 'Negotiation Pro', icon: TrendingUp, color: 'text-blue-500 bg-blue-50 dark:bg-blue-900/10' },
+                                            { id: 'negotiation_pro', label: 'Negotiation Pro', icon: TrendingUp, color: 'text-blue-500 bg-blue-50 dark:text-emerald-500 dark:bg-emerald-900/10' },
                                             { id: 'high_value', label: 'High-Value Trader', icon: DollarSign, color: 'text-indigo-500 bg-indigo-50 dark:bg-indigo-900/10' },
                                             { id: 'fast_mover', label: 'Fast Mover', icon: Rocket, color: 'text-purple-500 bg-purple-50 dark:bg-purple-900/10' },
                                         ].filter(badge => user.achievements?.some(a => a.id === badge.id))
                                             .map((badge) => (
                                                 <div
                                                     key={badge.id}
-                                                    className="p-4 rounded-3xl border bg-white dark:bg-zinc-900 border-gray-100 dark:border-zinc-800 shadow-sm transition-all flex flex-col items-center justify-center gap-2"
+                                                    className="p-4 rounded-3xl border bg-white dark:bg-zinc-900 bluish:bg-slate-900/80 bluish:backdrop-blur-md border-gray-100 dark:border-zinc-800 bluish:border-white/5 shadow-sm transition-all flex flex-col items-center justify-center gap-2"
                                                 >
                                                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${badge.color}`}>
                                                         <badge.icon size={18} />
@@ -383,7 +406,7 @@ const PublicUserProfile = () => {
 
                                 <div className="p-8 md:p-12 overflow-y-auto max-h-[85vh] custom-scrollbar">
                                     <div className="flex items-center gap-4 mb-8">
-                                        <div className="w-12 h-12 bg-emerald-100 dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center text-emerald-600">
+                                        <div className="w-12 h-12 bg-blue-100 dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center text-blue-600 dark:text-emerald-400">
                                             {modalType === 'trust' ? <ShieldCheck size={28} /> : modalType === 'milestones' ? <Medal size={28} /> : <Zap size={28} />}
                                         </div>
                                         <div>
@@ -400,13 +423,13 @@ const PublicUserProfile = () => {
                                         {/* Trust Explanation */}
                                         {(modalType === 'trust' || modalType === 'all') && (
                                             <section>
-                                                <h3 className="text-sm font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-6 flex items-center gap-2">
+                                                <h3 className="text-sm font-black uppercase tracking-widest text-blue-600 dark:text-emerald-400 mb-6 flex items-center gap-2">
                                                     <ShieldCheck size={16} /> Understanding Trust
                                                 </h3>
                                                 <div className="grid gap-4">
                                                     {badgeInfo.trust.map((t, idx) => (
                                                         <div key={idx} className="flex gap-4 p-4 rounded-3xl bg-gray-50 dark:bg-zinc-950/40 border border-gray-100 dark:border-zinc-800/50">
-                                                            <div className="w-10 h-10 rounded-xl bg-white dark:bg-zinc-800 flex items-center justify-center text-emerald-500 shadow-sm shrink-0">
+                                                            <div className="w-10 h-10 rounded-xl bg-white dark:bg-zinc-800 flex items-center justify-center text-blue-50 dark:text-emerald-500 shadow-sm shrink-0">
                                                                 <Star size={20} />
                                                             </div>
                                                             <div>
@@ -444,13 +467,13 @@ const PublicUserProfile = () => {
                                         {/* Achievements Explanation */}
                                         {(modalType === 'achievements' || modalType === 'all') && (
                                             <section>
-                                                <h3 className="text-sm font-black uppercase tracking-widest text-blue-600 dark:text-blue-400 mb-6 flex items-center gap-2">
+                                                <h3 className="text-sm font-black uppercase tracking-widest text-blue-600 dark:text-emerald-400 mb-6 flex items-center gap-2">
                                                     <Zap size={16} /> Achievement Quests
                                                 </h3>
                                                 <div className="grid gap-4">
                                                     {badgeInfo.achievements.map((a, idx) => (
                                                         <div key={idx} className="flex gap-4 p-4 rounded-3xl bg-gray-50 dark:bg-zinc-950/40 border border-gray-100 dark:border-zinc-800/50">
-                                                            <div className="w-10 h-10 rounded-xl bg-white dark:bg-zinc-800 flex items-center justify-center text-blue-500 shadow-sm shrink-0">
+                                                            <div className="w-10 h-10 rounded-xl bg-white dark:bg-zinc-800 flex items-center justify-center text-blue-50 dark:text-emerald-500 shadow-sm shrink-0">
                                                                 <a.icon size={20} />
                                                             </div>
                                                             <div>
