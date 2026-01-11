@@ -37,11 +37,11 @@ const Landing = () => {
                                 Go to Dashboard
                             </Link>
                         ) : (
-                            <Link to="/register" className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold text-lg transition-all shadow-lg shadow-blue-600/30 flex items-center justify-center">
+                            <Link to="/register?role=seller" className="px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold text-lg transition-all shadow-lg shadow-blue-600/30 flex items-center justify-center">
                                 Start Selling
                             </Link>
                         )}
-                        <Link to="/marketplace" className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white border border-white/20 rounded-lg font-bold text-lg backdrop-blur-sm transition-all flex items-center justify-center">
+                        <Link to="/register?role=buyer" className="px-8 py-4 bg-white/5 hover:bg-white/10 text-white border border-white/20 rounded-lg font-bold text-lg backdrop-blur-sm transition-all flex items-center justify-center">
                             Start Buying
                         </Link>
                     </div>
@@ -117,7 +117,7 @@ const Landing = () => {
                                 <ListItem text="Sell used equipment" />
                                 <ListItem text="Find bulk buyers" />
                             </ul>
-                            <Link to="/register" className="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold transition-colors">
+                            <Link to="/register?role=seller" className="inline-block px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold transition-colors">
                                 Start Selling
                             </Link>
                         </div>
@@ -132,7 +132,7 @@ const Landing = () => {
                                 <ListItem text="Negotiate prices" />
                                 <ListItem text="Verified business assets" />
                             </ul>
-                            <Link to="/marketplace" className="inline-block px-6 py-3 bg-[#1e293b] hover:bg-[#283548] text-white border border-white/10 rounded-lg font-bold transition-colors">
+                            <Link to="/register?role=buyer" className="inline-block px-6 py-3 bg-[#1e293b] hover:bg-[#283548] text-white border border-white/10 rounded-lg font-bold transition-colors">
                                 Start Buying
                             </Link>
                         </div>
@@ -162,10 +162,10 @@ const Landing = () => {
                     <div className="mt-20 pt-12 border-t border-white/5">
                         <h2 className="text-3xl font-bold mb-8">Ready to make real business deals?</h2>
                         <div className="flex justify-center gap-4">
-                            <Link to="/register" className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold transition-all">
+                            <Link to="/register?role=seller" className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold transition-all">
                                 Start Selling
                             </Link>
-                            <Link to="/marketplace" className="px-8 py-3 bg-[#1e293b] hover:bg-[#283548] text-white border border-white/10 rounded-lg font-bold transition-all">
+                            <Link to="/register?role=buyer" className="px-8 py-3 bg-[#1e293b] hover:bg-[#283548] text-white border border-white/10 rounded-lg font-bold transition-all">
                                 Start Buying
                             </Link>
                         </div>

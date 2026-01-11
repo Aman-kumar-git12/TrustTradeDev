@@ -1,15 +1,18 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../utils/api';
 import { useUI } from '../context/UIContext';
 import { useAuth } from '../context/AuthContext';
 
 const Register = () => {
+    const [searchParams] = useSearchParams();
+    const initialRole = searchParams.get('role') === 'seller' ? 'seller' : 'buyer';
+
     const [formData, setFormData] = useState({
         fullName: '',
         email: '',
         password: '',
-        role: 'buyer'
+        role: initialRole
     });
     const { showSnackbar } = useUI();
     const { login } = useAuth();

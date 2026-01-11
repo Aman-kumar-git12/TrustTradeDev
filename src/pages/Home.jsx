@@ -88,11 +88,10 @@ const Home = () => {
                 </div>
             </div>
 
-            {/* 2. Infinite Marquee Benefits (Right to Left) */}
             <div className="relative bg-white dark:bg-black dark:bg-gradient-to-r dark:from-emerald-900/10 dark:to-teal-900/10 border-y border-gray-200 dark:border-white/5 py-10 overflow-hidden shadow-sm dark:shadow-none">
-                <div className="flex animate-marquee whitespace-nowrap">
+                <div className="flex animate-marquee whitespace-nowrap min-w-full">
                     {[...Array(2)].map((_, i) => (
-                        <div key={i} className="flex items-center space-x-12 mx-6">
+                        <div key={i} className="flex items-center gap-12 px-6 flex-shrink-0">
                             <MarqueeItem icon={<ShieldCheck />} text="Bank-Grade Escrow Protection" />
                             <MarqueeItem icon={<Globe />} text="Global Logistics Support" />
                             <MarqueeItem icon={<Award />} text="Verified Business Sellers Only" />

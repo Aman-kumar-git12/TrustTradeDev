@@ -35,6 +35,17 @@ const AssetDetails = () => {
             }
         };
         fetchAsset();
+
+        // Record View
+        const recordView = async () => {
+            try {
+                await api.post(`/assets/${id}/view`, {});
+            } catch (error) {
+                // Fail silently, views aren't critical to UX
+                console.error('Failed to log view', error);
+            }
+        };
+        if (id) recordView();
     }, [id]);
 
     // Auto-scroll images

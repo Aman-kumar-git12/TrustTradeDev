@@ -345,6 +345,19 @@ const BuyerDashboard = () => {
     const [expandedId, setExpandedId] = useState(null);
     const [showStats, setShowStats] = useState(false);
     const [dashboardStats, setDashboardStats] = useState(null);
+    const [activityCounts, setActivityCounts] = useState({ interests: 0, orders: 0 });
+
+    useEffect(() => {
+        const fetchActivityCounts = async () => {
+            try {
+                const { data } = await api.get('/auth/activity-counts');
+                setActivityCounts(data);
+            } catch (error) {
+                console.error("Failed to fetch activity counts", error);
+            }
+        };
+        fetchActivityCounts();
+    }, []);
 
     // Derived state from URL query param
     const isFilterOpen = searchParams.get('filter') === 'true';
@@ -469,7 +482,7 @@ const BuyerDashboard = () => {
                             <Tag size={16} className="mr-2" />
                             My Interests
                             <span className="ml-2 px-1.5 py-0.5 text-[10px] bg-emerald-500/10 rounded-md">
-                                {interests.length}
+                                {activityCounts.interests}
                             </span>
                         </button>
                         <button
@@ -482,7 +495,7 @@ const BuyerDashboard = () => {
                             <ShoppingBag size={16} className="mr-2" />
                             My Orders
                             <span className="ml-2 px-1.5 py-0.5 text-[10px] bg-emerald-500/10 rounded-md">
-                                {orders.length}
+                                {activityCounts.orders}
                             </span>
                         </button>
 

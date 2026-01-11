@@ -55,6 +55,7 @@ const Navbar = () => {
     const accentBgClass = isLanding
         ? (isDark ? 'bg-blue-500/10' : 'bg-blue-600/10')
         : (isDark ? 'bg-emerald-500/10' : 'bg-emerald-600/10');
+    const hideMarketplace = location.pathname === '/register' || location.pathname === '/login';
     const buttonClass = isLanding
         ? 'bg-blue-600 hover:bg-blue-700 shadow-blue-500/20 hover:shadow-blue-500/40'
         : 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-500/20 hover:shadow-emerald-500/40';
@@ -112,18 +113,20 @@ const Navbar = () => {
                                         Home
                                     </Link>
                                 </Hover>
-                                <Hover text="Browse Assets">
-                                    <Link
-                                        to="/marketplace"
-                                        className={`text-sm font-bold transition-all ${location.pathname.startsWith('/marketplace')
-                                            ? accentClass
-                                            : 'text-gray-400 hover:text-white'
-                                            }`}
-                                        onClick={(e) => handleNavClick(e, '/marketplace', 'Marketplace')}
-                                    >
-                                        Marketplace
-                                    </Link>
-                                </Hover>
+                                {!hideMarketplace && (
+                                    <Hover text="Browse Assets">
+                                        <Link
+                                            to="/marketplace"
+                                            className={`text-sm font-bold transition-all ${location.pathname.startsWith('/marketplace')
+                                                ? accentClass
+                                                : 'text-gray-400 hover:text-white'
+                                                }`}
+                                            onClick={(e) => handleNavClick(e, '/marketplace', 'Marketplace')}
+                                        >
+                                            Marketplace
+                                        </Link>
+                                    </Hover>
+                                )}
 
                                 {user ? (
                                     <div className="flex items-center space-x-6">
@@ -191,6 +194,7 @@ const Navbar = () => {
                                 )}
                             </>
                         )}
+
                     </div>
                 </div>
             </div>
