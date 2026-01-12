@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || 'http://127.0.0.1:5002/api',
+    baseURL: import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'production' ? 'https://trusttrade-6d81.onrender.com/api' : 'http://localhost:5002/api'),
     withCredentials: true // Important for cookies
 });
 
