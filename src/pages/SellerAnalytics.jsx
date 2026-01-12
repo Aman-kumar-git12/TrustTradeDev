@@ -40,7 +40,7 @@ const SellerAnalytics = () => {
             {!isProductPage && (
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                     {/* Navigation Tabs */}
-                    <div className="flex space-x-1 bg-gray-100/50 dark:bg-zinc-900 bluish:bg-slate-900/50 border dark:border-zinc-800 bluish:border-white/5 p-1 rounded-xl w-fit transition-colors duration-300">
+                    <div className="flex space-x-1 bg-gray-100/50 dark:bg-zinc-900 bluish:bg-slate-900 border dark:border-zinc-800 bluish:border-white/5 p-1 rounded-xl w-fit transition-colors duration-300">
                         <NavLink
                             to="overview"
                             onClick={(e) => handleNavClick(e, 'overview', 'Business Overview')}
@@ -66,7 +66,7 @@ const SellerAnalytics = () => {
 
                     {/* Range Switcher - Visible on Overview or product details */}
                     {(isOverview || isProduct) && (
-                        <div className="bg-gray-100/50 dark:bg-zinc-900 bluish:bg-[#1e293b]/50 rounded-xl p-1 border dark:border-zinc-800 bluish:border-white/5 flex text-xs font-bold transition-colors duration-300">
+                        <div className="bg-gray-100/50 dark:bg-zinc-900 bluish:bg-[#1e293b] rounded-xl p-1 border dark:border-zinc-800 bluish:border-white/5 flex text-xs font-bold transition-colors duration-300">
                             {(isProduct ? ['30d', 'all'] : ['24h', '15d', '1m', '1y', 'all']).map(r => (
                                 <button
                                     key={r}

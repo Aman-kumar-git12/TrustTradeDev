@@ -194,13 +194,13 @@ const SellerBusinessDetails = () => {
                     onClick={() => navigate('/my-businesses')}
                     className="flex items-center text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white bluish:text-slate-400 bluish:hover:text-white mb-8 font-medium transition-colors group"
                 >
-                    <div className="bg-white dark:bg-zinc-900 bluish:bg-slate-800/50 p-2 rounded-lg shadow-sm group-hover:shadow-md mr-3 border border-gray-200 dark:border-zinc-800 bluish:border-white/5 transition-all">
+                    <div className="bg-white dark:bg-zinc-900 bluish:bg-slate-800 p-2 rounded-lg shadow-sm group-hover:shadow-md mr-3 border border-gray-200 dark:border-zinc-800 bluish:border-white/5 transition-all">
                         <ArrowLeft size={18} />
                     </div>
                     Back to Businesses
                 </button>
 
-                <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 rounded-3xl shadow-xl dark:shadow-emerald-900/10 overflow-hidden border border-gray-100 dark:border-zinc-800 bluish:border-white/5 transition-all">
+                <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800 bluish:to-slate-900 rounded-3xl shadow-xl dark:shadow-emerald-900/10 overflow-hidden border border-gray-100 dark:border-zinc-800 bluish:border-white/5 transition-all">
                     {/* Premium Header */}
                     <div className="h-40 bg-gradient-to-r from-zinc-900 to-zinc-800 bluish:from-slate-900 bluish:to-slate-800 relative overflow-hidden">
                         <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] animate-pulse-slow"></div>
@@ -293,7 +293,7 @@ const SellerBusinessDetails = () => {
                                                 type="button"
                                                 onClick={triggerFileInput}
                                                 disabled={uploadingImage}
-                                                className={`relative group overflow-hidden bg-gray-50 dark:bg-zinc-800/50 bluish:bg-slate-800/50 border-2 border-dashed border-gray-300 dark:border-zinc-700 bluish:border-white/10 hover:border-blue-500 dark:hover:border-emerald-500 bluish:hover:border-blue-500 rounded-xl flex flex-col items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-emerald-400 bluish:hover:text-blue-400 transition-all duration-300 ${formData.images.length === 0 ? 'col-span-2 aspect-video' : 'aspect-square'
+                                                className={`relative group overflow-hidden bg-gray-50 dark:bg-zinc-800/50 bluish:bg-slate-800 border-2 border-dashed border-gray-300 dark:border-zinc-700 bluish:border-white/10 hover:border-blue-500 dark:hover:border-emerald-500 bluish:hover:border-blue-500 rounded-xl flex flex-col items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-emerald-400 bluish:hover:text-blue-400 transition-all duration-300 ${formData.images.length === 0 ? 'col-span-2 aspect-video' : 'aspect-square'
                                                     }`}
                                             >
                                                 <div className="absolute inset-0 bg-blue-50/50 dark:bg-emerald-900/10 bluish:bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -308,7 +308,7 @@ const SellerBusinessDetails = () => {
                                     </div>
 
                                     {/* Action Buttons */}
-                                    <div className="bg-gray-50 dark:bg-zinc-800/50 bluish:bg-slate-800/30 p-5 rounded-2xl border border-gray-100 dark:border-zinc-800 bluish:border-white/5 space-y-4">
+                                    <div className="bg-gray-50 dark:bg-zinc-800/50 bluish:bg-slate-800 p-5 rounded-2xl border border-gray-100 dark:border-zinc-800 bluish:border-white/5 space-y-4">
                                         <input
                                             type="file"
                                             ref={fileInputRef}
@@ -362,7 +362,7 @@ const SellerBusinessDetails = () => {
                                             <input
                                                 required
                                                 type="text"
-                                                className="w-full pl-12 pr-4 py-3.5 bg-gray-50 dark:bg-zinc-800/50 bluish:bg-slate-800/50 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-emerald-500/20 bluish:focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-emerald-500 bluish:focus:border-blue-500 outline-none transition-all dark:text-white bluish:text-white font-medium"
+                                                className="w-full pl-12 pr-4 py-3.5 bg-gray-50 dark:bg-zinc-800/50 bluish:bg-slate-800 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-emerald-500/20 bluish:focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-emerald-500 bluish:focus:border-blue-500 outline-none transition-all dark:text-white bluish:text-white font-medium"
                                                 placeholder="e.g. Acme Industries"
                                                 value={formData.businessName}
                                                 onChange={e => setFormData({ ...formData, businessName: e.target.value })}
@@ -378,7 +378,7 @@ const SellerBusinessDetails = () => {
                                                 <input
                                                     required
                                                     type="text"
-                                                    className="w-full pl-12 pr-4 py-3.5 bg-gray-50 dark:bg-zinc-800/50 bluish:bg-slate-800/50 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-emerald-500/20 bluish:focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-emerald-500 bluish:focus:border-blue-500 outline-none transition-all dark:text-white bluish:text-white font-medium"
+                                                    className="w-full pl-12 pr-4 py-3.5 bg-gray-50 dark:bg-zinc-800/50 bluish:bg-slate-800 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-emerald-500/20 bluish:focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-emerald-500 bluish:focus:border-blue-500 outline-none transition-all dark:text-white bluish:text-white font-medium"
                                                     placeholder="e.g. New York"
                                                     value={formData.city}
                                                     onChange={e => setFormData({ ...formData, city: e.target.value })}
@@ -393,7 +393,7 @@ const SellerBusinessDetails = () => {
                                                 <input
                                                     required
                                                     type="text"
-                                                    className="w-full pl-12 pr-4 py-3.5 bg-gray-50 dark:bg-zinc-800/50 bluish:bg-slate-800/50 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-emerald-500/20 bluish:focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-emerald-500 bluish:focus:border-blue-500 outline-none transition-all dark:text-white bluish:text-white font-medium"
+                                                    className="w-full pl-12 pr-4 py-3.5 bg-gray-50 dark:bg-zinc-800/50 bluish:bg-slate-800 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-emerald-500/20 bluish:focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-emerald-500 bluish:focus:border-blue-500 outline-none transition-all dark:text-white bluish:text-white font-medium"
                                                     placeholder="e.g. Manhattan"
                                                     value={formData.place}
                                                     onChange={e => setFormData({ ...formData, place: e.target.value })}
@@ -407,7 +407,7 @@ const SellerBusinessDetails = () => {
                                         <textarea
                                             required
                                             rows="5"
-                                            className="w-full p-4 bg-gray-50 dark:bg-zinc-800/50 bluish:bg-slate-800/50 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-emerald-500/20 bluish:focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-emerald-500 bluish:focus:border-blue-500 outline-none transition-all dark:text-white bluish:text-white resize-none font-medium leading-relaxed"
+                                            className="w-full p-4 bg-gray-50 dark:bg-zinc-800/50 bluish:bg-slate-800 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-emerald-500/20 bluish:focus:ring-blue-500/20 focus:border-blue-500 dark:focus:border-emerald-500 bluish:focus:border-blue-500 outline-none transition-all dark:text-white bluish:text-white resize-none font-medium leading-relaxed"
                                             placeholder="Tell us about your business..."
                                             value={formData.description}
                                             onChange={e => setFormData({ ...formData, description: e.target.value })}

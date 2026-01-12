@@ -33,7 +33,8 @@ const Landing = () => {
     return (
         <div className="min-h-screen bg-[#0a0f1d] text-white font-sans selection:bg-blue-500/30 overflow-x-hidden relative">
             {/* Dotted Background - Global */}
-            <div className="fixed inset-0 bg-[#0a0f1d] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px] opacity-20 pointer-events-none z-[1]"></div>
+            {/* Dotted Background - Global */}
+            <div className="fixed inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] dark:bg-[radial-gradient(#ffffff33_1px,#000000_1px)] bluish:bg-[radial-gradient(#ffffff33_1px,#0a0f1d_1px)] [background-size:20px_20px] opacity-20 dark:opacity-[0.26] bluish:opacity-[0.26] pointer-events-none z-[1]"></div>
 
             {/* Ambient Background Glows - Global */}
             <div className="fixed top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-30 animate-blob pointer-events-none z-0"></div>
@@ -253,7 +254,7 @@ const Landing = () => {
 
 // UI Components
 const FeatureBox = ({ icon, title, desc }) => (
-    <div className="bg-[#131b2e]/80 backdrop-blur-md border border-white/10 p-6 rounded-xl hover:bg-[#1a243a] transition-colors group h-full">
+    <div className="bg-[#131b2e] backdrop-blur-md border border-white/10 p-6 rounded-xl hover:bg-[#1a243a] transition-colors group h-full">
         <div className="mb-4 bg-blue-600/10 w-fit p-3 rounded-lg group-hover:bg-blue-600/20 transition-colors">
             {icon}
         </div>

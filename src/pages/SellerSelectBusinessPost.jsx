@@ -30,7 +30,7 @@ const SellerSelectBusinessPost = () => {
     );
 
     return (
-        <div className="min-h-[calc(100vh-64px)] bg-slate-50 dark:bg-zinc-950 bluish:bg-[#0a0f1d] py-16 px-4 sm:px-6 lg:px-8 font-sans transition-colors duration-300 relative overflow-hidden">
+        <div className="min-h-[calc(100vh-64px)] bg-transparent dark:bg-black bluish:bg-[#0a0f1d] py-16 px-4 sm:px-6 lg:px-8 font-sans transition-colors duration-300 relative overflow-hidden">
             {/* Dynamic Background Elements - Bluish Theme Only */}
             <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden hidden bluish:block">
                 <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob"></div>

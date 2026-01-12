@@ -284,14 +284,14 @@ const SellerProductAnalytics = () => {
 
                 {/* Sidebar: Price Intelligence & Health */}
                 <div className="space-y-6">
-                    <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 bluish:border-white/5 transition-colors duration-300">
+                    <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800 bluish:to-slate-900 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 bluish:border-white/5 transition-colors duration-300">
                         <h3 className="text-lg font-bold text-gray-800 dark:text-white bluish:text-white mb-4 transition-colors duration-300">Price Intelligence</h3>
                         <div className="space-y-4">
-                            <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-zinc-800 bluish:bg-slate-800/50 rounded-xl transition-colors duration-300">
+                            <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-zinc-800 bluish:bg-slate-800 rounded-xl transition-colors duration-300">
                                 <span className="text-gray-500 dark:text-gray-400 bluish:text-slate-400 text-sm">Your Price</span>
                                 <span className="font-bold text-gray-900 dark:text-white bluish:text-white transition-colors duration-300">${asset.price.toLocaleString()}</span>
                             </div>
-                            <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-zinc-800 bluish:bg-slate-800/50 rounded-xl transition-colors duration-300">
+                            <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-zinc-800 bluish:bg-slate-800 rounded-xl transition-colors duration-300">
                                 <span className="text-gray-500 dark:text-gray-400 bluish:text-slate-400 text-sm">Market Avg</span>
                                 <span className="font-bold text-gray-600 dark:text-gray-300 bluish:text-slate-300 transition-colors duration-300">${priceIntelligence.marketAvgPrice.toLocaleString()}</span>
                             </div>

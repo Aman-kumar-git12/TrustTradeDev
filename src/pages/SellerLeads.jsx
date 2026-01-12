@@ -258,7 +258,7 @@ const LeadRow = ({ lead, isExpanded, onToggle, onStatusUpdate, onLeadUpdate }) =
     };
 
     // Conditional Styling
-    const rowBaseClasses = `bg-white dark:bg-zinc-900 bluish:bg-gradient-to-r bluish:from-[#1e293b]/90 bluish:to-[#0f172a]/90 bluish:backdrop-blur-md rounded-xl border transition-all duration-300 overflow-hidden`;
+    const rowBaseClasses = `bg-white dark:bg-zinc-900 bluish:bg-gradient-to-r bluish:from-[#1e293b] bluish:to-[#0f172a] bluish:backdrop-blur-md rounded-xl border transition-all duration-300 overflow-hidden`;
     let rowClasses = rowBaseClasses;
     if (lead.salesStatus === 'sold') {
         rowClasses = `bg-blue-100/70 dark:bg-emerald-900/20 rounded-xl border border-blue-400 dark:border-emerald-800 transition-all duration-200 overflow-hidden hover:shadow-md`;

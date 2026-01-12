@@ -37,13 +37,15 @@ const Home = () => {
         );
     }
 
+
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-black text-gray-900 dark:text-white font-sans selection:bg-blue-500/30 pb-20 overflow-x-hidden relative transition-colors duration-300 bluish:bg-[#0a0f1d]">
-            {/* Page Background */}
-            <div className="fixed inset-0 z-0 pointer-events-none">
-                <img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=2670&auto=format&fit=crop" alt="Background" className="w-full h-full object-cover opacity-5 dark:opacity-20 mix-blend-overlay" />
-                <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-gray-50/90 to-gray-50 dark:from-black dark:via-black/90 dark:to-black bluish:from-[#0a0f1d] bluish:via-[#0a0f1d]/90 bluish:to-[#0a0f1d]"></div>
-            </div>
+        <div className="min-h-screen bg-transparent dark:bg-black bluish:bg-[#0a0f1d] text-gray-900 dark:text-gray-200 transaction-colors duration-300 relative overflow-x-hidden">
+            {/* Dotted Background - Local Override for Home */}
+            <div className="fixed inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] dark:bg-[radial-gradient(#ffffff33_1px,#000000_1px)] bluish:bg-[radial-gradient(#ffffff33_1px,#0a0f1d_1px)] [background-size:20px_20px] opacity-20 dark:opacity-20 bluish:opacity-[0.26] pointer-events-none z-[1]"></div>
+
+            {/* Ambient Background Glows - Global */}
+            <div className="fixed top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/20 dark:bg-emerald-600/10 bluish:bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-30 animate-blob pointer-events-none z-0"></div>
+            <div className="fixed bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-600/20 dark:bg-emerald-600/10 bluish:bg-purple-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-30 animate-blob animation-delay-2000 pointer-events-none z-0"></div>
 
             {/* 1. Hero / Billboard (Netflix Style) */}
             <div className="relative h-[75vh] w-full overflow-hidden group z-10">
@@ -53,8 +55,8 @@ const Home = () => {
                         alt="Hero"
                         className="w-full h-full object-cover opacity-80 dark:opacity-60"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-r from-gray-50 via-gray-50/40 to-transparent dark:from-black dark:via-black/40 dark:to-transparent bluish:from-[#0a0f1d] bluish:via-[#0a0f1d]/40 bluish:to-transparent"></div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-gray-50 via-transparent to-transparent dark:from-black dark:via-transparent dark:to-transparent bluish:from-[#0a0f1d] bluish:via-transparent bluish:to-transparent"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#0a0f1d] via-[#0a0f1d]/40 to-transparent"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1d] via-transparent to-transparent"></div>
                 </div>
 
                 <div className="relative z-10 h-full flex flex-col justify-center px-4 sm:px-6 lg:px-12 max-w-4xl pt-20">
@@ -85,7 +87,7 @@ const Home = () => {
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         transition={{ duration: 1, delay: 0.4 }}
-                        className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl text-shadow-sm font-light leading-relaxed"
+                        className="text-xl text-gray-300 mb-8 max-w-2xl text-shadow-sm font-light leading-relaxed"
                     >
                         Access exclusive heavy machinery, IT infrastructure, and fleet vehicles directly from top enterprises.
                     </motion.p>
@@ -106,7 +108,7 @@ const Home = () => {
                 </div>
             </div>
 
-            <div className="relative bg-white dark:bg-black dark:bg-gradient-to-r dark:from-blue-900/10 dark:to-teal-900/10 bluish:bg-[#0a0f1d] border-y border-gray-200 dark:border-white/5 py-10 overflow-hidden shadow-sm dark:shadow-none">
+            <div className="relative bg-white dark:bg-[#050505] bluish:bg-[#0a0f1d] border-y border-gray-100 dark:border-white/5 py-10 overflow-hidden shadow-sm dark:shadow-none z-10">
                 <div className="flex animate-marquee whitespace-nowrap min-w-full">
                     {[...Array(2)].map((_, i) => (
                         <div key={i} className="flex items-center gap-12 px-6 flex-shrink-0">
@@ -118,17 +120,16 @@ const Home = () => {
                         </div>
                     ))}
                 </div>
-                {/* Fade edges - Dynamic for Light (White) and Dark (Black) */}
-                <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-white to-transparent dark:from-black dark:to-transparent bluish:from-[#0a0f1d] bluish:to-transparent z-10 pointer-events-none"></div>
-                <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-white to-transparent dark:from-black dark:to-transparent bluish:from-[#0a0f1d] bluish:to-transparent z-10 pointer-events-none"></div>
+                {/* Fade edges - Dynamic */}
+                <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#0a0f1d] to-transparent z-10 pointer-events-none"></div>
+                <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-[#0a0f1d] to-transparent z-10 pointer-events-none"></div>
             </div>
 
             {/* 3. Top Market Leader Section (Moved Up) */}
             {stats.topMarket && (
                 <div className="px-4 sm:px-6 lg:px-12 py-12">
-                    <h2 className="text-xl font-bold text-gray-700 dark:text-gray-200 bluish:text-slate-200 mb-4 px-1 drop-shadow-md">Market Leader of the Month</h2>
-                    <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-white to-gray-50 dark:bg-gradient-to-br dark:from-zinc-800 dark:to-zinc-950 bluish:from-slate-800 bluish:to-slate-950 border border-gray-200 dark:border-white/10 bluish:border-slate-700 p-8 md:p-12 flex items-center justify-between group cursor-pointer  transition-all shadow-xl dark:shadow-2xl">
-                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-5 dark:opacity-20"></div>
+                    <h2 className="text-xl font-bold text-gray-200 mb-4 px-1 drop-shadow-md">Market Leader of the Month</h2>
+                    <div className="relative z-10 rounded-2xl overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-emerald-900 dark:to-emerald-950 bluish:from-blue-900 bluish:to-indigo-950 border-2 border-blue-500/20 dark:border-emerald-500/30 bluish:border-blue-500/30 p-8 md:p-12 flex items-center justify-between group cursor-pointer transition-all shadow-2xl hover:shadow-[0_0_40px_rgba(37,99,235,0.2)] dark:hover:shadow-[0_0_40px_rgba(16,185,129,0.2)] dark:shadow-2xl transform hover:scale-[1.01] duration-500">
                         <div className="relative z-10">
                             <div className="text-blue-600 dark:text-emerald-400 bluish:text-blue-400 font-bold tracking-widest uppercase text-sm mb-2">Highest Revenue Generator</div>
                             <h3 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-2">{stats.topMarket.name}</h3>

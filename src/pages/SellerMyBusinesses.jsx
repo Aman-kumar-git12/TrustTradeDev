@@ -17,7 +17,7 @@ const BusinessCard = ({ business }) => {
     }, [business]);
 
     return (
-        <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e]/80 bluish:backdrop-blur-md rounded-2xl shadow-sm bluish:shadow-lg border border-gray-100 dark:border-zinc-800 bluish:border-white/10 overflow-hidden hover:shadow-xl dark:hover:shadow-emerald-900/10 bluish:hover:shadow-blue-600/10 transition-all group flex flex-col h-full hover:-translate-y-1 duration-300 relative">
+        <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e] bluish:backdrop-blur-md rounded-2xl shadow-sm bluish:shadow-lg border border-gray-100 dark:border-zinc-800 bluish:border-white/10 overflow-hidden hover:shadow-xl dark:hover:shadow-emerald-900/10 bluish:hover:shadow-blue-600/10 transition-all group flex flex-col h-full hover:-translate-y-1 duration-300 relative">
             <div className={`absolute -inset-[1px] bg-gradient-to-r from-transparent via-blue-500/20 dark:via-emerald-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm rounded-2xl -z-10 hidden bluish:block`}></div>
             <div className="h-48 bg-zinc-200 dark:bg-zinc-800 relative overflow-hidden">
                 <div className="absolute inset-0">
@@ -116,7 +116,7 @@ const SellerMyBusinesses = () => {
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {/* Add New Card */}
                     {businesses.length < 4 && (
-                        <Link to="/my-businesses/new" className="group bg-white dark:bg-zinc-900 bluish:bg-[#131b2e]/40 bluish:backdrop-blur-sm rounded-2xl border-2 border-dashed border-gray-300 dark:border-zinc-700 bluish:border-white/10 hover:border-blue-500 dark:hover:border-emerald-500 bluish:hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-emerald-900/10 bluish:hover:bg-blue-900/20 p-8 flex flex-col items-center justify-center text-center transition-all h-full min-h-[400px] cursor-pointer relative hover:-translate-y-1 duration-300">
+                        <Link to="/my-businesses/new" className="group bg-white dark:bg-zinc-900 bluish:bg-[#131b2e] bluish:backdrop-blur-sm rounded-2xl border-2 border-dashed border-gray-300 dark:border-zinc-700 bluish:border-white/10 hover:border-blue-500 dark:hover:border-emerald-500 bluish:hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-emerald-900/10 bluish:hover:bg-blue-900/20 p-8 flex flex-col items-center justify-center text-center transition-all h-full min-h-[400px] cursor-pointer relative hover:-translate-y-1 duration-300">
                             <div className="bg-blue-100 dark:bg-emerald-900/30 bluish:bg-blue-500/10 p-4 rounded-full mb-4 group-hover:scale-110 transition-transform text-blue-600 dark:text-emerald-400 bluish:text-blue-400 bluish:border bluish:border-blue-500/20 bluish:group-hover:border-blue-500/50">
                                 <Plus size={32} />
                             </div>

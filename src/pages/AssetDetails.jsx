@@ -96,6 +96,7 @@ const AssetDetails = () => {
 
     return (
         <div className="min-h-screen transition-colors duration-300 bg-slate-50 dark:bg-zinc-950 bluish:bg-[#0a0f1d] selection:bg-blue-500/30 bluish:selection:bg-blue-500/30 font-sans relative overflow-hidden scrollbar-thin scrollbar-thumb-blue-600 dark:scrollbar-thumb-emerald-600 scrollbar-track-slate-900">
+            <div className="fixed inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] dark:bg-[radial-gradient(#ffffff33_1px,#000000_1px)] bluish:bg-[radial-gradient(#ffffff33_1px,#0a0f1d_1px)] [background-size:20px_20px] opacity-20 dark:opacity-[0.26] bluish:opacity-[0.26] pointer-events-none z-[1]"></div>
             {/* Dynamic Background Elements - Bluish Theme Only */}
             <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden hidden bluish:block">
                 <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob"></div>
@@ -135,7 +136,7 @@ const AssetDetails = () => {
                     >
                         {/* Main Image */}
                         <div
-                            className="bg-gray-50 dark:bg-zinc-900 bluish:bg-slate-900/40 backdrop-blur-xl rounded-2xl h-[400px] lg:h-[500px] flex items-center justify-center overflow-hidden border border-gray-100 dark:border-zinc-800 bluish:border-blue-500/20 shadow-inner bluish:shadow-[0_0_40px_rgba(59,130,246,0.1)] relative group cursor-zoom-in hover:border-blue-400/30 transition-all duration-500"
+                            className="bg-gray-50 dark:bg-zinc-900 bluish:bg-slate-900 bluish:backdrop-blur-xl rounded-2xl h-[400px] lg:h-[500px] flex items-center justify-center overflow-hidden border border-gray-100 dark:border-zinc-800 bluish:border-blue-500/20 shadow-inner bluish:shadow-[0_0_40px_rgba(59,130,246,0.1)] relative group cursor-zoom-in hover:border-blue-400/30 transition-all duration-500"
                             onClick={() => setShowLightbox(true)}
                         >
                             {asset.images && asset.images.length > 0 ? (
@@ -215,7 +216,7 @@ const AssetDetails = () => {
                             {asset.description}
                         </p>
 
-                        <div className="bg-slate-50 dark:bg-zinc-900 bluish:bg-slate-900/60 p-6 rounded-2xl border border-slate-100 dark:border-zinc-800 bluish:border-blue-500/20 mb-8 shadow-sm bluish:shadow-lg backdrop-blur-md transition-colors duration-300">
+                        <div className="bg-slate-50 dark:bg-zinc-900 bluish:bg-slate-900 p-6 rounded-2xl border border-slate-100 dark:border-zinc-800 bluish:border-blue-500/20 mb-8 shadow-sm bluish:shadow-lg backdrop-blur-md transition-colors duration-300">
                             <div className="flex items-center text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">
                                 <MapPin className="mr-2 text-blue-500 dark:text-emerald-400" /> Location: <strong className="ml-1 text-gray-900 dark:text-white">{asset.location}</strong>
                             </div>

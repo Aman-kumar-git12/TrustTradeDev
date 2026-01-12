@@ -34,10 +34,10 @@ const PublicBusinessListings = () => {
 
     if (loading) return (
         <div className="min-h-[calc(100vh-64px)] bg-slate-50 dark:bg-zinc-950 bluish:bg-[#0a0f1d] font-sans">
-            <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 border-b border-gray-200 dark:border-zinc-800 bluish:border-white/5 py-6 px-4">
+            <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800 bluish:to-slate-900 border-b border-gray-200 dark:border-zinc-800 bluish:border-white/5 py-6 px-4">
                 <div className="max-w-7xl mx-auto flex items-center justify-between">
-                    <div className="h-8 w-48 bg-gray-100 dark:bg-zinc-800 bluish:bg-white/10 rounded animate-pulse"></div>
-                    <div className="h-8 w-32 bg-gray-100 dark:bg-zinc-800 bluish:bg-white/10 rounded animate-pulse"></div>
+                    <div className="h-8 w-48 bg-gray-100 dark:bg-zinc-800 bluish:bg-white rounded animate-pulse"></div>
+                    <div className="h-8 w-32 bg-gray-100 dark:bg-zinc-800 bluish:bg-white rounded animate-pulse"></div>
                 </div>
             </div>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -48,6 +48,7 @@ const PublicBusinessListings = () => {
 
     return (
         <div className="min-h-[calc(100vh-64px)] bg-slate-50 dark:bg-zinc-950 bluish:bg-[#0a0f1d] selection:bg-blue-500/30 dark:selection:bg-emerald-500/30 bluish:selection:bg-blue-500/30 font-sans transition-colors duration-300 relative z-0 overflow-hidden">
+            <div className="fixed inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] dark:bg-[radial-gradient(#ffffff33_1px,#000000_1px)] bluish:bg-[radial-gradient(#ffffff33_1px,#0a0f1d_1px)] [background-size:20px_20px] opacity-20 dark:opacity-[0.26] bluish:opacity-[0.26] pointer-events-none z-[1]"></div>
             {/* Dynamic Background Elements - Bluish Theme Only */}
             <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden hidden bluish:block">
                 <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob"></div>
@@ -67,7 +68,7 @@ const PublicBusinessListings = () => {
 
             <div className="relative z-10">
                 {/* Header */}
-                <div className="bg-white dark:bg-zinc-900 bluish:bg-slate-900/80 backdrop-blur-md border-b border-gray-200 dark:border-zinc-800 bluish:border-white/5 py-6 px-4 sticky top-0 z-10">
+                <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800 bluish:to-slate-900 border-b border-gray-200 dark:border-zinc-800 bluish:border-white/5 py-6 px-4 sticky top-0 z-10 transition-colors duration-300">
                     <div className="max-w-7xl mx-auto flex items-center justify-between">
                         <button
                             onClick={() => navigate(-1)}
@@ -84,7 +85,7 @@ const PublicBusinessListings = () => {
                 {/* Content */}
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                     {assets.length === 0 ? (
-                        <div className="text-center py-20 bg-white dark:bg-zinc-900 bluish:bg-slate-900/50 rounded-3xl shadow-sm border border-gray-100 dark:border-zinc-800 bluish:border-white/5 backdrop-blur-sm">
+                        <div className="text-center py-20 bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800 bluish:to-slate-900 rounded-3xl shadow-sm border border-gray-100 dark:border-zinc-800 bluish:border-white/5 transition-colors duration-300">
                             <div className="w-16 h-16 bg-gray-100 dark:bg-zinc-800 bluish:bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-400 bluish:text-slate-500">
                                 <ShoppingBag size={32} />
                             </div>
@@ -97,7 +98,7 @@ const PublicBusinessListings = () => {
                                 <div
                                     key={asset._id}
                                     onClick={() => navigate(`/assets/${asset._id}`)}
-                                    className="bg-white dark:bg-zinc-900 bluish:bg-slate-900 rounded-2xl shadow-sm hover:shadow-xl dark:hover:shadow-emerald-900/10 bluish:hover:shadow-blue-900/10 border border-gray-100 dark:border-zinc-800 bluish:border-white/5 overflow-hidden cursor-pointer group transition-all duration-300"
+                                    className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800 bluish:to-slate-900 rounded-2xl shadow-sm hover:shadow-xl dark:hover:shadow-emerald-900/10 bluish:hover:shadow-blue-900/10 border border-gray-100 dark:border-zinc-800 bluish:border-white/5 overflow-hidden cursor-pointer group transition-all duration-300"
                                 >
                                     <div className="aspect-[4/3] bg-gray-100 dark:bg-zinc-800 bluish:bg-slate-800 relative overflow-hidden">
                                         <img

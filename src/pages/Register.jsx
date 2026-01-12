@@ -44,9 +44,7 @@ const Register = () => {
     return (
         <div className="h-screen bg-[#0a0f1d] flex items-center justify-center p-4 relative overflow-hidden">
             {/* Dotted Background Pattern */}
-            <div className="absolute inset-0 z-0">
-                <div className="absolute inset-0 bg-[#0a0f1d] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px] opacity-20"></div>
-            </div>
+            <div className="fixed inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] dark:bg-[radial-gradient(#ffffff33_1px,#000000_1px)] bluish:bg-[radial-gradient(#ffffff33_1px,#0a0f1d_1px)] [background-size:20px_20px] opacity-20 dark:opacity-[0.26] bluish:opacity-[0.26] pointer-events-none z-[1]"></div>
 
             {/* Ambient Background Glows */}
             <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-30 animate-blob"></div>

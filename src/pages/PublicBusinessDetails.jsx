@@ -50,6 +50,7 @@ const PublicBusinessDetails = () => {
 
     return (
         <div className="min-h-[calc(100vh-64px)] bg-slate-50 dark:bg-zinc-950 bluish:bg-[#0a0f1d] selection:bg-blue-500/30 dark:selection:bg-emerald-500/30 bluish:selection:bg-blue-500/30 font-sans transition-colors duration-300 relative overflow-hidden">
+
             {/* Dynamic Background Elements - Bluish Theme Only */}
             <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden hidden bluish:block">
                 <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob"></div>
@@ -96,7 +97,7 @@ const PublicBusinessDetails = () => {
 
                         <div className="flex flex-col md:flex-row md:items-end gap-10 animate-fade-in-up">
                             {/* Floating Glass Card for Main Image */}
-                            <div className="w-32 h-32 md:w-56 md:h-56 bg-white dark:bg-zinc-800 bluish:bg-slate-900/40 backdrop-blur-xl rounded-3xl p-2 shadow-[0_0_40px_rgba(59,130,246,0.15)] dark:shadow-[0_0_40px_rgba(16,185,129,0.15)] rotate-3 transform border border-blue-500/20 dark:border-emerald-500/20 overflow-hidden flex-shrink-0 relative group hover:rotate-0 transition-transform duration-500 hover:shadow-[0_0_50px_rgba(59,130,246,0.3)] dark:hover:shadow-[0_0_50px_rgba(16,185,129,0.3)] hover:border-blue-400/40 dark:hover:border-emerald-400/40">
+                            <div className="w-32 h-32 md:w-56 md:h-56 bg-white dark:bg-zinc-800 bluish:bg-gradient-to-br bluish:from-slate-800 bluish:to-slate-900 backdrop-blur-xl rounded-3xl p-2 shadow-[0_0_40px_rgba(59,130,246,0.15)] dark:shadow-[0_0_40px_rgba(16,185,129,0.15)] rotate-3 transform border border-blue-500/20 dark:border-emerald-500/20 overflow-hidden flex-shrink-0 relative group hover:rotate-0 transition-transform duration-500 hover:shadow-[0_0_50px_rgba(59,130,246,0.3)] dark:hover:shadow-[0_0_50px_rgba(16,185,129,0.3)] hover:border-blue-400/40 dark:hover:border-emerald-400/40">
                                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent pointer-events-none z-10"></div>
                                 <img
                                     src={mainImage}
@@ -141,7 +142,7 @@ const PublicBusinessDetails = () => {
                     <div className="grid md:grid-cols-3 gap-8">
                         {/* Left Column: About */}
                         <div className="md:col-span-2 space-y-8">
-                            <div className="bg-white dark:bg-zinc-900 bluish:bg-slate-900/60 rounded-3xl p-8 shadow-xl dark:shadow-none border border-gray-100 dark:border-zinc-800 bluish:border-blue-500/10 backdrop-blur-sm animate-fade-in-up transition-all hover:border-blue-500/20 hover:shadow-[0_0_30px_rgba(59,130,246,0.1)]" style={{ animationDelay: '100ms' }}>
+                            <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800 bluish:to-slate-900 rounded-3xl p-8 shadow-xl dark:shadow-none border border-gray-100 dark:border-zinc-800 bluish:border-blue-500/10 transition-all hover:border-blue-500/20 hover:shadow-[0_0_30px_rgba(59,130,246,0.1)]" style={{ animationDelay: '100ms' }}>
                                 <h2 className="text-2xl font-bold text-gray-900 dark:text-white bluish:text-white mb-6 flex items-center">
                                     <div className="w-10 h-10 rounded-lg bg-blue-500/10 dark:bg-emerald-500/10 flex items-center justify-center mr-4 border border-blue-500/20 dark:border-emerald-500/20 shadow-[0_0_15px_rgba(59,130,246,0.2)] dark:shadow-[0_0_15px_rgba(16,185,129,0.2)]">
                                         <Building2 className="text-blue-400 dark:text-cyan-400" size={20} />
@@ -154,7 +155,7 @@ const PublicBusinessDetails = () => {
                             </div>
 
                             {/* Gallery Section */}
-                            <div className="bg-white dark:bg-zinc-900 bluish:bg-slate-900/60 rounded-3xl p-8 shadow-xl dark:shadow-none border border-gray-100 dark:border-zinc-800 bluish:border-blue-500/10 backdrop-blur-sm animate-fade-in-up transition-all hover:border-blue-500/20 dark:hover:border-emerald-500/20 hover:shadow-[0_0_30px_rgba(59,130,246,0.1)] dark:hover:shadow-[0_0_30px_rgba(16,185,129,0.1)]" style={{ animationDelay: '200ms' }}>
+                            <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800 bluish:to-slate-900 rounded-3xl p-8 shadow-xl dark:shadow-none border border-gray-100 dark:border-zinc-800 bluish:border-blue-500/10 transition-all hover:border-blue-500/20 dark:hover:border-emerald-500/20 hover:shadow-[0_0_30px_rgba(59,130,246,0.1)] dark:hover:shadow-[0_0_30px_rgba(16,185,129,0.1)]" style={{ animationDelay: '200ms' }}>
                                 <h2 className="text-xl font-bold text-gray-900 dark:text-white bluish:text-white mb-6 flex items-center">
                                     <div className="w-10 h-10 rounded-lg bg-indigo-500/10 flex items-center justify-center mr-4 border border-indigo-500/20 shadow-[0_0_15px_rgba(99,102,241,0.2)]">
                                         <ImageIcon className="text-indigo-400" size={20} />
@@ -214,11 +215,11 @@ const PublicBusinessDetails = () => {
                                     </div>
 
                                     <div className="space-y-3 relative z-10">
-                                        <div className="flex items-center bg-black/30 bluish:bg-slate-950/50 p-3 rounded-xl backdrop-blur-sm group-hover:bg-slate-950/70 transition-colors border border-blue-500/10 dark:border-emerald-500/10 group-hover:border-blue-500/30 dark:group-hover:border-emerald-500/30">
+                                        <div className="flex items-center bg-black/30 bluish:bg-slate-950 p-3 rounded-xl backdrop-blur-sm group-hover:bg-slate-950/70 transition-colors border border-blue-500/10 dark:border-emerald-500/10 group-hover:border-blue-500/30 dark:group-hover:border-emerald-500/30">
                                             <Mail size={18} className="mr-3 text-blue-200 dark:text-emerald-200 bluish:text-cyan-400" />
                                             <span className="text-sm font-medium truncate opacity-90 text-blue-100 dark:text-emerald-100">{business.owner?.email}</span>
                                         </div>
-                                        <div className="flex items-center bg-black/30 bluish:bg-slate-950/50 p-3 rounded-xl backdrop-blur-sm group-hover:bg-slate-950/70 transition-colors border border-blue-500/10 dark:border-emerald-500/10 group-hover:border-blue-500/30 dark:group-hover:border-emerald-500/30">
+                                        <div className="flex items-center bg-black/30 bluish:bg-slate-950 p-3 rounded-xl backdrop-blur-sm group-hover:bg-slate-950/70 transition-colors border border-blue-500/10 dark:border-emerald-500/10 group-hover:border-blue-500/30 dark:group-hover:border-emerald-500/30">
                                             <Phone size={18} className="mr-3 text-blue-200 dark:text-emerald-200 bluish:text-cyan-400" />
                                             <span className="text-sm font-medium opacity-90 text-blue-100 dark:text-emerald-100">{business.owner?.phone || 'No Phone'}</span>
                                         </div>
@@ -226,7 +227,7 @@ const PublicBusinessDetails = () => {
                                 </div>
                             </Link>
 
-                            <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-b bluish:from-slate-900/60 bluish:to-[#0a0f1d]/60 rounded-3xl p-6 shadow-lg border border-gray-100 dark:border-zinc-800 bluish:border-blue-500/20 text-center backdrop-blur-xl">
+                            <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-b bluish:from-slate-900 bluish:to-[#0a0f1d] rounded-3xl p-6 shadow-lg border border-gray-100 dark:border-zinc-800 bluish:border-blue-500/20 text-center backdrop-blur-xl">
                                 <p className="text-gray-500 dark:text-gray-400 bluish:text-blue-200 text-sm mb-4 font-bold tracking-wide uppercase">Interested in this business?</p>
                                 <button
                                     onClick={() => navigate(`/businessdetails/${businessId}/listings`)}

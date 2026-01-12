@@ -29,7 +29,7 @@ import Filter from '../components/Filter';
 import BuyerDashboardShimmer from '../components/shimmers/BuyerDashboardShimmer';
 
 const StatCard = ({ title, value, icon: Icon, colorClass }) => (
-    <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 p-5 rounded-2xl border border-gray-100 dark:border-zinc-800 bluish:border-white/5 shadow-sm flex items-center justify-between group hover:shadow-md transition-all">
+    <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800 bluish:to-slate-900 p-5 rounded-2xl border border-gray-100 dark:border-zinc-800 bluish:border-white/5 shadow-sm flex items-center justify-between group hover:shadow-md transition-all">
         <div>
             <p className="text-xs font-bold text-gray-400 dark:text-gray-500 bluish:text-slate-400 uppercase tracking-wider mb-1">{title}</p>
             <h3 className="text-2xl font-black text-gray-900 dark:text-white bluish:text-white">{value}</h3>
@@ -54,7 +54,7 @@ const InterestCard = ({ interest, isExpanded, onToggle, onDelete }) => {
     };
 
     return (
-        <div className={`bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 rounded-2xl border transition-all duration-300 overflow-hidden ${isExpanded
+        <div className={`bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800 bluish:to-slate-900 rounded-2xl border transition-all duration-300 overflow-hidden ${isExpanded
             ? 'border-blue-500 dark:border-blue-500 bluish:border-blue-500 shadow-xl ring-1 ring-blue-500/10 dark:ring-blue-500/10 bluish:ring-blue-500/10'
             : 'border-gray-100 dark:border-zinc-800 bluish:border-white/5 hover:border-blue-500/30 dark:hover:border-blue-500/30 bluish:hover:border-blue-500/30 shadow-sm hover:shadow-md'
             }`}>
@@ -219,7 +219,7 @@ const InterestCard = ({ interest, isExpanded, onToggle, onDelete }) => {
 
 const OrderCard = ({ order, isExpanded, onToggle }) => {
     return (
-        <div className={`bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 rounded-2xl border transition-all duration-300 overflow-hidden ${isExpanded
+        <div className={`bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800 bluish:to-slate-900 rounded-2xl border transition-all duration-300 overflow-hidden ${isExpanded
             ? 'border-blue-500 dark:border-blue-500 bluish:border-blue-500 shadow-xl ring-1 ring-blue-500/10 dark:ring-blue-500/10 bluish:ring-blue-500/10'
             : 'border-gray-100 dark:border-zinc-800 bluish:border-white/5 hover:border-blue-500/30 dark:hover:border-blue-500/30 bluish:hover:border-blue-500/30 shadow-sm hover:shadow-md'
             }`}>
@@ -371,7 +371,7 @@ const BuyerDashboard = () => {
         condition: '',
         status: ''
     });
-    const {showSnackbar, confirm } = useUI();
+    const { showSnackbar, confirm } = useUI();
 
     // The backend handles the filtering.
     const displayData = activeTab === 'interests' ? interests : orders;
@@ -461,6 +461,7 @@ const BuyerDashboard = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-black bluish:bg-[#0a0f1d] transition-colors duration-300 pb-20 relative overflow-hidden">
+            <div className="fixed inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] dark:bg-[radial-gradient(#ffffff33_1px,#000000_1px)] bluish:bg-[radial-gradient(#ffffff33_1px,#0a0f1d_1px)] [background-size:20px_20px] opacity-20 dark:opacity-[0.26] bluish:opacity-[0.26] pointer-events-none z-[1]"></div>
             {/* Dynamic Background Elements */}
             <div className="fixed inset-0 z-0 pointer-events-none">
                 <img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=2670&auto=format&fit=crop" alt="Background" className="w-full h-full object-cover opacity-5 dark:opacity-20 mix-blend-overlay" />

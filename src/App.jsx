@@ -68,7 +68,14 @@ function App() {
     };
 
     return (
-        <div className="min-h-screen bg-white dark:bg-[#050505] text-gray-900 dark:text-gray-200 transition-colors duration-300">
+        <div className="min-h-screen bg-gray-50 dark:bg-black bluish:bg-[#0a0f1d] text-gray-900 dark:text-gray-200 transaction-colors duration-300 relative overflow-x-hidden">
+            {/* Global Dotted Background */}
+            <div className="fixed inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] dark:bg-[radial-gradient(#ffffff33_1px,#000000_1px)] bluish:bg-[radial-gradient(#ffffff33_1px,#0a0f1d_1px)] [background-size:20px_20px] opacity-20 dark:opacity-[0.26] bluish:opacity-[0.26] pointer-events-none z-[1]"></div>
+
+            {/* Global Ambient Glows */}
+            <div className="fixed top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/20 dark:bg-emerald-600/10 bluish:bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-30 animate-blob pointer-events-none z-[0]"></div>
+            <div className="fixed bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-600/20 dark:bg-emerald-600/10 bluish:bg-purple-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-30 animate-blob animation-delay-2000 pointer-events-none z-[0]"></div>
+
             {!shouldHideNavbar() && <Navbar />}
             <ScrollToTop />
             <Routes>
@@ -167,4 +174,4 @@ function App() {
     )
 }
 
-export default App
+export default App;

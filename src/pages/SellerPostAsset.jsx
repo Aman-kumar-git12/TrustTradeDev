@@ -164,6 +164,8 @@ const SellerPostAsset = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-zinc-950 bluish:bg-[#0a0f1d] selection:bg-blue-500/30 dark:selection:bg-emerald-500/30 bluish:selection:bg-blue-500/30 py-12 px-4 sm:px-6 lg:px-8 font-sans transition-colors duration-300 relative overflow-hidden">
+            {/* Dotted Background Pattern */}
+            <div className="fixed inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] dark:bg-[radial-gradient(#ffffff33_1px,#000000_1px)] bluish:bg-[radial-gradient(#ffffff33_1px,#0a0f1d_1px)] [background-size:20px_20px] opacity-20 dark:opacity-[0.26] bluish:opacity-[0.26] pointer-events-none z-[1]"></div>
             {/* Dynamic Background Elements - Bluish Theme Only */}
             <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden hidden bluish:block">
                 <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob"></div>
@@ -198,7 +200,7 @@ const SellerPostAsset = () => {
                     </div>
                 </div>
 
-                <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 rounded-2xl shadow-xl border border-gray-100 dark:border-zinc-800 bluish:border-white/5 overflow-hidden transition-colors duration-300">
+                <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800 bluish:to-slate-900 rounded-2xl shadow-xl border border-gray-100 dark:border-zinc-800 bluish:border-white/5 overflow-hidden transition-colors duration-300">
                     <div className="h-1 bg-gradient-to-r from-blue-500 to-blue-400 dark:from-emerald-600 dark:to-emerald-400 bluish:from-blue-500 bluish:to-blue-400 w-full"></div>
 
                     <form onSubmit={handleSubmit} className="p-8 md:p-10">
@@ -221,7 +223,7 @@ const SellerPostAsset = () => {
                                                     type="text"
                                                     required
                                                     placeholder="e.g., 2020 CNC Milling Machine"
-                                                    className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 bg-white dark:bg-zinc-800 bluish:bg-slate-800/50 text-gray-900 dark:text-white bluish:text-white rounded-xl focus:ring-4 focus:ring-blue-500/10 dark:focus:ring-emerald-500/10 focus:border-blue-500 dark:focus:border-emerald-500 bluish:focus:ring-blue-500/10 bluish:focus:border-blue-500 transition-all outline-none"
+                                                    className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 bg-white dark:bg-zinc-800 bluish:bg-slate-800 text-gray-900 dark:text-white bluish:text-white rounded-xl focus:ring-4 focus:ring-blue-500/10 dark:focus:ring-emerald-500/10 focus:border-blue-500 dark:focus:border-emerald-500 bluish:focus:ring-blue-500/10 bluish:focus:border-blue-500 transition-all outline-none"
                                                     value={formData.title}
                                                     onChange={e => setFormData({ ...formData, title: e.target.value })}
                                                 />
@@ -239,7 +241,7 @@ const SellerPostAsset = () => {
                                                         type="number"
                                                         required
                                                         placeholder="0.00"
-                                                        className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 bg-white dark:bg-zinc-800 bluish:bg-slate-800/50 text-gray-900 dark:text-white bluish:text-white rounded-xl focus:ring-4 focus:ring-blue-500/10 dark:focus:ring-emerald-500/10 focus:border-blue-500 dark:focus:border-emerald-500 bluish:focus:ring-blue-500/10 bluish:focus:border-blue-500 transition-all outline-none"
+                                                        className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 bg-white dark:bg-zinc-800 bluish:bg-slate-800 text-gray-900 dark:text-white bluish:text-white rounded-xl focus:ring-4 focus:ring-blue-500/10 dark:focus:ring-emerald-500/10 focus:border-blue-500 dark:focus:border-emerald-500 bluish:focus:ring-blue-500/10 bluish:focus:border-blue-500 transition-all outline-none"
                                                         value={formData.price}
                                                         onChange={e => setFormData({ ...formData, price: e.target.value })}
                                                     />
@@ -253,7 +255,7 @@ const SellerPostAsset = () => {
                                                         <Tag className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                                                     </div>
                                                     <select
-                                                        className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 bg-white dark:bg-zinc-800 bluish:bg-slate-800/50 text-gray-900 dark:text-white bluish:text-white rounded-xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 bluish:focus:ring-blue-500/10 bluish:focus:border-blue-500 transition-all outline-none appearance-none"
+                                                        className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 bg-white dark:bg-zinc-800 bluish:bg-slate-800 text-gray-900 dark:text-white bluish:text-white rounded-xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 bluish:focus:ring-blue-500/10 bluish:focus:border-blue-500 transition-all outline-none appearance-none"
                                                         value={formData.condition}
                                                         onChange={e => setFormData({ ...formData, condition: e.target.value })}
                                                     >
@@ -276,7 +278,7 @@ const SellerPostAsset = () => {
                                                     type="text"
                                                     required
                                                     placeholder="City, State"
-                                                    className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 bg-white dark:bg-zinc-800 bluish:bg-slate-800/50 text-gray-900 dark:text-white bluish:text-white rounded-xl focus:ring-4 focus:ring-blue-500/10 dark:focus:ring-emerald-500/10 focus:border-blue-500 dark:focus:border-emerald-500 bluish:focus:ring-blue-500/10 bluish:focus:border-blue-500 transition-all outline-none"
+                                                    className="w-full pl-10 pr-4 py-3 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 bg-white dark:bg-zinc-800 bluish:bg-slate-800 text-gray-900 dark:text-white bluish:text-white rounded-xl focus:ring-4 focus:ring-blue-500/10 dark:focus:ring-emerald-500/10 focus:border-blue-500 dark:focus:border-emerald-500 bluish:focus:ring-blue-500/10 bluish:focus:border-blue-500 transition-all outline-none"
                                                     value={formData.location}
                                                     onChange={e => setFormData({ ...formData, location: e.target.value })}
                                                 />
@@ -354,7 +356,7 @@ const SellerPostAsset = () => {
                                     <div className="grid grid-cols-2 gap-3 mb-4">
                                         {/* Existing Images */}
                                         {formData.images.map((img, idx) => (
-                                            <div key={idx} className="aspect-square relative group rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-zinc-700 bluish:border-white/10 bg-gray-50 dark:bg-zinc-800 bluish:bg-slate-800/50">
+                                            <div key={idx} className="aspect-square relative group rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-zinc-700 bluish:border-white/10 bg-gray-50 dark:bg-zinc-800 bluish:bg-slate-800">
                                                 <img src={img} alt={`Preview ${idx + 1}`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                                                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[1px]">
                                                     <button
@@ -374,7 +376,7 @@ const SellerPostAsset = () => {
                                                 type="button"
                                                 onClick={triggerFileInput}
                                                 disabled={uploadingImage}
-                                                className={`relative group overflow-hidden bg-gray-50 dark:bg-zinc-800/50 bluish:bg-slate-800/50 border-2 border-dashed border-gray-300 dark:border-zinc-700 bluish:border-white/10 hover:border-blue-500 dark:hover:border-emerald-500 bluish:hover:border-blue-500 rounded-xl flex flex-col items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-emerald-400 bluish:hover:text-blue-400 transition-all duration-300 ${formData.images.length === 0 ? 'col-span-2 aspect-video' : 'aspect-square'}`}
+                                                className={`relative group overflow-hidden bg-gray-50 dark:bg-zinc-800/50 bluish:bg-slate-800 border-2 border-dashed border-gray-300 dark:border-zinc-700 bluish:border-white/10 hover:border-blue-500 dark:hover:border-emerald-500 bluish:hover:border-blue-500 rounded-xl flex flex-col items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-emerald-400 bluish:hover:text-blue-400 transition-all duration-300 ${formData.images.length === 0 ? 'col-span-2 aspect-video' : 'aspect-square'}`}
                                             >
                                                 {uploadingImage ? (
                                                     <Loader2 size={24} className="animate-spin mb-2" />
@@ -387,7 +389,7 @@ const SellerPostAsset = () => {
                                     </div>
 
                                     {/* URL Input Handling */}
-                                    <div className="bg-gray-50 dark:bg-zinc-800/50 bluish:bg-slate-800/30 p-4 rounded-xl border border-gray-100 dark:border-zinc-800 bluish:border-white/5">
+                                    <div className="bg-gray-50 dark:bg-zinc-800/50 bluish:bg-slate-800 p-4 rounded-xl border border-gray-100 dark:border-zinc-800 bluish:border-white/5">
                                         <input
                                             type="file"
                                             ref={fileInputRef}
@@ -437,7 +439,7 @@ const SellerPostAsset = () => {
                                         required
                                         rows={6}
                                         placeholder="Describe the condition, history, and key features of the asset..."
-                                        className="w-full px-4 py-3 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 bg-white dark:bg-zinc-800 bluish:bg-slate-800/50 text-gray-900 dark:text-white bluish:text-white rounded-xl focus:ring-4 focus:ring-blue-500/10 dark:focus:ring-emerald-500/10 focus:border-blue-500 dark:focus:border-emerald-500 bluish:focus:ring-blue-500/10 bluish:focus:border-blue-500 transition-all outline-none resize-none shadow-sm"
+                                        className="w-full px-4 py-3 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 bg-white dark:bg-zinc-800 bluish:bg-slate-800 text-gray-900 dark:text-white bluish:text-white rounded-xl focus:ring-4 focus:ring-blue-500/10 dark:focus:ring-emerald-500/10 focus:border-blue-500 dark:focus:border-emerald-500 bluish:focus:ring-blue-500/10 bluish:focus:border-blue-500 transition-all outline-none resize-none shadow-sm"
                                         value={formData.description}
                                         onChange={e => setFormData({ ...formData, description: e.target.value })}
                                     />

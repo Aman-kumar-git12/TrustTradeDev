@@ -113,7 +113,7 @@ const PublicUserProfile = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 relative z-10">
                 {/* Profile Card - Overlapping Header */}
                 <div className="relative -mt-20 mb-12">
-                    <div className="bg-white dark:bg-zinc-900 bluish:bg-slate-900/80 bluish:backdrop-blur-md rounded-3xl shadow-xl border border-gray-100 dark:border-zinc-800 bluish:border-white/5 p-8 flex flex-col md:flex-row items-center md:items-end gap-6 md:gap-8 transition-all duration-300">
+                    <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800 bluish:to-slate-900 rounded-3xl shadow-xl border border-gray-100 dark:border-zinc-800 bluish:border-white/5 p-8 flex flex-col md:flex-row items-center md:items-end gap-6 md:gap-8 transition-all duration-300">
                         {/* Avatar */}
                         <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-white dark:bg-zinc-800 p-1.5 shadow-lg border-4 border-white dark:border-zinc-700 -mt-16 md:-mt-24 flex-shrink-0 relative">
                             {user.avatarUrl ? (
@@ -191,7 +191,7 @@ const PublicUserProfile = () => {
                                     <Link
                                         to={`/businessdetails/${business._id}`}
                                         key={business._id}
-                                        className="bg-white dark:bg-zinc-900 bluish:bg-slate-900/80 bluish:backdrop-blur-md rounded-2xl p-4 shadow-sm hover:shadow-xl dark:shadow-none border border-gray-100 dark:border-zinc-800 bluish:border-white/5 transition-all group hover:-translate-y-1"
+                                        className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800 bluish:to-slate-900 rounded-2xl p-4 shadow-sm hover:shadow-xl dark:shadow-none border border-gray-100 dark:border-zinc-800 bluish:border-white/5 transition-all group hover:-translate-y-1"
                                     >
                                         <div className="aspect-video bg-gray-100 dark:bg-zinc-800 rounded-xl overflow-hidden mb-4 relative">
                                             <img
@@ -227,7 +227,7 @@ const PublicUserProfile = () => {
                                 <ShieldCheck className="mr-3 text-blue-500 dark:text-emerald-500" />
                                 Verified Reputation
                             </h2>
-                            <div className="bg-white dark:bg-zinc-900 bluish:bg-slate-900/80 bluish:backdrop-blur-md rounded-3xl p-8 border border-gray-100 dark:border-zinc-800 bluish:border-white/5 shadow-sm text-center relative">
+                            <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800 bluish:to-slate-900 rounded-3xl p-8 border border-gray-100 dark:border-zinc-800 bluish:border-white/5 shadow-sm text-center relative">
                                 <button
                                     onClick={() => { setModalType('trust'); setShowInfoModal(true); }}
                                     className="absolute top-6 right-6 p-2 text-blue-500 dark:text-emerald-500 hover:text-blue-600 dark:hover:text-emerald-400 transition-colors"
@@ -307,7 +307,7 @@ const PublicUserProfile = () => {
                                         }).map((m, idx) => (
                                             <div
                                                 key={idx}
-                                                className="p-5 rounded-[2rem] border bg-white dark:bg-zinc-900 bluish:bg-slate-900/80 bluish:backdrop-blur-md border-gray-100 dark:border-zinc-800 bluish:border-white/5 shadow-sm transition-all"
+                                                className="p-5 rounded-[2rem] border bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800 bluish:to-slate-900 border-gray-100 dark:border-zinc-800 bluish:border-white/5 shadow-sm transition-all"
                                             >
                                                 <div className="flex items-center gap-4">
                                                     <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 ${m.color}`}>
@@ -358,7 +358,7 @@ const PublicUserProfile = () => {
                                             .map((badge) => (
                                                 <div
                                                     key={badge.id}
-                                                    className="p-4 rounded-3xl border bg-white dark:bg-zinc-900 bluish:bg-slate-900/80 bluish:backdrop-blur-md border-gray-100 dark:border-zinc-800 bluish:border-white/5 shadow-sm transition-all flex flex-col items-center justify-center gap-2"
+                                                    className="p-4 rounded-3xl border bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800 bluish:to-slate-900 border-gray-100 dark:border-zinc-800 bluish:border-white/5 shadow-sm transition-all flex flex-col items-center justify-center gap-2"
                                                 >
                                                     <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${badge.color}`}>
                                                         <badge.icon size={18} />

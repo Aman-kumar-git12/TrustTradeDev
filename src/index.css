@@ -9,7 +9,9 @@
   }
 
   body {
-    @apply bg-white text-gray-900 font-sans transition-colors duration-300;
+    @apply bg-[#0a0f1d] text-slate-50 font-sans transition-colors duration-300;
+    background-image: radial-gradient(#ffffff33 1px, #00091d 1px);
+    background-size: 20px 20px;
   }
 
   /* Dark Mode Base Styles */
