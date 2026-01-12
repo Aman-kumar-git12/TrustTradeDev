@@ -2,15 +2,7 @@ import axios from 'axios';
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL || 'http://127.0.0.1:5002/api',
-});
-
-// Add auth token to requests
-api.interceptors.request.use((config) => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (user && user.token) {
-        config.headers.Authorization = `Bearer ${user.token}`;
-    }
-    return config;
+    withCredentials: true // Important for cookies
 });
 
 // Handle 401 globally
@@ -18,8 +10,10 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
         if (error.response && error.response.status === 401) {
-            localStorage.removeItem('user');
-            window.location.href = '/login';
+            // Optional: redirect to login if not already there, but be careful of infinite loops
+            if (window.location.pathname !== '/login' && window.location.pathname !== '/') {
+                window.location.href = '/login';
+            }
         }
         return Promise.reject(error);
     }

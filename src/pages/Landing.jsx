@@ -1,12 +1,19 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, Check, CheckCircle2, Factory, Users, ShieldCheck, Truck } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
 import { Tilt } from 'react-tilt';
 
 const Landing = () => {
-    const { user } = useAuth();
+    const { user, loading } = useAuth();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!loading && user) {
+            navigate('/home');
+        }
+    }, [user, loading, navigate]);
 
     const fadeUp = {
         hidden: { opacity: 0, y: 30 },

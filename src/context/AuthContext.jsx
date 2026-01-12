@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+axios.defaults.withCredentials = true;
 
 const AuthContext = createContext();
 
@@ -12,22 +13,31 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Check for logged-in user
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
-        }
-        setLoading(false);
+        const checkLoggedIn = async () => {
+            try {
+                const { data } = await axios.get('http://localhost:5002/api/auth/me'); // Ensure base URL is correct or configured elsewhere
+                setUser(data);
+            } catch (error) {
+                setUser(null);
+            } finally {
+                setLoading(false);
+            }
+        };
+        checkLoggedIn();
     }, []);
 
-    const login = (userData) => {
-        localStorage.setItem('user', JSON.stringify(userData));
-        setUser(userData);
+    const login = async (email, password) => {
+        const { data } = await axios.post('http://localhost:5002/api/auth/login', { email, password });
+        setUser(data);
     };
 
-    const logout = () => {
-        localStorage.removeItem('user');
-        setUser(null);
+    const logout = async () => {
+        try {
+            await axios.post('http://localhost:5002/api/auth/logout');
+            setUser(null);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const value = {

@@ -26,76 +26,133 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
+        setError(null);
         try {
             await login(email, password);
             navigate('/home');
         } catch (err) {
             setError('Invalid credentials');
+        } finally {
+            setIsLoading(false);
         }
     };
 
     return (
-        <motion.div
-            className="min-h-screen bg-[#0a0f1d] flex items-center justify-center p-4"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-        >
-            <motion.div
-                className="absolute inset-0 bg-gradient-to-br from-[#0a0f1d] via-[#0a0f1d]/80 to-[#0a0f1d]"
-                animate={{ backgroundPosition: ['0% 0%', '100% 100%'] }}
-                transition={{ duration: 8, repeat: Infinity, repeatType: 'reverse', ease: 'linear' }}
-            />
+        <div className="h-screen bg-[#0a0f1d] flex items-center justify-center p-4 relative overflow-hidden">
+            {/* Dotted Background Pattern */}
+            <div className="absolute inset-0 z-0">
+                <div className="absolute inset-0 bg-[#0a0f1d] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px] opacity-20"></div>
+            </div>
+
+            {/* Ambient Background Glows */}
+            <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-30 animate-blob"></div>
+            <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-30 animate-blob animation-delay-2000"></div>
 
             <motion.div
-                className="relative bg-[#131b2e] rounded-xl shadow-2xl p-8 w-full max-w-md z-10"
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
+                className="relative bg-[#0f1629]/60 backdrop-blur-xl border border-white/10 rounded-2xl shadow-2xl p-6 md:p-8 w-full max-w-md z-10 overflow-hidden"
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
             >
-                <motion.h2 className="text-3xl font-bold text-center text-blue-400 mb-6" variants={itemVariants}>
-                    Sign In
-                </motion.h2>
-                {error && (
-                    <motion.p className="text-red-400 text-center mb-4" variants={itemVariants}>
-                        {error}
+                {/* Vertical Scanning Beam Removed */}
+                <div className="text-center mb-6">
+                    <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="inline-block p-2 rounded-full bg-blue-500/10 mb-3"
+                    >
+                        <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-blue-400 to-blue-600 shadow-lg shadow-blue-500/30"></div>
+                    </motion.div>
+                    <motion.h2
+                        className="text-3xl font-bold text-white mb-2"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.3 }}
+                    >
+                        Welcome Back
+                    </motion.h2>
+                    <motion.p
+                        className="text-gray-400 text-sm"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.4 }}
+                    >
+                        Sign in to access your dashboard
                     </motion.p>
+                </div>
+
+                {error && (
+                    <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm py-2 px-3 rounded-lg text-center mb-6"
+                    >
+                        {error}
+                    </motion.div>
                 )}
-                <motion.form onSubmit={handleSubmit} className="space-y-4" variants={itemVariants}>
-                    <motion.div variants={itemVariants}>
-                        <label className="block text-gray-300 mb-1">Email</label>
+
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+                        <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Email Address</label>
                         <input
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full px-4 py-2 bg-[#0f1629] text-white rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-4 py-2.5 bg-[#0a0f1d]/50 border border-white/10 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all placeholder-gray-600 text-sm"
+                            placeholder="name@company.com"
                             required
                         />
-                    </motion.div>
-                    <motion.div variants={itemVariants}>
-                        <label className="block text-gray-300 mb-1">Password</label>
+                    </div>
+                    <div className="animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+                        <div className="flex justify-between items-center mb-1.5">
+                            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider">Password</label>
+                            <a href="#" className="text-xs text-blue-400 hover:text-blue-300 transition-colors">Forgot password?</a>
+                        </div>
                         <input
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-4 py-2 bg-[#0f1629] text-white rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-4 py-2.5 bg-[#0a0f1d]/50 border border-white/10 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all placeholder-gray-600 text-sm"
+                            placeholder="••••••••"
                             required
                         />
-                    </motion.div>
-                    <motion.button
+                    </div>
+
+                    <button
                         type="submit"
-                        className="w-full flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded transition-colors"
-                        whileHover={buttonHover}
-                        variants={itemVariants}
+                        disabled={isLoading}
+                        className="w-full flex items-center justify-center bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold py-3 rounded-xl shadow-lg shadow-blue-500/25 transition-all transform active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed mt-2 text-sm animate-fade-in-up"
+                        style={{ animationDelay: '0.6s' }}
                     >
-                        Login <ArrowRight className="ml-2" size={18} />
-                    </motion.button>
-                </motion.form>
+                        {isLoading ? (
+                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                        ) : (
+                            <>Sign In <ArrowRight className="ml-2" size={16} /></>
+                        )}
+                    </button>
+                </form>
+
+                <motion.div
+                    className="mt-6 text-center"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.8 }}
+                >
+                    <p className="text-gray-400 text-xs">
+                        Don't have an account?{' '}
+                        <span onClick={() => navigate('/register')} className="text-blue-400 font-semibold hover:text-blue-300 cursor-pointer transition-colors">
+                            Create account
+                        </span>
+                    </p>
+                </motion.div>
             </motion.div>
-        </motion.div>
+        </div>
     );
 };
 
