@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar'
 import ScrollToTop from './components/ScrollToTop'
+import ScrollButtons from './components/ScrollButtons'
 import Landing from './pages/Landing'
 import Home from './pages/Home'
 import Login from './pages/Login'
@@ -78,6 +79,7 @@ function App() {
 
             {!shouldHideNavbar() && <Navbar />}
             <ScrollToTop />
+            <ScrollButtons />
             <Routes>
                 <Route path="/" element={<Landing />} />
                 <Route path="/home" element={
