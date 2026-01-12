@@ -33,7 +33,7 @@ const Landing = () => {
     return (
         <div className="min-h-screen bg-[#0a0f1d] text-white font-sans selection:bg-blue-500/30 overflow-x-hidden relative">
             {/* Dotted Background - Global */}
-            <div className="fixed inset-0 bg-[#0a0f1d] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px] opacity-20 pointer-events-none z-0"></div>
+            <div className="fixed inset-0 bg-[#0a0f1d] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px] opacity-20 pointer-events-none z-[1]"></div>
 
             {/* Ambient Background Glows - Global */}
             <div className="fixed top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-30 animate-blob pointer-events-none z-0"></div>
@@ -262,10 +262,10 @@ const FeatureBox = ({ icon, title, desc }) => (
     </div>
 );
 
-const StepCard = ({ num, title, img, active, completed, progress }) => (
-    <div className={`group relative rounded-2xl overflow-hidden h-96 bg-[#131b2e] shadow-2xl transition-all duration-500 ${active ? 'ring-2 ring-blue-500/50' : 'border border-gray-800'}`}>
+const StepCard = ({ num, title, img, active, completed, duration }) => (
+    <div className={`group relative rounded-2xl overflow-hidden h-96 bg-[#131b2e] shadow-2xl transition-all duration-500 ${active ? 'border-2 border-blue-400 shadow-[0_0_30px_rgba(59,130,246,0.4)]' : 'border border-gray-800'}`}>
         {active && (
-            <div className="absolute inset-0 rounded-2xl border-4 border-blue-500/30 animate-ping opacity-20 pointer-events-none"></div>
+            <div className="absolute inset-0 rounded-2xl border-4 border-blue-400/30 animate-ping opacity-20 pointer-events-none"></div>
         )}
         <div className="absolute inset-0">
             <img
@@ -293,10 +293,16 @@ const StepCard = ({ num, title, img, active, completed, progress }) => (
                 Everything connects in the {title} phase.
             </p>
             <div className={`mt-4 h-1.5 w-full bg-white/10 rounded-full overflow-hidden transition-opacity duration-300 ${active || completed ? 'opacity-100' : 'opacity-0'}`}>
-                <div
+                <motion.div
+                    key={active ? "active" : "inactive"}
                     className="h-full bg-gradient-to-r from-blue-500 to-cyan-400 shadow-[0_0_10px_rgba(59,130,246,0.5)]"
-                    style={{ width: `${progress}%`, transition: active ? 'none' : 'width 0.4s ease' }}
-                ></div>
+                    initial={{ width: active ? "0%" : completed ? "100%" : "0%" }}
+                    animate={{ width: active ? "100%" : completed ? "100%" : "0%" }}
+                    transition={{
+                        duration: active ? duration : 0.5,
+                        ease: "linear"
+                    }}
+                />
             </div>
         </div>
     </div>
@@ -319,28 +325,20 @@ const PriceCard = ({ title, price, highlight }) => (
 // Sequential Progress Animation Component
 const LiquidFlow = ({ steps }) => {
     const [currentStep, setCurrentStep] = useState(0);
-    const [progress, setProgress] = useState(0);
-
-    const stepDuration = 3500;
-    const updateInterval = 30;
+    const stepDuration = 3.5; // Seconds
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            setProgress(prev => {
-                const newProgress = prev + (updateInterval / stepDuration) * 100;
-                if (newProgress >= 100) {
-                    setCurrentStep(curr => (curr + 1) % steps.length);
-                    return 0;
-                }
-                return newProgress;
-            });
-        }, updateInterval);
-        return () => clearInterval(interval);
-    }, [steps.length]);
+        const delay = currentStep === steps.length ? 1000 : stepDuration * 1000;
+
+        const timer = setTimeout(() => {
+            setCurrentStep(prev => (prev + 1) % (steps.length + 1));
+        }, delay);
+
+        return () => clearTimeout(timer);
+    }, [steps.length, currentStep]);
 
     const handleStepClick = (index) => {
         setCurrentStep(index);
-        setProgress(0);
     };
 
     return (
@@ -367,7 +365,7 @@ const LiquidFlow = ({ steps }) => {
                                 {...step}
                                 active={isActive}
                                 completed={isPast}
-                                progress={isActive ? progress : isPast ? 100 : 0}
+                                duration={stepDuration}
                             />
                         </motion.div>
                     );

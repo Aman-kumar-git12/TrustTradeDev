@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import api from '../utils/api';
@@ -15,12 +16,15 @@ const Register = () => {
         password: '',
         role: initialRole
     });
+    const [isLoading, setIsLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const { showSnackbar } = useUI();
     const { login } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
         try {
             const { data } = await api.post('/auth/register', formData);
             login(data); // Use context login
@@ -33,6 +37,7 @@ const Register = () => {
         } catch (err) {
             const msg = err.response?.data?.message || 'Registration failed';
             showSnackbar(msg, 'error');
+            setIsLoading(false);
         }
     };
 
@@ -83,14 +88,23 @@ const Register = () => {
                     </div>
                     <div className="animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
                         <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Password</label>
-                        <input
-                            type="password"
-                            required
-                            className="w-full px-4 py-2 bg-[#0a0f1d]/50 border border-white/10 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all placeholder-gray-600 text-sm"
-                            placeholder="••••••••"
-                            value={formData.password}
-                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                        />
+                        <div className="relative">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                required
+                                className="w-full px-4 py-2 bg-[#0a0f1d]/50 border border-white/10 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all placeholder-gray-600 text-sm"
+                                placeholder="••••••••"
+                                value={formData.password}
+                                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                            />
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+                            >
+                                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                            </button>
+                        </div>
                     </div>
 
                     <div className="animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
@@ -113,8 +127,15 @@ const Register = () => {
                         </div>
                     </div>
 
-                    <button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold py-3 rounded-xl transition-all mt-4 shadow-lg shadow-blue-500/25 transform hover:scale-[1.02] active:scale-[0.98] animate-fade-in-up text-sm" style={{ animationDelay: '0.6s' }}>
-                        Register
+                    <button type="submit" disabled={isLoading} className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white font-bold py-3 rounded-xl transition-all mt-4 shadow-lg shadow-blue-500/25 transform hover:scale-[1.02] active:scale-[0.98] animate-fade-in-up text-sm disabled:opacity-70 disabled:cursor-not-allowed" style={{ animationDelay: '0.6s' }}>
+                        {isLoading ? (
+                            <div className="flex items-center justify-center gap-2">
+                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                <span>Registering...</span>
+                            </div>
+                        ) : (
+                            'Register'
+                        )}
                     </button>
                 </form>
 

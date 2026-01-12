@@ -169,7 +169,6 @@ const Home = () => {
                     <ProductSection
                         title="Trending Now"
                         items={stats.trendingAssets}
-                        badge={{ text: "Hot", icon: <TrendingUp className="w-3 h-3 text-white" /> }}
                     />
                 )}
 
@@ -177,7 +176,6 @@ const Home = () => {
                     <ProductSection
                         title="New Arrivals"
                         items={stats.newArrivals}
-                        badge={{ text: "New", icon: <Zap className="w-3 h-3 text-white" /> }}
                     />
                 )}
 
@@ -248,7 +246,7 @@ const MarqueeItem = ({ icon, text }) => (
     </div>
 );
 
-const ProductCard = ({ item, badge }) => (
+const ProductCard = ({ item }) => (
     <Tilt options={{ max: 10, scale: 1.02, speed: 400, glare: true, 'max-glare': 0.05 }} style={{ height: '100%' }}>
         <Link to={`/assets/${item._id || item.id}`} className="group block bg-white dark:bg-[#141414] bluish:bg-[#1e293b] rounded-xl overflow-hidden border border-gray-200 dark:border-white/5 bluish:border-slate-700/50 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-300 h-full flex flex-col transform-style-3d">
             {/* Image Container */}
@@ -261,11 +259,7 @@ const ProductCard = ({ item, badge }) => (
                 {/* Subtle gradient only for depth, not for text overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-                {/* Badge */}
-                <div className="absolute top-3 left-3 bg-blue-600 dark:bg-emerald-600 border border-blue-500 dark:border-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.4)] px-3 py-1 rounded-full flex items-center gap-1.5 z-10 transform-z-30">
-                    {badge.icon}
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-white shadow-sm">{badge.text}</span>
-                </div>
+
             </div>
 
             {/* Details Container - Below Image */}
@@ -289,7 +283,7 @@ const ProductCard = ({ item, badge }) => (
     </Tilt>
 );
 
-const ProductSection = ({ title, items, badge }) => (
+const ProductSection = ({ title, items }) => (
     <div className="space-y-6">
         <div className="flex items-center justify-between px-1">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
@@ -302,7 +296,7 @@ const ProductSection = ({ title, items, badge }) => (
         <div className="flex overflow-x-auto snap-x scrollbar-hide pb-4 gap-4 lg:grid lg:grid-cols-4 lg:gap-6 lg:overflow-visible lg:pb-0">
             {items.slice(0, 4).map((item, idx) => (
                 <div key={idx} className="flex-none w-[280px] snap-center lg:w-auto">
-                    <ProductCard item={item} badge={badge} />
+                    <ProductCard item={item} />
                 </div>
             ))}
         </div>
