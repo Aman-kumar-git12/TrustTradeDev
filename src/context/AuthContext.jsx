@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import axios from 'axios';
-axios.defaults.withCredentials = true;
+import api from '../utils/api';
 
 const AuthContext = createContext();
 
@@ -15,7 +14,7 @@ export const AuthProvider = ({ children }) => {
     useEffect(() => {
         const checkLoggedIn = async () => {
             try {
-                const { data } = await axios.get('http://localhost:5002/api/auth/me'); // Ensure base URL is correct or configured elsewhere
+                const { data } = await api.get('/auth/me');
                 setUser(data);
             } catch (error) {
                 setUser(null);
@@ -27,13 +26,13 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = async (email, password) => {
-        const { data } = await axios.post('http://localhost:5002/api/auth/login', { email, password });
+        const { data } = await api.post('/auth/login', { email, password });
         setUser(data);
     };
 
     const logout = async () => {
         try {
-            await axios.post('http://localhost:5002/api/auth/logout');
+            await api.post('/auth/logout');
             setUser(null);
         } catch (error) {
             console.error(error);

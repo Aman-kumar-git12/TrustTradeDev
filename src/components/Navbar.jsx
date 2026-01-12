@@ -173,7 +173,7 @@ const Navbar = () => {
                                                     onClick={(e) => handleNavClick(e, '/profile', 'Profile')}
                                                 >
                                                     <div className={`h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold border transition-all group-hover:scale-110 ${accentBgClass} ${accentClass} border-white/5`}>
-                                                        {user.fullName.charAt(0)}
+                                                        {user.fullName?.charAt(0) || 'U'}
                                                     </div>
                                                     <span className={`text-sm font-bold transition-colors text-gray-300 group-hover:text-white`}>
                                                         {user.fullName}
