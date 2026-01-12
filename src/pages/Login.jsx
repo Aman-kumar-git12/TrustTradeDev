@@ -97,7 +97,7 @@ const Login = () => {
                     </motion.div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4" autoComplete="off">
                     <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                         <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Email Address</label>
                         <input
@@ -107,6 +107,7 @@ const Login = () => {
                             className="w-full px-4 py-2.5 bg-[#0a0f1d]/50 border border-white/10 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all placeholder-gray-600 text-sm"
                             placeholder="name@company.com"
                             required
+                            autoComplete="off"
                         />
                     </div>
                     <div className="animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
@@ -122,6 +123,7 @@ const Login = () => {
                                 className="w-full px-4 py-2.5 bg-[#0a0f1d]/50 border border-white/10 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all placeholder-gray-600 text-sm"
                                 placeholder="••••••••"
                                 required
+                                autoComplete="new-password"
                             />
                             <button
                                 type="button"

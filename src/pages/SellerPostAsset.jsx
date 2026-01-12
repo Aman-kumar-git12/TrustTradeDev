@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
     ArrowLeft, Upload, DollarSign, MapPin, Tag, FileText, CheckCircle, AlertCircle, Image as ImageIcon,

@@ -371,7 +371,7 @@ const BuyerDashboard = () => {
         condition: '',
         status: ''
     });
-    const { showSnackbar, confirm } = useUI();
+    const {showSnackbar, confirm } = useUI();
 
     // The backend handles the filtering.
     const displayData = activeTab === 'interests' ? interests : orders;

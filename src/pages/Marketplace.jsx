@@ -160,8 +160,11 @@ const Marketplace = () => {
                                             <div className="flex items-center text-xs text-blue-600 dark:text-emerald-400 bluish:text-white font-bold uppercase tracking-wider mb-2 bluish:bg-blue-600/90 bluish:backdrop-blur-md bluish:px-2.5 bluish:py-1 bluish:rounded-md bluish:w-fit bluish:shadow-lg">
                                                 <Tag size={12} className="mr-1" /> {asset.category}
                                             </div>
+                                            <div className="text-xs font-semibold text-gray-500 dark:text-gray-400 bluish:text-gray-300 mb-1 truncate">
+                                                {asset.business?.businessName || asset.seller?.companyName || asset.seller?.fullName}
+                                            </div>
                                             <h3 className="text-xl font-bold text-gray-900 dark:text-white bluish:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-emerald-400 bluish:group-hover:text-blue-400 transition-colors line-clamp-1">{asset.title}</h3>
-                                            <p className="text-gray-600 dark:text-gray-400 bluish:text-gray-400 text-sm line-clamp-2 mb-4 flex-grow font-light leading-relaxed">{asset.description}</p>
+                                            <p className="text-gray-600 dark:text-gray-400 bluish:text-gray-400 text-sm truncate mb-4 flex-grow font-light leading-relaxed">{asset.description}</p>
 
                                             <div className="flex items-center text-gray-500 dark:text-gray-500 bluish:text-gray-500 text-sm border-t border-gray-100 dark:border-zinc-800 bluish:border-white/5 pt-4 mt-auto">
                                                 <MapPin size={16} className="mr-1 bluish:text-blue-500" /> {asset.location}
