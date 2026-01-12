@@ -31,7 +31,14 @@ const Landing = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#0a0f1d] text-white font-sans selection:bg-blue-500/30 overflow-x-hidden">
+        <div className="min-h-screen bg-[#0a0f1d] text-white font-sans selection:bg-blue-500/30 overflow-x-hidden relative">
+            {/* Dotted Background - Global */}
+            <div className="fixed inset-0 bg-[#0a0f1d] bg-[radial-gradient(#ffffff33_1px,#00091d_1px)] bg-[size:20px_20px] opacity-20 pointer-events-none z-0"></div>
+
+            {/* Ambient Background Glows - Global */}
+            <div className="fixed top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-30 animate-blob pointer-events-none z-0"></div>
+            <div className="fixed bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-30 animate-blob animation-delay-2000 pointer-events-none z-0"></div>
+
             {/* Hero Section - Full Background */}
             <div className="relative min-h-screen flex flex-col">
                 {/* Background Image with Slow Pan/Zoom */}
@@ -42,9 +49,11 @@ const Landing = () => {
                         transition={{ duration: 20, repeat: Infinity, repeatType: "reverse", ease: "linear" }}
                         src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2670&auto=format&fit=crop"
                         alt="Industrial Warehouse"
-                        className="w-full h-full object-cover opacity-40 mix-blend-overlay"
+                        className="w-full h-full object-cover opacity-20 mix-blend-overlay"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f1d]/80 via-[#0a0f1d]/50 to-[#0a0f1d] z-0"></div>
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f1d]/90 via-[#0a0f1d]/60 to-[#0a0f1d] z-0"></div>
+                    {/* Extra Bottom Fade to Hide Image Line */}
+                    <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#0a0f1d] via-[#0a0f1d] to-transparent z-10"></div>
                 </div>
 
                 {/* Navbar Spacer */}
@@ -114,7 +123,8 @@ const Landing = () => {
             </div>
 
             {/* How It Works Section */}
-            <section className="py-24 relative z-10 bg-[#0a0f1d]">
+            {/* How It Works Section */}
+            <section className="py-24 relative z-10">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <motion.div
                         initial={{ opacity: 0 }}
@@ -140,7 +150,7 @@ const Landing = () => {
 
 
             {/* Split Section: Sellers vs Buyers */}
-            < section className="py-12 bg-[#0a0f1d] border-t border-white/5" >
+            < section className="py-12 border-t border-white/5" >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid md:grid-cols-2 gap-8">
                         {/* Sellers Card */}
@@ -193,7 +203,7 @@ const Landing = () => {
             </section >
 
             {/* Business Model / Pricing */}
-            < section className="py-24 bg-[#0a0f1d] relative" >
+            < section className="py-24 relative" >
                 {/* Glow Effect */}
                 < div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-3xl h-64 bg-blue-600/5 blur-[100px] rounded-full pointer-events-none" ></div >
 
