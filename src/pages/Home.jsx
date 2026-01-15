@@ -268,7 +268,7 @@ const ProductCard = ({ item }) => (
                 <h3 className="text-gray-900 dark:text-white bluish:text-white font-bold text-lg line-clamp-1 mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors transform-z-20">{item.title}</h3>
 
                 <div className="flex justify-between items-center text-sm mb-4 transform-z-10">
-                    <span className="text-blue-600 dark:text-blue-400 bluish:text-blue-400 font-bold text-xl">${item.price?.toLocaleString()}</span>
+                    <span className="text-blue-600 dark:text-blue-400 bluish:text-blue-400 font-bold text-xl">₹{item.price?.toLocaleString()}</span>
                     <span className="text-gray-500 dark:text-gray-400 text-xs flex items-center gap-1 bg-gray-100 dark:bg-white/5 px-2 py-1 rounded"><Clock className="w-3 h-3" /> 2h left</span>
                 </div>
 

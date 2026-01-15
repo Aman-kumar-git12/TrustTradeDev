@@ -91,7 +91,7 @@ const SellerAnalyticsCustomers = () => {
                                             </Link>
                                         </td>
                                         <td className="px-4 py-3 text-right text-sm text-gray-600 dark:text-gray-300 bluish:text-slate-300">{c.totalOrders}</td>
-                                        <td className="px-4 py-3 text-right font-bold text-sm text-blue-600 dark:text-emerald-400 bluish:text-blue-600">${c.totalSpend.toLocaleString()}</td>
+                                        <td className="px-4 py-3 text-right font-bold text-sm text-blue-600 dark:text-emerald-400 bluish:text-blue-600">₹{c.totalSpend.toLocaleString()}</td>
                                         <td className="px-4 py-3 text-right text-xs text-gray-500 dark:text-gray-400 bluish:text-slate-400">{new Date(c.lastOrderDate).toLocaleDateString()}</td>
                                     </tr>
                                 ))}

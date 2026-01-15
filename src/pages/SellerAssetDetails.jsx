@@ -229,7 +229,7 @@ const SellerAssetDetails = () => {
                             <div>
                                 <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1 transition-colors duration-300">Price (USD)</label>
                                 <div className="relative">
-                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 dark:text-gray-400 font-bold">$</div>
+                                    <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 dark:text-gray-400 font-bold">₹</div>
                                     <input
                                         type="number"
                                         name="price"

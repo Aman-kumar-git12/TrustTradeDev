@@ -169,8 +169,10 @@ const SellerListings = () => {
                                             <h3 className="font-bold text-lg text-gray-900 dark:text-white bluish:text-white group-hover:text-blue-600 dark:group-hover:text-emerald-400 bluish:group-hover:text-blue-500 transition-colors">
                                                 {asset.title}
                                             </h3>
+                                            <div className="text-sm text-gray-500 dark:text-gray-400 bluish:text-slate-400 bg-gray-50 dark:bg-zinc-800 bluish:bg-slate-800 px-3 py-1 rounded-lg border border-gray-100 dark:border-zinc-700 bluish:border-slate-700">
+                                                <span className="font-semibold text-gray-900 dark:text-gray-200 bluish:text-slate-200">₹{asset.price.toLocaleString()}</span>
+                                            </div>
                                             <div className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400 bluish:text-slate-400 mt-1">
-                                                <span className="font-semibold text-gray-900 dark:text-gray-200 bluish:text-slate-200">${asset.price.toLocaleString()}</span>
                                                 <span>•</span>
                                                 <span>{asset.condition}</span>
                                             </div>

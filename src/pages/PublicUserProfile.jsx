@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { User, Mail, Phone, Calendar, ArrowLeft, Building2, ShieldCheck, ShoppingBag, Medal, Star, Activity, Crown, Zap, TrendingUp, Rocket, DollarSign, Info, X } from 'lucide-react';
+import { User, Mail, Phone, Calendar, ArrowLeft, Building2, ShieldCheck, ShoppingBag, Medal, Star, Activity, Crown, Zap, TrendingUp, Rocket, IndianRupee, Info, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '../utils/api';
 import ProfileShimmer from '../components/shimmers/ProfileShimmer';
@@ -31,7 +31,7 @@ const PublicUserProfile = () => {
             { id: "first_deal", label: "First Deal", icon: ShoppingBag, desc: "How to earn: Successfully finalize your very first acquisition on the TruthTrade platform." },
             { id: "active_buyer", label: "Active Buyer", icon: Zap, desc: "How to earn: Sustain a regular pattern of successful purchases across multiple categories." },
             { id: "negotiation_pro", label: "Negotiation Pro", icon: TrendingUp, desc: "How to earn: Successfully finalize deals through professional price negotiation and mutual compromise." },
-            { id: "high_value", label: "High-Value Trader", icon: DollarSign, desc: "How to earn: Successfully execute significant market transactions and high-value strategic acquisitions." },
+            { id: "high_value", label: "High-Value Trader", icon: IndianRupee, desc: "How to earn: Successfully execute significant market transactions and high-value strategic acquisitions." },
             { id: "fast_mover", label: "Fast Mover", icon: Rocket, desc: "How to earn: Demonstrate decisive market action by securing separate deals within a brief time frame." }
         ]
     };
@@ -352,7 +352,7 @@ const PublicUserProfile = () => {
                                             { id: 'first_deal', label: 'First Deal', icon: ShoppingBag, color: 'text-blue-500 bg-blue-50 dark:text-emerald-500 dark:bg-emerald-900/10' },
                                             { id: 'active_buyer', label: 'Active Buyer', icon: Zap, color: 'text-amber-500 bg-amber-50 dark:bg-amber-900/10' },
                                             { id: 'negotiation_pro', label: 'Negotiation Pro', icon: TrendingUp, color: 'text-blue-500 bg-blue-50 dark:text-emerald-500 dark:bg-emerald-900/10' },
-                                            { id: 'high_value', label: 'High-Value Trader', icon: DollarSign, color: 'text-indigo-500 bg-indigo-50 dark:bg-indigo-900/10' },
+                                            { id: 'high_value', label: 'High-Value Trader', icon: IndianRupee, color: 'text-indigo-500 bg-indigo-50 dark:bg-indigo-900/10' },
                                             { id: 'fast_mover', label: 'Fast Mover', icon: Rocket, color: 'text-purple-500 bg-purple-50 dark:bg-purple-900/10' },
                                         ].filter(badge => user.achievements?.some(a => a.id === badge.id))
                                             .map((badge) => (

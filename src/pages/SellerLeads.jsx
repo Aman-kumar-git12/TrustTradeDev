@@ -38,7 +38,7 @@ const PriceInputModal = ({ isOpen, onClose, onSubmit, title, maxQuantity, reques
                         <div className="mb-6 relative">
                             <label className="block text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Total Sale Amount</label>
                             <div className="relative">
-                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 font-bold">$</span>
+                                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 font-bold">₹</span>
                                 <input
                                     type="number"
                                     min="0"
@@ -94,12 +94,12 @@ const PriceInputModal = ({ isOpen, onClose, onSubmit, title, maxQuantity, reques
                             </div>
                             <div className="flex justify-between items-center text-sm">
                                 <span className="text-gray-500 font-medium">Total Price</span>
-                                <span className="font-bold text-indigo-600 dark:text-indigo-400 text-lg">${(originalPrice * requestedQuantity)?.toLocaleString()}</span>
+                                <span className="font-bold text-indigo-600 dark:text-indigo-400 text-lg">₹{(originalPrice * requestedQuantity)?.toLocaleString()}</span>
                             </div>
                             <div className="h-px bg-indigo-100 dark:bg-indigo-900/30 border-t border-dashed my-2"></div>
                             <div className="flex justify-between items-center">
                                 <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">Unit Price</span>
-                                <span className="text-xs font-medium text-gray-500">${originalPrice?.toLocaleString()}</span>
+                                <span className="text-xs font-medium text-gray-500">₹{originalPrice?.toLocaleString()}</span>
                             </div>
                         </div>
                     </div>
@@ -117,12 +117,12 @@ const PriceInputModal = ({ isOpen, onClose, onSubmit, title, maxQuantity, reques
                             </div>
                             <div className="flex justify-between items-center text-sm">
                                 <span className="text-gray-500 font-medium">Total Price</span>
-                                <span className="font-bold text-blue-600 dark:text-blue-400 bluish:text-blue-400 text-2xl">${totalPrice ? parseFloat(totalPrice).toLocaleString() : '0.00'}</span>
+                                <span className="font-bold text-blue-600 dark:text-blue-400 bluish:text-blue-400 text-2xl">₹{totalPrice ? parseFloat(totalPrice).toLocaleString() : '0.00'}</span>
                             </div>
                             <div className="h-px bg-gray-200 dark:bg-zinc-700 border-t border-dashed"></div>
                             <div className="flex justify-between items-center">
                                 <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">Unit Price</span>
-                                <span className="text-xs font-medium text-gray-500">${effectiveUnitPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}/item</span>
+                                <span className="text-xs font-medium text-gray-500">₹{effectiveUnitPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}/item</span>
                             </div>
                         </div>
                     </div>
@@ -461,7 +461,7 @@ const LeadRow = ({ lead, isExpanded, onToggle, onStatusUpdate, onLeadUpdate }) =
                                                 <div className="h-px bg-indigo-100 dark:bg-indigo-900/30 border-t border-dashed"></div>
                                                 <div className="flex justify-between items-center">
                                                     <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">Unit Price</span>
-                                                    <span className="text-xs font-medium text-gray-500">${lead.asset.price?.toLocaleString()}</span>
+                                                    <span className="text-xs font-medium text-gray-500">₹{lead.asset.price?.toLocaleString()}</span>
                                                 </div>
                                             </div>
                                         </div>

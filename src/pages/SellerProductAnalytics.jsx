@@ -5,7 +5,7 @@ import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 } from 'recharts';
 import {
-    ArrowLeft, DollarSign, Clock,
+    ArrowLeft, IndianRupee, Clock,
     TrendingUp, AlertTriangle, CheckCircle, Package, Users, MessageCircle
 } from 'lucide-react';
 import KPICard from '../components/KPICard';
@@ -65,27 +65,52 @@ const SellerProductAnalytics = () => {
         return `${days.toFixed(1)} Days`;
     };
 
+    const handleRangeChange = (newRange) => {
+        navigate(`/dashboard/seller/${businessId}/analytics/product/${assetId}/${newRange}`, { state: location.state });
+    };
+
     return (
         <div className="max-w-7xl mx-auto px-4 py-8 space-y-8 animate-fade-in pb-20">
             {/* Header */}
-            <div className="flex items-center gap-4 border-b border-gray-100 dark:border-zinc-800 pb-6 transition-colors duration-300">
-                <button
-                    onClick={() => navigate(`/dashboard/seller/${businessId}/analytics/products`)}
-                    className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-full transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-                >
-                    <ArrowLeft size={24} />
-                </button>
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white transition-colors duration-300">{asset.title}</h1>
-                    <div className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400 mt-1">
-                        <span className="px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300 font-semibold text-xs uppercase border border-indigo-200 dark:border-indigo-800">
-                            {asset.category}
-                        </span>
-                        <span className="flex items-center gap-1">
-                            <Package size={14} className="text-gray-400 dark:text-gray-500" /> Stuck: {asset.availableQty} Units
-                        </span>
-                        <span>Listed on {new Date(asset.createdAt).toLocaleDateString()}</span>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-gray-100 dark:border-zinc-800 pb-6 transition-colors duration-300">
+                <div className="flex items-center gap-4">
+                    <button
+                        onClick={() => navigate(`/dashboard/seller/${businessId}/analytics/products`)}
+                        className="p-2 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-full transition-colors text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                    >
+                        <ArrowLeft size={24} />
+                    </button>
+                    <div>
+                        <h1 className="text-2xl font-bold text-gray-900 dark:text-white transition-colors duration-300">{asset.title}</h1>
+                        <div className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400 mt-1">
+                            <span className="px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300 font-semibold text-xs uppercase border border-indigo-200 dark:border-indigo-800">
+                                {asset.category}
+                            </span>
+                            <span className="flex items-center gap-1">
+                                <Package size={14} className="text-gray-400 dark:text-gray-500" /> Stock: {asset.availableQty} Units
+                            </span>
+                            <span>Listed on {new Date(asset.createdAt).toLocaleDateString()}</span>
+                        </div>
                     </div>
+                </div>
+
+                {/* Range Selector */}
+                <div className="bg-gray-100 dark:bg-zinc-900/50 p-1 rounded-xl border border-gray-200 dark:border-zinc-800 flex self-start md:self-center">
+                    {[
+                        { label: '30 Days', value: '30d' },
+                        { label: 'All Time', value: 'all' }
+                    ].map((r) => (
+                        <button
+                            key={r.value}
+                            onClick={() => handleRangeChange(r.value)}
+                            className={`px-6 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-300 ${activeRange === r.value
+                                ? 'bg-white dark:bg-zinc-800 text-blue-600 dark:text-emerald-400 shadow-sm'
+                                : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+                                }`}
+                        >
+                            {r.label}
+                        </button>
+                    ))}
                 </div>
             </div>
 
@@ -96,28 +121,28 @@ const SellerProductAnalytics = () => {
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                     <KPICard
                         title="Total Revenue"
-                        value={`$${metrics.totalRevenue.toLocaleString()}`}
-                        icon={DollarSign}
+                        value={`₹${metrics.totalRevenue.toLocaleString()}`}
+                        icon={IndianRupee}
                         color="blue"
                         subtitle={`${metrics.totalOrders} Orders Completed`}
                     />
                     <KPICard
                         title="Total Profit"
-                        value={`$${metrics.totalProfit.toLocaleString()}`}
+                        value={`₹${metrics.totalProfit.toLocaleString()}`}
                         icon={TrendingUp}
                         color={metrics.totalProfit >= 0 ? "blue" : "red"}
                         subtitle={metrics.totalProfit >= 0 ? "Net Gain" : "Net Loss"}
                     />
                     <KPICard
                         title="Avg Profit / Order"
-                        value={`$${metrics.avgProfit.toLocaleString()}`}
-                        icon={DollarSign}
+                        value={`₹${metrics.avgProfit.toLocaleString()}`}
+                        icon={IndianRupee}
                         color={metrics.avgProfit >= 0 ? "blue" : "red"}
                         subtitle="Per unit margin"
                     />
                     <KPICard
                         title="Avg Neg. Price"
-                        value={`$${metrics.avgNegotiatedFinalPrice.toLocaleString()}`}
+                        value={`₹${metrics.avgNegotiatedFinalPrice.toLocaleString()}`}
                         icon={MessageCircle}
                         color="indigo"
                         subtitle="On negotiated deals"
@@ -226,10 +251,10 @@ const SellerProductAnalytics = () => {
                                         axisLine={false}
                                         tickLine={false}
                                         tick={{ fill: '#9CA3AF', fontSize: 12 }}
-                                        tickFormatter={v => `$${v}`}
+                                        tickFormatter={v => `₹${v}`}
                                     />
                                     <Tooltip
-                                        formatter={(value, name) => [`$${value.toLocaleString()}`, name === 'amount' ? 'Revenue' : 'Profit']}
+                                        formatter={(value, name) => [`₹${value.toLocaleString()}`, name === 'amount' ? 'Revenue' : 'Profit']}
                                         contentStyle={{
                                             backgroundColor: '#18181b', // zinc-900
                                             borderColor: '#27272a', // zinc-800
@@ -289,11 +314,11 @@ const SellerProductAnalytics = () => {
                         <div className="space-y-4">
                             <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-zinc-800 bluish:bg-slate-800 rounded-xl transition-colors duration-300">
                                 <span className="text-gray-500 dark:text-gray-400 bluish:text-slate-400 text-sm">Your Price</span>
-                                <span className="font-bold text-gray-900 dark:text-white bluish:text-white transition-colors duration-300">${asset.price.toLocaleString()}</span>
+                                <span className="font-bold text-gray-900 dark:text-white bluish:text-white transition-colors duration-300">₹{asset.price.toLocaleString()}</span>
                             </div>
                             <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-zinc-800 bluish:bg-slate-800 rounded-xl transition-colors duration-300">
                                 <span className="text-gray-500 dark:text-gray-400 bluish:text-slate-400 text-sm">Market Avg</span>
-                                <span className="font-bold text-gray-600 dark:text-gray-300 bluish:text-slate-300 transition-colors duration-300">${priceIntelligence.marketAvgPrice.toLocaleString()}</span>
+                                <span className="font-bold text-gray-600 dark:text-gray-300 bluish:text-slate-300 transition-colors duration-300">₹{priceIntelligence.marketAvgPrice.toLocaleString()}</span>
                             </div>
 
                             <div className={`p-4 rounded-xl border ${priceIntelligence.pricePosition === 'Overpriced' ? 'bg-red-50 border-red-100 text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-300' : 'bg-blue-50 border-blue-100 text-blue-700 dark:bg-emerald-900/20 dark:border-emerald-800 dark:text-emerald-300'} transition-colors duration-300`}>
@@ -305,7 +330,7 @@ const SellerProductAnalytics = () => {
                                         </p>
                                         <p className="opacity-90">
                                             {priceIntelligence.pricePosition === 'Overpriced'
-                                                ? `You are ${priceIntelligence.deviation}% above market average. Consider lowering to $${priceIntelligence.marketAvgPrice} to sell faster.`
+                                                ? `You are ${priceIntelligence.deviation}% above market average. Consider lowering to ₹${priceIntelligence.marketAvgPrice} to sell faster.`
                                                 : `Great job! You are priced competitively. This usually leads to 2x faster sales.`}
                                         </p>
                                     </div>

@@ -114,30 +114,39 @@ const MobileMenu = ({
 
                             {/* Nav Links */}
                             <div className="flex-1 overflow-y-auto px-6 py-6 space-y-3">
-                                {navLinks.map((link) => {
-                                    const isActive = location.pathname === link.path || (link.path !== '/' && location.pathname.startsWith(link.path));
+                                {(!user && location.pathname === '/') ? (
+                                    // Landing Page - Show nothing in the main list, or maybe "Home" if desired, 
+                                    // but user asked for ONLY Login, Register, Get Started.
+                                    // Those are in the footer. So we render nothing here or a placeholder.
+                                    <div className="flex flex-col items-center justify-center h-full text-center space-y-4 opacity-50">
+                                        <p>Welcome to TrustTrade</p>
+                                    </div>
+                                ) : (
+                                    navLinks.map((link) => {
+                                        const isActive = location.pathname === link.path || (link.path !== '/' && location.pathname.startsWith(link.path));
 
-                                    return (
-                                        <motion.div key={link.id} variants={itemVariants}>
-                                            <Link
-                                                to={link.path}
-                                                className={`flex items-center space-x-4 w-full px-5 py-4 rounded-2xl text-base font-bold transition-all group ${isActive && link.id !== 'Home' ? `${accentBgClass} ${accentClass}` :
-                                                    isActive && link.id === 'Home' ? accentClass :
-                                                        'text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-white'
-                                                    }`}
-                                                onClick={(e) => {
-                                                    handleNavClick(e, link.path, link.id);
-                                                    setIsOpen(false);
-                                                }}
-                                            >
-                                                <div className={`p-2 rounded-xl transition-colors ${isActive && link.id !== 'Home' ? accentBgClass : 'bg-transparent group-hover:bg-white/5'}`}>
-                                                    <link.icon size={22} className={`transition-transform duration-300 group-hover:scale-110 ${isActive ? accentClass : ''}`} />
-                                                </div>
-                                                <span>{link.label}</span>
-                                            </Link>
-                                        </motion.div>
-                                    );
-                                })}
+                                        return (
+                                            <motion.div key={link.id} variants={itemVariants}>
+                                                <Link
+                                                    to={link.path}
+                                                    className={`flex items-center space-x-4 w-full px-5 py-4 rounded-2xl text-base font-bold transition-all group ${isActive && link.id !== 'Home' ? `${accentBgClass} ${accentClass}` :
+                                                        isActive && link.id === 'Home' ? accentClass :
+                                                            'text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-white'
+                                                        }`}
+                                                    onClick={(e) => {
+                                                        handleNavClick(e, link.path, link.id);
+                                                        setIsOpen(false);
+                                                    }}
+                                                >
+                                                    <div className={`p-2 rounded-xl transition-colors ${isActive && link.id !== 'Home' ? accentBgClass : 'bg-transparent group-hover:bg-white/5'}`}>
+                                                        <link.icon size={22} className={`transition-transform duration-300 group-hover:scale-110 ${isActive ? accentClass : ''}`} />
+                                                    </div>
+                                                    <span>{link.label}</span>
+                                                </Link>
+                                            </motion.div>
+                                        );
+                                    })
+                                )}
                             </div>
 
                             {/* Footer Section */}
@@ -167,7 +176,7 @@ const MobileMenu = ({
                                             className={`flex items-center justify-center px-6 py-4 rounded-2xl text-base font-bold text-white shadow-xl transition-all ${buttonClass} text-center`}
                                             onClick={() => setIsOpen(false)}
                                         >
-                                            Join Now
+                                            Get Started
                                         </Link>
                                     </div>
                                 )}

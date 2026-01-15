@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useOutletContext, useParams, useNavigate } from 'react-router-dom';
 import api from '../utils/api';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, BarChart as RechartsBarChart, Bar, LineChart, Line, Legend } from 'recharts';
-import { DollarSign, ShoppingBag, TrendingUp, Users, Briefcase, Award, MapPin, Tag, List, BarChart2 } from 'lucide-react';
+import { IndianRupee, ShoppingBag, TrendingUp, Users, Briefcase, Award, MapPin, Tag, List, BarChart2 } from 'lucide-react';
 import KPICard from '../components/KPICard';
 import OverviewShimmer from '../components/shimmers/OverviewShimmer';
 
@@ -68,9 +68,9 @@ const SellerAnalyticsOverview = () => {
 
             {/* KPI Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <KPICard title="Total Revenue" value={`$${kpi.totalRevenue.toLocaleString()}`} icon={DollarSign} color="primary" subtitle="Gross Income" />
-                <KPICard title="Net Profit" value={`$${kpi.totalProfit.toLocaleString()}`} icon={Briefcase} color="indigo" subtitle={`Margin: ${kpi.netMargin}%`} highlight />
-                <KPICard title="Total Orders" value={kpi.totalUnitsSold} icon={ShoppingBag} color="blue" subtitle={`Avg: $${kpi.avgDealSize}`} />
+                <KPICard title="Total Revenue" value={`₹${kpi.totalRevenue.toLocaleString()}`} icon={IndianRupee} color="primary" subtitle="Gross Income" />
+                <KPICard title="Net Profit" value={`₹${kpi.totalProfit.toLocaleString()}`} icon={Briefcase} color="indigo" subtitle={`Margin: ${kpi.netMargin}%`} highlight />
+                <KPICard title="Total Orders" value={kpi.totalUnitsSold} icon={ShoppingBag} color="blue" subtitle={`Avg: ₹${kpi.avgDealSize}`} />
                 <KPICard title="Unique Customers" value={kpi.customers} icon={Users} color="purple" subtitle={`Best Month: ${kpi.bestMonth}`} />
             </div>
 
@@ -97,7 +97,7 @@ const SellerAnalyticsOverview = () => {
                                 </defs>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#374151" strokeOpacity={0.1} />
                                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 12 }} dy={10} />
-                                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 12 }} tickFormatter={(value) => `$${value / 1000}k`} />
+                                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 12 }} tickFormatter={(value) => `₹${value / 1000}k`} />
                                 <Tooltip contentStyle={{ borderRadius: '12px', border: '1px solid #27272a', backgroundColor: '#18181b', color: '#fff', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.5)' }} itemStyle={{ color: '#e5e7eb' }} />
                                 <Area type="monotone" dataKey="revenue" name="Revenue" stroke="#10B981" strokeWidth={3} fillOpacity={1} fill="url(#colorRevenue)" />
                                 <Area type="monotone" dataKey="profit" name="Profit" stroke="#6366f1" strokeWidth={3} fillOpacity={1} fill="url(#colorProfit)" />
@@ -140,20 +140,20 @@ const SellerAnalyticsOverview = () => {
                 {/* Product Efficiency Card */}
                 <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-zinc-800 bluish:border-white/5 transition-colors duration-300">
                     <h4 className="font-semibold text-gray-700 dark:text-gray-200 bluish:text-slate-200 mb-4 flex items-center gap-2">
-                        <DollarSign size={18} className="text-gray-400 dark:text-zinc-500 bluish:text-slate-500" /> Financial Efficiency
+                        <IndianRupee size={18} className="text-gray-400 dark:text-zinc-500 bluish:text-slate-500" /> Financial Efficiency
                     </h4>
                     <div className="space-y-4">
                         <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-zinc-800 bluish:bg-slate-800/50 rounded-lg transition-colors">
                             <span className="text-sm text-gray-500 dark:text-gray-400 bluish:text-slate-400">Avg Profit / Item</span>
-                            <span className="font-bold text-blue-600 dark:text-emerald-400 bluish:text-blue-400">+${kpi.avgProfit?.toLocaleString() || 0}</span>
+                            <span className="font-bold text-blue-600 dark:text-emerald-400 bluish:text-blue-400">+₹{kpi.avgProfit?.toLocaleString() || 0}</span>
                         </div>
                         <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-zinc-800 bluish:bg-slate-800/50 rounded-lg transition-colors">
                             <span className="text-sm text-gray-500 dark:text-gray-400 bluish:text-slate-400">Avg Discount</span>
-                            <span className="font-bold text-amber-600 dark:text-amber-400 bluish:text-amber-400">${kpi.avgDiscount?.toLocaleString() || 0}</span>
+                            <span className="font-bold text-amber-600 dark:text-amber-400 bluish:text-amber-400">₹{kpi.avgDiscount?.toLocaleString() || 0}</span>
                         </div>
                         <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-zinc-800 bluish:bg-slate-800/50 rounded-lg transition-colors">
                             <span className="text-sm text-gray-500 dark:text-gray-400 bluish:text-slate-400">Total Loss</span>
-                            <span className="font-bold text-red-500 dark:text-red-400 bluish:text-red-400">-${kpi.totalLoss?.toLocaleString() || 0}</span>
+                            <span className="font-bold text-red-500 dark:text-red-400 bluish:text-red-400">-₹{kpi.totalLoss?.toLocaleString() || 0}</span>
                         </div>
                         <div className="flex justify-between items-center p-3 bg-gray-50 dark:bg-zinc-800 bluish:bg-slate-800/50 rounded-lg transition-colors">
                             <span className="text-sm text-gray-500 dark:text-gray-400 bluish:text-slate-400">Items / Customer</span>
@@ -190,12 +190,12 @@ const SellerAnalyticsOverview = () => {
                         <div className="p-3 bg-blue-50/50 dark:bg-emerald-900/20 bluish:bg-blue-900/10 rounded-lg transition-colors">
                             <p className="text-xs text-blue-500 dark:text-emerald-400 bluish:text-blue-400 font-bold mb-1 uppercase tracking-wider">Most Profitable</p>
                             <p className="font-bold text-gray-900 dark:text-white bluish:text-white truncate">{data.rankings?.mostProfitable?.title || 'N/A'}</p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 bluish:text-slate-400">+${data.rankings?.mostProfitable?.profit?.toLocaleString() || 0}</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 bluish:text-slate-400">+₹{data.rankings?.mostProfitable?.profit?.toLocaleString() || 0}</p>
                         </div>
                         <div className="p-3 bg-red-50/50 dark:bg-red-900/20 bluish:bg-red-900/10 rounded-lg transition-colors">
                             <p className="text-xs text-red-500 dark:text-red-400 bluish:text-red-400 font-bold mb-1 uppercase tracking-wider">Least Profitable</p>
                             <p className="font-bold text-gray-900 dark:text-white bluish:text-white truncate">{data.rankings?.leastProfitable?.title || 'N/A'}</p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400 bluish:text-slate-400">${data.rankings?.leastProfitable?.profit?.toLocaleString() || 0}</p>
+                            <p className="text-xs text-gray-500 dark:text-gray-400 bluish:text-slate-400">₹{data.rankings?.leastProfitable?.profit?.toLocaleString() || 0}</p>
                         </div>
                     </div>
                 </div>
@@ -254,7 +254,7 @@ const SellerAnalyticsOverview = () => {
                             data: performanceView === 'promote' ? data.performers?.best?.byRevenue : data.performers?.worst?.byLoss,
                             dataKey: performanceView === 'promote' ? 'revenue' : 'profit',
                             color: performanceView === 'promote' ? '#10b981' : '#ef4444',
-                            unit: '$',
+                            unit: '₹',
                             prefix: true
                         },
                         {
@@ -262,7 +262,7 @@ const SellerAnalyticsOverview = () => {
                             data: performanceView === 'promote' ? data.performers?.best?.byProfit : data.performers?.worst?.byMargin,
                             dataKey: performanceView === 'promote' ? 'profit' : 'margin',
                             color: performanceView === 'promote' ? '#f59e0b' : '#f97316',
-                            unit: performanceView === 'promote' ? '$' : '%',
+                            unit: performanceView === 'promote' ? '₹' : '%',
                             prefix: performanceView === 'promote'
                         }
                     ].map((col, idx) => {
@@ -356,7 +356,7 @@ const SellerAnalyticsOverview = () => {
                                     <Tooltip
                                         contentStyle={{ borderRadius: '8px', border: '1px solid #27272a', backgroundColor: '#18181b', color: '#fff' }}
                                         itemStyle={{ color: '#fff' }}
-                                        formatter={(value) => `$${value.toLocaleString()}`}
+                                        formatter={(value) => `₹${value.toLocaleString()}`}
                                     />
                                     <Legend iconType="circle" />
                                 </PieChart>
@@ -404,12 +404,12 @@ const SellerAnalyticsOverview = () => {
                                     </defs>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#374151" strokeOpacity={0.1} />
                                     <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 12 }} />
-                                    <YAxis axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 12 }} tickFormatter={(val) => `$${val}`} />
+                                    <YAxis axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 12 }} tickFormatter={(val) => `₹${val}`} />
                                     <Tooltip
                                         contentStyle={{ backgroundColor: '#18181b', borderRadius: '12px', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', border: '1px solid #27272a', color: '#fff' }}
                                         itemStyle={{ color: '#fff' }}
                                         formatter={(val, name, props) => {
-                                            if (name === 'Avg Price') return [`$${Math.round(val).toLocaleString()}`, 'Avg Price'];
+                                            if (name === 'Avg Price') return [`₹${Math.round(val).toLocaleString()}`, 'Avg Price'];
                                             return [val, name];
                                         }}
                                     />

@@ -7,7 +7,7 @@ import {
     PieChart, Pie, Cell, Legend, BarChart, Bar
 } from 'recharts';
 import {
-    DollarSign, ShoppingBag, TrendingUp, ArrowLeft, Percent, Wallet,
+    IndianRupee, ShoppingBag, TrendingUp, ArrowLeft, Percent, Wallet,
     ShieldCheck, Activity, Award, Calendar, ChevronRight, Info,
     Zap, X, Target, Rocket, Star, Medal, Crown, ShieldAlert,
     CheckCircle2, Download, Share2
@@ -34,7 +34,7 @@ const eduContent = [
     { title: 'Consistent Activity', color: 'blue', icon: Activity, desc: 'Maintain regular browsing and purchasing habits to show reliability.', boost: '+5 pts' },
     { title: 'Verified Identity', color: 'indigo', icon: ShieldCheck, desc: 'Complete all identity verification steps (ID, Phone, Email).', boost: '+10 pts' },
     { title: 'Positive Interactions', color: 'amber', icon: Star, desc: 'Receive 5-star ratings from sellers on your communications.', boost: '+15 pts' },
-    { title: 'High Value Orders', color: 'blue', icon: Wallet, desc: 'Complete orders over $10k securely via platform escrow.', boost: '+8 pts' }
+    { title: 'High Value Orders', color: 'blue', icon: Wallet, desc: 'Complete orders over ₹10k securely via platform escrow.', boost: '+8 pts' }
 ];
 
 const getMilestoneBadge = (score, achievements) => {
@@ -202,8 +202,8 @@ const BuyerInsights = () => {
 
                 {/* KPI Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <KPICard title="Total Spent" value={`$${kpi.totalSpent.toLocaleString()}`} icon={Wallet} color="blue" />
-                    <KPICard title="Total Savings" value={`$${kpi.totalSavings.toLocaleString()}`} icon={TrendingUp} color="blue" subtitle="Negotiated discounts" />
+                    <KPICard title="Total Spent" value={`₹${kpi.totalSpent.toLocaleString()}`} icon={Wallet} color="blue" />
+                    <KPICard title="Total Savings" value={`₹${kpi.totalSavings.toLocaleString()}`} icon={TrendingUp} color="blue" subtitle="Negotiated discounts" />
                     <KPICard title="Acquisitions" value={kpi.acquisitions} icon={ShoppingBag} color="indigo" subtitle="Completed orders" />
                     <KPICard title="Conversion Rate" value={`${kpi.conversionRate}%`} icon={Percent} color="purple" subtitle="Interests to deals" />
                 </div>
@@ -241,7 +241,7 @@ const BuyerInsights = () => {
                                 </defs>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#374151" strokeOpacity={0.05} />
                                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 10, fontWeight: 700 }} dy={10} />
-                                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 10, fontWeight: 700 }} tickFormatter={(value) => `$${value}`} />
+                                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#9ca3af', fontSize: 10, fontWeight: 700 }} tickFormatter={(value) => `₹${value}`} />
                                 <Tooltip contentStyle={{ borderRadius: '20px', border: '1px solid #27272a', backgroundColor: '#111', color: '#fff', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.5)' }} cursor={{ stroke: '#ffffff20', strokeWidth: 2 }} />
                                 <Area type="monotone" dataKey="spent" name="Spent" stroke={chartColors.primary} strokeWidth={4} fillOpacity={1} fill="url(#colorSpent)" animationDuration={1500} />
                                 <Area type="monotone" dataKey="savings" name="Savings" stroke={chartColors.secondary} strokeWidth={4} fillOpacity={1} fill="url(#colorSavings)" animationDuration={1500} />
@@ -274,7 +274,7 @@ const BuyerInsights = () => {
                                     </Pie>
                                     <Tooltip
                                         contentStyle={{ borderRadius: '15px', border: '1px solid #27272a', backgroundColor: '#111', color: '#fff' }}
-                                        formatter={(value) => `$${value.toLocaleString()}`}
+                                        formatter={(value) => `₹${value.toLocaleString()}`}
                                     />
                                     <Legend verticalAlign="bottom" height={36} iconType="circle" wrapperStyle={{ fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1px' }} />
                                 </PieChart>

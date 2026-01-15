@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -21,8 +21,14 @@ const buttonHover = {
 };
 
 const Login = () => {
-    const { login } = useAuth();
+    const { login, user, loading } = useAuth();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!loading && user) {
+            navigate('/home');
+        }
+    }, [user, loading, navigate]);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);

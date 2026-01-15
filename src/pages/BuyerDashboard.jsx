@@ -85,7 +85,7 @@ const InterestCard = ({ interest, isExpanded, onToggle, onDelete }) => {
                         <span>{interest.asset?.business?.businessName || 'Independent Seller'}</span>
                     </div>
                     <div className="flex items-center text-sm font-semibold text-gray-500 dark:text-gray-400">
-                        <span className="text-gray-900 dark:text-gray-200">${interest.asset?.price?.toLocaleString()}</span>
+                        <span className="text-gray-900 dark:text-gray-200">₹{interest.asset?.price?.toLocaleString()}</span>
                         <span className="mx-2">•</span>
                         <MapPin size={14} className="mr-1" />
                         <span>{interest.asset?.location}</span>
@@ -137,7 +137,7 @@ const InterestCard = ({ interest, isExpanded, onToggle, onDelete }) => {
                                             <div className="grid grid-cols-3 gap-2 text-center">
                                                 <div>
                                                     <p className="text-[10px] text-gray-500 uppercase">Unit Price</p>
-                                                    <p className="font-bold text-gray-900 dark:text-white">${(interest.soldPrice || interest.asset?.price || 0).toLocaleString()}</p>
+                                                    <p className="font-bold text-gray-900 dark:text-white">₹{(interest.soldPrice || interest.asset?.price || 0).toLocaleString()}</p>
                                                 </div>
                                                 <div>
                                                     <p className="text-[10px] text-gray-500 uppercase">Qty</p>
@@ -145,7 +145,7 @@ const InterestCard = ({ interest, isExpanded, onToggle, onDelete }) => {
                                                 </div>
                                                 <div>
                                                     <p className="text-[10px] text-gray-500 uppercase">Total</p>
-                                                    <p className="font-bold text-blue-600 dark:text-blue-400 bluish:text-blue-400">${(interest.soldTotalAmount || (interest.soldPrice * interest.soldQuantity) || 0).toLocaleString()}</p>
+                                                    <p className="font-bold text-blue-600 dark:text-blue-400 bluish:text-blue-400">₹{(interest.soldTotalAmount || (interest.soldPrice * interest.soldQuantity) || 0).toLocaleString()}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -250,7 +250,7 @@ const OrderCard = ({ order, isExpanded, onToggle }) => {
                         <span>{order.asset?.business?.businessName || 'Independent Seller'}</span>
                     </div>
                     <div className="flex items-center text-sm font-semibold text-gray-500 dark:text-gray-400">
-                        <span className="text-gray-900 dark:text-white font-bold">${order.price?.toLocaleString()}</span>
+                        <span className="text-gray-900 dark:text-white font-bold">₹{order.price?.toLocaleString()}</span>
                         <span className="mx-2">•</span>
                         <ShoppingBag size={14} className="mr-1 text-blue-500 dark:text-blue-500 bluish:text-blue-400" />
                         <span>Qty: {order.quantity}</span>
@@ -291,7 +291,7 @@ const OrderCard = ({ order, isExpanded, onToggle }) => {
                                         </div>
                                         <div className="flex justify-between items-center mb-2">
                                             <span className="text-xs text-gray-500">Unit Price</span>
-                                            <span className="text-sm font-bold dark:text-white">${order.price?.toLocaleString()}</span>
+                                            <span className="text-sm font-bold dark:text-white">₹{order.price?.toLocaleString()}</span>
                                         </div>
                                         <div className="flex justify-between items-center mb-2">
                                             <span className="text-xs text-gray-500">Quantity Sold</span>
@@ -299,7 +299,7 @@ const OrderCard = ({ order, isExpanded, onToggle }) => {
                                         </div>
                                         <div className="pt-2 border-t border-gray-200 dark:border-zinc-700 flex justify-between items-center">
                                             <span className="text-xs font-bold text-gray-900 dark:text-white uppercase">Total Paid</span>
-                                            <span className="text-lg font-black text-blue-600 dark:text-blue-400 bluish:text-blue-400">${(order.totalAmount || (order.price * order.quantity)).toLocaleString()}</span>
+                                            <span className="text-lg font-black text-blue-600 dark:text-blue-400 bluish:text-blue-400">₹{(order.totalAmount || (order.price * order.quantity)).toLocaleString()}</span>
                                         </div>
                                     </div>
                                 </div>

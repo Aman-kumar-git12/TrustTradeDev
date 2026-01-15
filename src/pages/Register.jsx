@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
@@ -19,8 +19,14 @@ const Register = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const { showSnackbar } = useUI();
-    const { login } = useAuth();
+    const { login, user, loading } = useAuth();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!loading && user) {
+            navigate('/home');
+        }
+    }, [user, loading, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();

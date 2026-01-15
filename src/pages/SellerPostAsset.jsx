@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
-    ArrowLeft, Upload, DollarSign, MapPin, Tag, FileText, CheckCircle, AlertCircle, Image as ImageIcon,
+    ArrowLeft, Upload, IndianRupee, MapPin, Tag, FileText, CheckCircle, AlertCircle, Image as ImageIcon,
     Factory, Truck, Cpu, Building2, Stethoscope, Smartphone, Hammer, Printer, HelpCircle,
     Loader2, Link as LinkIcon, Plus, Trash2, X
 } from 'lucide-react';
@@ -232,10 +232,10 @@ const SellerPostAsset = () => {
 
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div>
-                                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 bluish:text-slate-300 mb-2 transition-colors duration-300">Price (USD)</label>
+                                                <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 bluish:text-slate-300 mb-2 transition-colors duration-300">Price (INR)</label>
                                                 <div className="relative">
                                                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                        <DollarSign className="h-5 w-5 text-gray-400 dark:text-gray-500" />
+                                                        <IndianRupee className="h-5 w-5 text-gray-400 dark:text-gray-500" />
                                                     </div>
                                                     <input
                                                         type="number"
