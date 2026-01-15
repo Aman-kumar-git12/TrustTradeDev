@@ -128,12 +128,12 @@ const Home = () => {
             {/* 3. Top Market Leader Section (Moved Up) */}
             {stats.topMarket && (
                 <div className="px-4 sm:px-6 lg:px-12 py-12">
-                    <h2 className="text-xl font-bold text-gray-200 mb-4 px-1 drop-shadow-md">Market Leader of the Month</h2>
+                    <h2 className="text-xl font-bold text-gray-900 dark:text-gray-200 bluish:text-gray-200 mb-4 px-1 drop-shadow-md">Market Leader of the Month</h2>
                     <div className="relative z-10 rounded-2xl overflow-hidden bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-emerald-900 dark:to-emerald-950 bluish:from-blue-900 bluish:to-indigo-950 border-2 border-blue-500/20 dark:border-emerald-500/30 bluish:border-blue-500/30 p-8 md:p-12 flex items-center justify-between group cursor-pointer transition-all shadow-2xl hover:shadow-[0_0_40px_rgba(37,99,235,0.2)] dark:hover:shadow-[0_0_40px_rgba(16,185,129,0.2)] dark:shadow-2xl transform hover:scale-[1.01] duration-500">
                         <div className="relative z-10">
                             <div className="text-blue-600 dark:text-emerald-400 bluish:text-blue-400 font-bold tracking-widest uppercase text-sm mb-2">Highest Revenue Generator</div>
                             <h3 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-2">{stats.topMarket.name}</h3>
-                            <p className="text-gray-600 dark:text-white flex items-center mb-6">
+                            <p className="text-gray-900 dark:text-gray-300 bluish:text-gray-300 flex items-center mb-6">
                                 <Star className="w-4 h-4 text-yellow-400 fill-current mr-2" />
                                 Verified Top Seller
                             </p>

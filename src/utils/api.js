@@ -5,17 +5,28 @@ const api = axios.create({
     withCredentials: true // Important for cookies
 });
 
-// Handle 401 globally
+// Handle 401 globally & Retry for Cold Starts
 api.interceptors.response.use(
     (response) => response,
-    (error) => {
-        if (error.response && error.response.status === 401) {
-            // Optional: redirect to login if not already there, but be careful of infinite loops
+    async (error) => {
+        const { config, response } = error;
+
+        // 1. Handle Cold Start (No Response)
+        if (!response && config && !config._isRetry) {
+            config._isRetry = true;
+            console.log("Backend cold start detected. Retrying in 3s...");
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            return api(config);
+        }
+
+        // 2. Handle 401 Unauthorized
+        if (response && response.status === 401) {
             if (window.location.pathname !== '/login' && window.location.pathname !== '/') {
                 window.location.href = '/login';
             }
         }
-        return Promise.reject(error) ;
+
+        return Promise.reject(error);
     }
 );
 
