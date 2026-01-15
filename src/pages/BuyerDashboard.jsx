@@ -459,8 +459,10 @@ const BuyerDashboard = () => {
         }
     };
 
+    if (loading && !displayData.length) return <BuyerDashboardShimmer />;
+
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-black bluish:bg-[#0a0f1d] transition-colors duration-300 pb-20 relative overflow-hidden">
+        <div className="min-h-screen bg-gray-50 dark:bg-black bluish:bg-[#0a0f1d] selection:bg-blue-500/30 bluish:selection:bg-blue-500/30 overflow-hidden relative">
             <div className="fixed inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] dark:bg-[radial-gradient(#ffffff33_1px,#000000_1px)] bluish:bg-[radial-gradient(#ffffff33_1px,#0a0f1d_1px)] [background-size:20px_20px] opacity-20 dark:opacity-[0.26] bluish:opacity-[0.26] pointer-events-none z-[1]"></div>
             {/* Dynamic Background Elements */}
             <div className="fixed inset-0 z-0 pointer-events-none">
@@ -617,7 +619,6 @@ const BuyerDashboard = () => {
                             />
                         </div>
                     )}
-
                     <div className="flex-grow space-y-4 relative min-h-[400px]">
                         {loading ? (
                             <BuyerDashboardShimmer />

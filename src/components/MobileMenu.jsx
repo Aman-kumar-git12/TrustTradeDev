@@ -121,15 +121,16 @@ const MobileMenu = ({
                                         <motion.div key={link.id} variants={itemVariants}>
                                             <Link
                                                 to={link.path}
-                                                className={`flex items-center space-x-4 w-full px-5 py-4 rounded-2xl text-base font-bold transition-all group ${isActive ? `${accentBgClass} ${accentClass}` :
-                                                    'text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-white'
+                                                className={`flex items-center space-x-4 w-full px-5 py-4 rounded-2xl text-base font-bold transition-all group ${isActive && link.id !== 'Home' ? `${accentBgClass} ${accentClass}` :
+                                                    isActive && link.id === 'Home' ? accentClass :
+                                                        'text-gray-400 hover:bg-gray-100 dark:hover:bg-white/5 hover:text-white'
                                                     }`}
                                                 onClick={(e) => {
                                                     handleNavClick(e, link.path, link.id);
                                                     setIsOpen(false);
                                                 }}
                                             >
-                                                <div className={`p-2 rounded-xl transition-colors ${isActive ? accentBgClass : 'bg-transparent group-hover:bg-white/5'}`}>
+                                                <div className={`p-2 rounded-xl transition-colors ${isActive && link.id !== 'Home' ? accentBgClass : 'bg-transparent group-hover:bg-white/5'}`}>
                                                     <link.icon size={22} className={`transition-transform duration-300 group-hover:scale-110 ${isActive ? accentClass : ''}`} />
                                                 </div>
                                                 <span>{link.label}</span>

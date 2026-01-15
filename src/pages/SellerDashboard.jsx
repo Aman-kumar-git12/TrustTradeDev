@@ -4,6 +4,7 @@ import { Filter as FilterIcon, ArrowLeft, TrendingUp, Tag, ShoppingBag, BarChart
 import { motion, AnimatePresence } from 'framer-motion';
 import api from '../utils/api';
 import Hover from '../components/Hover';
+import SellerDashboardShimmer from '../components/shimmers/SellerDashboardShimmer';
 
 const StatCard = ({ title, value, icon: Icon, colorClass }) => (
     <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 p-5 rounded-2xl border border-gray-100 dark:border-zinc-800 bluish:border-white/5 shadow-sm flex items-center justify-between group hover:shadow-md transition-all">
@@ -29,6 +30,7 @@ const SellerDashboard = () => {
     const [leadsCount, setLeadsCount] = useState(0);
     const [listingsCount, setListingsCount] = useState(0);
     const [dashboardStats, setDashboardStats] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         setShowStats(false);
@@ -37,6 +39,7 @@ const SellerDashboard = () => {
     useEffect(() => {
         const fetchData = async () => {
             if (!businessId) return;
+            setLoading(true);
             try {
                 // Fetch all data in parallel for speed and UI consistency
                 const [bizRes, leadsRes, listingsRes, statsRes] = await Promise.all([
@@ -61,6 +64,8 @@ const SellerDashboard = () => {
                 }
             } catch (error) {
                 console.error("Failed to fetch dashboard data", error);
+            } finally {
+                setLoading(false);
             }
         };
         fetchData();
@@ -83,6 +88,8 @@ const SellerDashboard = () => {
         }
         setSearchParams(newParams);
     };
+
+    if (loading) return <SellerDashboardShimmer />;
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-black bluish:bg-[#0a0f1d] transition-colors duration-300 pb-20 relative overflow-hidden">
