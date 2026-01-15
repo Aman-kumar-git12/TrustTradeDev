@@ -68,7 +68,7 @@ const SellerAnalyticsProducts = () => {
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
                         <thead className="bg-gray-50/50 dark:bg-zinc-800/50 text-xs uppercase text-gray-500 dark:text-gray-400 font-semibold tracking-wider block w-full border-b border-gray-100 dark:border-zinc-800">
-                            <tr className="grid grid-cols-6 w-full">
+                            <tr className="grid grid-cols-[200px_120px_120px_120px_100px_80px] lg:grid-cols-6 w-full min-w-max">
                                 <HeaderCell label="Product Name" column="title" align="left" />
                                 <HeaderCell label="Status" column="status" />
                                 <HeaderCell label="Sold Price" column="soldPrice" />
@@ -82,13 +82,13 @@ const SellerAnalyticsProducts = () => {
                                 <tr
                                     key={product.id}
                                     onClick={() => navigate(`/dashboard/seller/${businessId}/analytics/product/${product.id}/30d`, { state: { productTitle: product.title } })}
-                                    className="hover:bg-gray-50/50 dark:hover:bg-zinc-800/30 transition-colors group cursor-pointer grid grid-cols-6 w-full items-center"
+                                    className="hover:bg-gray-50/50 dark:hover:bg-zinc-800/30 transition-colors group cursor-pointer grid grid-cols-[200px_120px_120px_120px_100px_80px] lg:grid-cols-6 w-full items-center min-w-max"
                                 >
                                     <td className="px-6 py-4 flex flex-col justify-center">
-                                        <div className="font-semibold text-gray-900 dark:text-white truncate max-w-xs transition-colors">{product.title}</div>
+                                        <div className="font-semibold text-gray-900 dark:text-white truncate max-w-[150px] transition-colors">{product.title}</div>
                                     </td>
                                     <td className="px-6 py-4 text-center">
-                                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-bold border uppercase tracking-wider ${product.status === 'Active'
+                                        <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold border uppercase tracking-wider ${product.status === 'Active'
                                             ? 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-emerald-900/20 dark:text-emerald-400 dark:border-emerald-800 bluish:bg-blue-50 bluish:text-blue-700 bluish:border-blue-200'
                                             : 'bg-rose-50 text-rose-600 border-rose-200 dark:bg-rose-900/20 dark:text-rose-400 dark:border-rose-800'
                                             }`}>

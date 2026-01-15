@@ -15,9 +15,9 @@ const LeadFilter = ({ filters, setFilters, onClose, onApply, onClear, hideStatus
     const statuses = ['pending', 'negotiating', 'accepted', 'rejected'];
 
     return (
-        <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 rounded-xl shadow-sm border border-gray-200 dark:border-zinc-800 bluish:border-white/5 p-6 h-fit sticky top-24 transition-colors duration-300">
+        <div className="bg-white dark:bg-black bluish:bg-[#131b2e] bluish:backdrop-blur-md rounded-xl shadow-sm border border-gray-200 dark:border-zinc-800 bluish:border-white/5 p-6 h-fit sticky top-24 transition-colors duration-300">
             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-bold text-blue-600 dark:text-blue-400 bluish:text-blue-400 flex items-center transition-colors duration-300">
+                <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center transition-colors">
                     <Filter size={20} className="mr-2" /> Filter Leads
                 </h2>
                 {onClose && (

@@ -1,5 +1,7 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, LogOut, PlusCircle, Building2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { LayoutDashboard, LogOut, PlusCircle, Building2, Menu, X } from 'lucide-react';
+import MobileMenu from './MobileMenu';
 import { useUI } from '../context/UIContext';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
@@ -11,6 +13,22 @@ const Navbar = () => {
     const { confirm, showSnackbar } = useUI();
     const { user, logout } = useAuth();
     const { theme, mode } = useTheme();
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+    // Close mobile menu on route change
+    useEffect(() => {
+        setIsMobileMenuOpen(false);
+    }, [location]);
+
+    // Prevent body scroll when mobile menu is open
+    useEffect(() => {
+        if (isMobileMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => { document.body.style.overflow = 'unset'; };
+    }, [isMobileMenuOpen]);
 
     const handleLogout = async () => {
         const isConfirmed = await confirm({
@@ -66,146 +84,172 @@ const Navbar = () => {
         : 'bg-blue-600 hover:bg-blue-700 shadow-blue-500/20 hover:shadow-blue-500/40';
 
     return (
-        <nav className={`sticky top-0 z-[999] border-b shadow-2xl transition-all duration-300 ${isBluish
-            ? 'bg-[#0f172a] border-white/5 text-white backdrop-blur-md'
-            : isDark
-                ? 'bg-gray-900 border-white/5 text-white backdrop-blur-md'
-                : 'bg-gray-900 border-white/5 text-white'
-            }`}>
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between h-16 items-center">
-                    <Link to={user ? "/home" : "/"} className="flex items-center space-x-2 group">
-                        <div className={`p-1.5 rounded-lg group-hover:scale-110 transition-transform duration-300 ${accentBgClass}`}>
-                            <Building2 className={`h-6 w-6 ${accentClass}`} />
-                        </div>
-                        <span className="font-display font-bold text-xl tracking-tight transition-colors text-white">TrustTrade</span>
-                    </Link>
-
-                    <div className="hidden md:flex items-center space-x-8">
-                        {isLanding ? (
-                            <div className="flex items-center space-x-8">
-                                <Hover text="Home">
-                                    <Link
-                                        to="/"
-                                        className={`text-sm font-bold transition-all ${accentClass}`}
-                                    >
-                                        Home
-                                    </Link>
-                                </Hover>
-                                {!user && (
-                                    <>
-                                        <Link to="/login" className="text-sm font-bold transition-colors text-gray-400 hover:text-white">Log in</Link>
-                                        <Link to="/register" className={`${buttonClass} text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-lg hover:-translate-y-0.5`}>
-                                            Get Started
-                                        </Link>
-                                    </>
-                                )}
-                                {user && (
-                                    <Link to="/home" className={`${buttonClass} text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-lg hover:-translate-y-0.5`}>
-                                        Go to Dashboard
-                                    </Link>
-                                )}
+        <>
+            <nav className={`fixed top-0 left-0 right-0 w-full z-[1999] border-b shadow-2xl transition-all duration-300 ${isBluish ? 'bg-[#0f172a]/80 border-white/5 text-white backdrop-blur-md' :
+                isDark ? 'bg-gray-900/80 border-white/5 text-white backdrop-blur-md' :
+                    'bg-gray-900 text-white border-white/5'
+                }`}>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="flex justify-between h-16 items-center">
+                        <Link to={user ? "/home" : "/"} className="flex items-center space-x-2 group">
+                            <div className={`p-1.5 rounded-lg group-hover:scale-110 transition-transform duration-300 ${accentBgClass}`}>
+                                <Building2 className={`h-6 w-6 ${accentClass}`} />
                             </div>
-                        ) : (
-                            <>
-                                <Hover text="Home">
-                                    <Link
-                                        to={user ? "/home" : "/"}
-                                        className={`text-sm font-bold transition-all ${location.pathname === (user ? '/home' : '/')
-                                            ? accentClass
-                                            : 'text-gray-400 hover:text-white'
-                                            }`}
-                                        onClick={(e) => handleNavClick(e, user ? "/home" : "/", 'Home')}
-                                    >
-                                        Home
-                                    </Link>
-                                </Hover>
-                                {!hideMarketplace && (
-                                    <Hover text="Browse Assets">
+                            <span className="font-display font-bold text-xl tracking-tight transition-colors text-white">TrustTrade</span>
+                        </Link>
+
+                        {/* Desktop Navigation */}
+                        <div className="hidden md:flex items-center space-x-8">
+                            {isLanding ? (
+                                <div className="flex items-center space-x-8">
+                                    <Hover text="Home">
                                         <Link
-                                            to="/marketplace"
-                                            className={`text-sm font-bold transition-all ${location.pathname.startsWith('/marketplace')
+                                            to="/"
+                                            className={`text-sm font-bold transition-all ${accentClass}`}
+                                        >
+                                            Home
+                                        </Link>
+                                    </Hover>
+                                    {!user && (
+                                        <>
+                                            <Link to="/login" className="text-sm font-bold transition-colors text-gray-400 hover:text-white">Log in</Link>
+                                            <Link to="/register" className={`${buttonClass} text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-lg hover:-translate-y-0.5`}>
+                                                Get Started
+                                            </Link>
+                                        </>
+                                    )}
+                                    {user && (
+                                        <Link to="/home" className={`${buttonClass} text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-lg hover:-translate-y-0.5`}>
+                                            Go to Dashboard
+                                        </Link>
+                                    )}
+                                </div>
+                            ) : (
+                                <>
+                                    <Hover text="Home">
+                                        <Link
+                                            to={user ? "/home" : "/"}
+                                            className={`text-sm font-bold transition-all ${location.pathname === (user ? '/home' : '/')
                                                 ? accentClass
                                                 : 'text-gray-400 hover:text-white'
                                                 }`}
-                                            onClick={(e) => handleNavClick(e, '/marketplace', 'Marketplace')}
+                                            onClick={(e) => handleNavClick(e, user ? "/home" : "/", 'Home')}
                                         >
-                                            Marketplace
+                                            Home
                                         </Link>
                                     </Hover>
-                                )}
-
-                                {user ? (
-                                    <div className="flex items-center space-x-6">
-                                        {user.role === 'seller' && (
-                                            <Hover text="List New Asset">
-                                                <Link
-                                                    to="/post-asset"
-                                                    className={`flex items-center space-x-1.5 text-sm font-bold transition-all ${location.pathname.startsWith('/post-asset')
-                                                        ? accentClass
-                                                        : 'text-gray-400 hover:text-white'
-                                                        }`}
-                                                    onClick={(e) => handleNavClick(e, '/post-asset', 'Post Asset')}
-                                                >
-                                                    <PlusCircle size={18} />
-                                                    <span>Post Asset</span>
-                                                </Link>
-                                            </Hover>
-                                        )}
-                                        <Hover text="View Dashboard">
+                                    {!hideMarketplace && (
+                                        <Hover text="Browse Assets">
                                             <Link
-                                                to={user.role === 'seller' ? "/dashboard/seller" : `/dashboard/buyer/${user._id}`}
-                                                className={`flex items-center space-x-1.5 text-sm font-bold transition-all ${location.pathname.includes('/dashboard/')
+                                                to="/marketplace"
+                                                className={`text-sm font-bold transition-all ${location.pathname.startsWith('/marketplace')
                                                     ? accentClass
                                                     : 'text-gray-400 hover:text-white'
                                                     }`}
-                                                onClick={(e) => handleNavClick(e, user.role === 'seller' ? "/dashboard/seller" : `/dashboard/buyer/${user._id}`, 'Dashboard')}
+                                                onClick={(e) => handleNavClick(e, '/marketplace', 'Marketplace')}
                                             >
-                                                <LayoutDashboard size={18} />
-                                                <span>Dashboard</span>
+                                                Marketplace
                                             </Link>
                                         </Hover>
-                                        <div className={`flex items-center space-x-4 border-l pl-6 border-white/10`}>
-                                            <Hover text="View Profile">
+                                    )}
+
+                                    {user ? (
+                                        <div className="flex items-center space-x-6">
+                                            {user.role === 'seller' && (
+                                                <Hover text="List New Asset">
+                                                    <Link
+                                                        to="/post-asset"
+                                                        className={`flex items-center space-x-1.5 text-sm font-bold transition-all ${location.pathname.startsWith('/post-asset')
+                                                            ? accentClass
+                                                            : 'text-gray-400 hover:text-white'
+                                                            }`}
+                                                        onClick={(e) => handleNavClick(e, '/post-asset', 'Post Asset')}
+                                                    >
+                                                        <PlusCircle size={18} />
+                                                        <span>Post Asset</span>
+                                                    </Link>
+                                                </Hover>
+                                            )}
+                                            <Hover text="View Dashboard">
                                                 <Link
-                                                    to="/profile"
-                                                    className="flex items-center space-x-3 group"
-                                                    onClick={(e) => handleNavClick(e, '/profile', 'Profile')}
+                                                    to={user.role === 'seller' ? "/dashboard/seller" : `/dashboard/buyer/${user._id}`}
+                                                    className={`flex items-center space-x-1.5 text-sm font-bold transition-all ${location.pathname.includes('/dashboard/')
+                                                        ? accentClass
+                                                        : 'text-gray-400 hover:text-white'
+                                                        }`}
+                                                    onClick={(e) => handleNavClick(e, user.role === 'seller' ? "/dashboard/seller" : `/dashboard/buyer/${user._id}`, 'Dashboard')}
                                                 >
-                                                    <div className={`h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold border transition-all group-hover:scale-110 ${accentBgClass} ${accentClass} border-white/5`}>
-                                                        {user.fullName?.charAt(0) || 'U'}
-                                                    </div>
-                                                    <span className={`text-sm font-bold transition-colors text-gray-300 group-hover:text-white`}>
-                                                        {user.fullName}
-                                                    </span>
+                                                    <LayoutDashboard size={18} />
+                                                    <span>Dashboard</span>
                                                 </Link>
                                             </Hover>
+                                            <div className="flex items-center space-x-4 border-l pl-6 border-white/10">
+                                                <Hover text="View Profile">
+                                                    <Link
+                                                        to="/profile"
+                                                        className="flex items-center space-x-3 group"
+                                                        onClick={(e) => handleNavClick(e, '/profile', 'Profile')}
+                                                    >
+                                                        <div className={`h-8 w-8 rounded-full flex items-center justify-center text-xs font-bold border transition-all group-hover:scale-110 ${accentBgClass} ${accentClass} border-white/5`}>
+                                                            {user.fullName?.charAt(0) || 'U'}
+                                                        </div>
+                                                        <span className="text-sm font-bold transition-colors text-gray-300 group-hover:text-white">
+                                                            {user.fullName}
+                                                        </span>
+                                                    </Link>
+                                                </Hover>
 
-                                            <Hover text="Log Out">
-                                                <button
-                                                    onClick={handleLogout}
-                                                    className={`p-2 rounded-lg transition-all text-gray-400 hover:text-rose-400 hover:bg-rose-400/10`}
-                                                >
-                                                    <LogOut size={18} />
-                                                </button>
-                                            </Hover>
+                                                <Hover text="Log Out">
+                                                    <button
+                                                        onClick={handleLogout}
+                                                        className="p-2 rounded-lg transition-all text-gray-400 hover:text-rose-400 hover:bg-rose-400/10"
+                                                    >
+                                                        <LogOut size={18} />
+                                                    </button>
+                                                </Hover>
+                                            </div>
                                         </div>
-                                    </div>
-                                ) : (
-                                    <div className="flex items-center space-x-4">
-                                        <Link to="/login" className="text-sm font-bold transition-colors text-gray-400 hover:text-white">Log in</Link>
-                                        <Link to="/register" className={`${buttonClass} text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-lg hover:-translate-y-0.5`}>
-                                            Get Started
-                                        </Link>
-                                    </div>
-                                )}
-                            </>
-                        )}
+                                    ) : (
+                                        <div className="flex items-center space-x-4">
+                                            <Link to="/login" className="text-sm font-bold transition-colors text-gray-400 hover:text-white">Log in</Link>
+                                            <Link to="/register" className={`${buttonClass} text-white px-5 py-2.5 rounded-xl font-bold text-sm transition-all shadow-lg hover:-translate-y-0.5`}>
+                                                Get Started
+                                            </Link>
+                                        </div>
+                                    )}
+                                </>
+                            )}
+                        </div>
 
+                        {/* Mobile Toggle Button - Specifically for Toggle ONLY */}
+                        <div className="md:hidden flex items-center">
+                            <button
+                                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                                className={`p-2 rounded-xl transition-all ${accentBgClass} ${accentClass} hover:scale-105 active:scale-95 relative z-[2002]`}
+                                aria-label="Toggle menu"
+                            >
+                                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </nav >
+            </nav>
+
+            {/* Mobile Menu Drawer - Rendered OUTSIDE the blurred nav to avoid stacking context issues */}
+            <MobileMenu
+                isOpen={isMobileMenuOpen}
+                setIsOpen={setIsMobileMenuOpen}
+                user={user}
+                accentClass={accentClass}
+                accentBgClass={accentBgClass}
+                handleNavClick={handleNavClick}
+                handleLogout={handleLogout}
+                isBluish={isBluish}
+                isDark={isDark}
+                buttonClass={buttonClass}
+                hideMarketplace={hideMarketplace}
+            />
+        </>
     );
 };
 

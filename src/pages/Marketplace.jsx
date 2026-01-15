@@ -4,8 +4,10 @@ import api from '../utils/api';
 import { MapPin, Tag, Filter as FilterIcon } from 'lucide-react';
 import Filter from '../components/Filter';
 import GridShimmer from '../components/shimmers/GridShimmer';
+import { useTheme } from '../context/ThemeContext';
 
 const Marketplace = () => {
+    const { theme, mode: themeMode } = useTheme();
     const [assets, setAssets] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -69,14 +71,6 @@ const Marketplace = () => {
         fetchAssets(emptyFilters);
     };
 
-    // Auto-clear filters when sidebar is closed (URL changes away from /filter)
-    useEffect(() => {
-        if (!isFilterOpen) {
-            handleClearFilters();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isFilterOpen]);
-
     const handleFilterChange = (newFilters) => {
         setFilters(prev => ({ ...prev, ...newFilters }));
     };
@@ -84,6 +78,10 @@ const Marketplace = () => {
     const handleApplyFilters = () => {
         fetchAssets();
     };
+
+    const isDark = theme === 'dark';
+    const isBluish = theme === 'bluish' || themeMode === 'bluish';
+    const accentColor = isDark && !isBluish ? 'emerald' : 'blue';
 
     return (
         <div className="min-h-screen bg-transparent dark:bg-black bluish:bg-[#0a0f1d] text-gray-900 dark:text-gray-200 transaction-colors duration-300 relative overflow-x-hidden">
@@ -130,6 +128,7 @@ const Marketplace = () => {
                                 onClear={handleClearFilters}
                                 onApply={handleApplyFilters}
                                 onClose={() => navigate('/marketplace')}
+                                accentColor={accentColor}
                             />
                         </div>
                     )}

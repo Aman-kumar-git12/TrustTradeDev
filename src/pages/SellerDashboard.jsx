@@ -98,15 +98,15 @@ const SellerDashboard = () => {
                     <>
                         {/* Header & Business Switcher Section */}
                         <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
-                            <div>
-                                <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white bluish:text-white tracking-tight mb-2 bluish:drop-shadow-lg">Seller Command</h1>
-                                <p className="text-gray-500 dark:text-gray-400 bluish:text-gray-400 font-semibold">Manage your businesses, track leads, and optimize your listings.</p>
+                            <div className="text-center md:text-left">
+                                <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white bluish:text-white tracking-tight mb-2 bluish:drop-shadow-lg">Seller Command</h1>
+                                <p className="text-gray-500 dark:text-gray-400 bluish:text-gray-400 font-semibold text-sm md:text-base">Manage your businesses, track leads, and optimize your listings.</p>
                             </div>
 
-                            <div className="relative inline-block">
+                            <div className="relative flex justify-center md:block">
                                 <button
                                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                    className="flex items-center gap-3 p-2 pr-4 bg-white dark:bg-zinc-900 bluish:bg-[#1e293b]/80 bluish:backdrop-blur-md rounded-2xl border border-gray-200 dark:border-zinc-800 bluish:border-white/10 shadow-sm hover:shadow-md transition-all group"
+                                    className="flex items-center gap-3 p-2 pr-4 bg-white dark:bg-zinc-900 bluish:bg-[#1e293b]/80 bluish:backdrop-blur-md rounded-2xl border border-gray-200 dark:border-zinc-800 bluish:border-white/10 shadow-sm hover:shadow-md transition-all group w-full md:w-auto"
                                 >
                                     <div className="h-10 w-10 rounded-xl bg-blue-500/10 dark:bg-emerald-500/10 flex items-center justify-center text-blue-600 dark:text-emerald-400 font-bold text-lg group-hover:bg-blue-500 group-hover:dark:bg-emerald-500 group-hover:text-white transition-all">
                                         {currentBusiness?.businessName?.charAt(0) || 'B'}
@@ -160,62 +160,64 @@ const SellerDashboard = () => {
                         </div>
 
                         {/* Navigation Tabs (Pill Style) & Actions */}
-                        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-                            <div className="flex p-1 bg-gray-100 dark:bg-zinc-900 bluish:bg-[#1e293b]/50 rounded-xl w-fit border border-gray-200 dark:border-zinc-800 bluish:border-white/5 relative">
-                                {[
-                                    { path: 'leads', icon: Tag, label: 'Incoming Leads', count: leadsCount },
-                                    { path: 'listings', icon: ShoppingBag, label: 'My Listings', count: listingsCount },
-                                    { path: 'analytics', icon: BarChart2, label: 'Overview' }
-                                ].map((tab) => {
-                                    const isActive = location.pathname.includes(tab.path);
-                                    return (
-                                        <NavLink
-                                            key={tab.path}
-                                            to={tab.path}
-                                            className="relative px-6 py-2.5 rounded-lg text-sm font-bold transition-all flex items-center z-10"
-                                        >
-                                            {isActive && (
-                                                <motion.div
-                                                    layoutId="seller-tab-pill"
-                                                    className="absolute inset-0 bg-white dark:bg-zinc-800 bluish:bg-blue-500/20 rounded-lg shadow-sm border border-gray-200 dark:border-zinc-700 bluish:border-blue-500/20"
-                                                    initial={false}
-                                                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                                                />
-                                            )}
-                                            <span className={`relative flex items-center z-20 ${isActive ? 'text-blue-600 dark:text-emerald-400 bluish:text-blue-400' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}>
-                                                <tab.icon size={16} className="mr-2" />
-                                                {tab.label}
-                                                {tab.count !== undefined && (
-                                                    <span className={`ml-2 px-1.5 py-0.5 text-[10px] rounded-md transition-colors ${isActive ? 'bg-blue-100 dark:bg-emerald-900/30 bluish:bg-blue-500/20' : 'bg-gray-200 dark:bg-zinc-800'}`}>
-                                                        {tab.count}
-                                                    </span>
+                        <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-8 gap-4">
+                            <div className="w-full lg:w-fit overflow-x-auto custom-scrollbar-hide flex p-1 bg-gray-100 dark:bg-zinc-900 bluish:bg-[#1e293b]/50 rounded-xl border border-gray-200 dark:border-zinc-800 bluish:border-white/5 relative no-scrollbar">
+                                <div className="flex min-w-max">
+                                    {[
+                                        { path: 'leads', icon: Tag, label: 'Incoming Leads', count: leadsCount },
+                                        { path: 'listings', icon: ShoppingBag, label: 'My Listings', count: listingsCount },
+                                        { path: 'analytics', icon: BarChart2, label: 'Overview' }
+                                    ].map((tab) => {
+                                        const isActive = location.pathname.includes(tab.path);
+                                        return (
+                                            <NavLink
+                                                key={tab.path}
+                                                to={tab.path}
+                                                className="relative px-4 sm:px-6 py-2.5 rounded-lg text-sm font-bold transition-all flex items-center z-10"
+                                            >
+                                                {isActive && (
+                                                    <motion.div
+                                                        layoutId="seller-tab-pill"
+                                                        className="absolute inset-0 bg-white dark:bg-zinc-800 bluish:bg-blue-500/20 rounded-lg shadow-sm border border-gray-200 dark:border-zinc-700 bluish:border-blue-500/20"
+                                                        initial={false}
+                                                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                                    />
                                                 )}
-                                            </span>
-                                        </NavLink>
-                                    );
-                                })}
+                                                <span className={`relative flex items-center z-20 whitespace-nowrap ${isActive ? 'text-blue-600 dark:text-emerald-400 bluish:text-blue-400' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}>
+                                                    <tab.icon size={16} className="mr-2" />
+                                                    {tab.label}
+                                                    {tab.count !== undefined && (
+                                                        <span className={`ml-2 px-1.5 py-0.5 text-[10px] rounded-md transition-colors ${isActive ? 'bg-blue-100 dark:bg-emerald-900/30 bluish:bg-blue-500/20' : 'bg-gray-200 dark:bg-zinc-800'}`}>
+                                                            {tab.count}
+                                                        </span>
+                                                    )}
+                                                </span>
+                                            </NavLink>
+                                        );
+                                    })}
+                                </div>
                             </div>
 
                             {/* Filter & Insights Buttons */}
-                            <div className="flex items-center gap-3">
+                            <div className="flex items-center gap-3 w-full lg:w-fit">
                                 {/* Insights Button - Only for Leads */}
                                 {location.pathname.includes('/leads') && (
                                     <button
                                         onClick={() => setShowStats(!showStats)}
-                                        className={`flex items-center px-4 py-2.5 rounded-xl border font-bold text-sm transition-all shadow-sm hover:shadow-md ${showStats ? 'bg-blue-50 dark:bg-emerald-900/20 text-blue-700 dark:text-emerald-400 border-blue-200 dark:border-emerald-800 bluish:bg-blue-50 bluish:dark:bg-[#1e293b] bluish:text-blue-400 bluish:border-blue-500/30' : 'bg-white dark:bg-zinc-900 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-zinc-700 hover:border-gray-300 dark:hover:border-zinc-500 bluish:bg-[#1e293b]/50 bluish:border-white/10 bluish:text-blue-200 bluish:hover:bg-blue-500/10 bluish:hover:border-blue-500/30'}`}
+                                        className={`flex-1 lg:flex-none flex items-center justify-center px-4 py-2.5 rounded-xl border font-bold text-sm transition-all shadow-sm hover:shadow-md ${showStats ? 'bg-blue-50 dark:bg-emerald-900/20 text-blue-700 dark:text-emerald-400 border-blue-200 dark:border-emerald-800 bluish:bg-blue-50 bluish:dark:bg-[#1e293b] bluish:text-blue-400 bluish:border-blue-500/30' : 'bg-white dark:bg-zinc-900 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-zinc-700 hover:border-gray-300 dark:hover:border-zinc-500 bluish:bg-[#1e293b]/50 bluish:border-white/10 bluish:text-blue-200 bluish:hover:bg-blue-500/10 bluish:hover:border-blue-500/30'}`}
                                     >
                                         <TrendingUp size={18} className={`mr-2 transition-transform ${showStats ? 'text-blue-600 dark:text-emerald-400 bluish:text-blue-400' : 'text-gray-500 dark:text-gray-400 bluish:text-blue-300'}`} />
-                                        {showStats ? 'Hide Insights' : 'View Insights'}
+                                        <span className="whitespace-nowrap">{showStats ? 'Hide Insights' : 'View Insights'}</span>
                                     </button>
                                 )}
 
                                 {showFilterButton && (
                                     <button
                                         onClick={toggleFilter}
-                                        className={`flex items-center px-5 py-2.5 rounded-xl border font-bold text-sm transition-all shadow-sm hover:shadow-md group ${isFilterOpen ? 'bg-gray-900 dark:bg-emerald-600 bluish:bg-blue-600 text-white border-gray-900 dark:border-emerald-600 bluish:border-blue-600' : 'bg-white dark:bg-zinc-900 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-zinc-700 hover:border-gray-300 dark:hover:border-zinc-500 bluish:bg-[#1e293b]/50 bluish:border-white/10 bluish:text-blue-200 bluish:hover:bg-blue-500/10 bluish:hover:border-blue-500/30'}`}
+                                        className={`flex-1 lg:flex-none flex items-center justify-center px-5 py-2.5 rounded-xl border font-bold text-sm transition-all shadow-sm hover:shadow-md group ${isFilterOpen ? 'bg-gray-900 dark:bg-emerald-600 bluish:bg-blue-600 text-white border-gray-900 dark:border-emerald-600 bluish:border-blue-600' : 'bg-white dark:bg-zinc-900 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-zinc-700 hover:border-gray-300 dark:hover:border-zinc-500 bluish:bg-[#1e293b]/50 bluish:border-white/10 bluish:text-blue-200 bluish:hover:bg-blue-500/10 bluish:hover:border-blue-500/30'}`}
                                     >
                                         <FilterIcon size={18} className={`mr-2 transition-transform group-hover:scale-110 ${isFilterOpen ? 'text-white' : 'text-gray-500 dark:text-gray-400 bluish:text-blue-300'}`} />
-                                        {isFilterOpen ? 'Hide Filters' : 'Show Filters'}
+                                        <span className="whitespace-nowrap">{isFilterOpen ? 'Hide Filters' : 'Show Filters'}</span>
                                     </button>
                                 )}
                             </div>

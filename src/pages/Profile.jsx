@@ -121,6 +121,16 @@ const Profile = () => {
         }
     };
 
+    const isDark = theme === 'dark';
+    const isBluish = theme === 'bluish' || mode === 'bluish';
+    const accentColor = isDark && !isBluish ? 'emerald' : 'blue';
+
+    const accentClass = accentColor === 'emerald' ? 'text-emerald-500' : 'text-blue-500';
+    const accentBgClass = accentColor === 'emerald' ? 'bg-emerald-500/10' : 'bg-blue-500/10';
+    const buttonClass = accentColor === 'emerald'
+        ? 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-500/20 hover:shadow-emerald-500/40'
+        : 'bg-blue-600 hover:bg-blue-700 shadow-blue-500/20 hover:shadow-blue-500/40';
+
     if (loading) return <ProfileShimmer />;
 
     if (!profile) return (
@@ -157,7 +167,7 @@ const Profile = () => {
                     {/* Header Section */}
                     <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e] bluish:backdrop-blur-md rounded-xl shadow-sm bluish:shadow-xl border border-gray-200 dark:border-zinc-800 bluish:border-white/10 overflow-hidden mb-6 transition-colors duration-300">
                         {/* Cover Area */}
-                        <div className="h-48 bg-slate-900 relative">
+                        <div className="h-40 md:h-48 bg-slate-900 relative">
                             {/* Texture/Image */}
                             <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=2000')] bg-cover bg-center opacity-30"></div>
 
@@ -194,15 +204,15 @@ const Profile = () => {
                         </div>
 
                         {/* Profile Info Bar */}
-                        <div className="px-8 pb-6 bg-white dark:bg-zinc-900 bluish:bg-transparent relative transition-colors duration-300">
-                            <div className="flex flex-col md:flex-row items-end -mt-12 mb-2">
+                        <div className="px-6 md:px-8 pb-6 bg-white dark:bg-zinc-900 bluish:bg-transparent relative transition-colors duration-300">
+                            <div className="flex flex-col md:flex-row items-center md:items-end -mt-10 md:-mt-12 mb-2 text-center md:text-left">
                                 {/* Avatar */}
-                                <div className="relative z-10 group">
-                                    <div className="h-28 w-28 rounded-xl border-4 border-white dark:border-zinc-900 bluish:border-[#131b2e] bg-gray-200 dark:bg-zinc-800 bluish:bg-[#1e293b] shadow-lg overflow-hidden relative transition-colors duration-300">
+                                <div className="relative z-10 group mb-4 md:mb-0">
+                                    <div className="h-24 w-24 md:h-28 md:w-28 rounded-xl border-4 border-white dark:border-zinc-900 bluish:border-[#131b2e] bg-gray-200 dark:bg-zinc-800 bluish:bg-[#1e293b] shadow-lg overflow-hidden relative transition-colors duration-300">
                                         {profile.avatarUrl ? (
                                             <img src={profile.avatarUrl} alt={profile.fullName} className="w-full h-full object-cover" />
                                         ) : (
-                                            <div className="w-full h-full flex items-center justify-center bg-gray-100 dark:bg-zinc-800 text-gray-300 text-4xl font-bold">
+                                            <div className="w-full h-full flex items-center justify-center bg-gray-100 dark:bg-zinc-800 text-gray-300 text-3xl md:text-4xl font-bold">
                                                 {profile.fullName.charAt(0)}
                                             </div>
                                         )}
@@ -231,14 +241,16 @@ const Profile = () => {
                                 </div>
 
                                 {/* Text Info */}
-                                <div className="md:ml-6 mt-4 md:mt-0 flex-1">
-                                    <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                                        <div>
-                                            <h1 className="text-2xl font-bold text-gray-900 dark:text-white bluish:text-white transition-colors duration-300">{profile.fullName}</h1>
-                                            <div className="flex items-center text-gray-500 dark:text-gray-400 text-sm mt-1">
-                                                <Mail size={14} className="mr-1.5" />
-                                                <span className="mr-4">{profile.email}</span>
-                                                <span className={`px-2.5 py-0.5 rounded-md text-xs font-semibold uppercase tracking-wide border ${profile.role === 'seller'
+                                <div className="md:ml-6 mt-2 md:mt-0 flex-1 w-full">
+                                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                                        <div className="flex flex-col items-center md:items-start">
+                                            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white bluish:text-white transition-colors duration-300 leading-tight">{profile.fullName}</h1>
+                                            <div className="flex flex-col sm:flex-row items-center text-gray-500 dark:text-gray-400 text-sm mt-1.5 gap-2 sm:gap-4">
+                                                <div className="flex items-center">
+                                                    <Mail size={14} className="mr-1.5" />
+                                                    <span>{profile.email}</span>
+                                                </div>
+                                                <span className={`px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider border ${profile.role === 'seller'
                                                     ? 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/20 dark:text-amber-400 dark:border-amber-800 bluish:bg-amber-900/20 bluish:text-amber-400 bluish:border-amber-800'
                                                     : 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800 bluish:bg-blue-900/20 bluish:text-blue-400 bluish:border-blue-800'
                                                     }`}>
@@ -249,14 +261,14 @@ const Profile = () => {
 
                                         {/* Simple Stats */}
                                         {profile.role === 'seller' && (
-                                            <div className="flex gap-4 mt-4 md:mt-0">
-                                                <div className="text-center px-4 py-2 bg-gray-50 dark:bg-zinc-800 bluish:bg-white/5 rounded-lg border border-gray-100 dark:border-zinc-700 bluish:border-white/5 transition-colors duration-300">
-                                                    <div className="text-xl font-bold text-gray-900 dark:text-white bluish:text-white">{businesses.length}</div>
-                                                    <div className="text-xs text-gray-500 dark:text-gray-400 bluish:text-gray-400 font-medium">Businesses</div>
+                                            <div className="flex justify-center md:justify-end gap-3 w-full md:w-auto">
+                                                <div className="text-center flex-1 md:flex-none px-4 py-2.5 bg-gray-50 dark:bg-zinc-800 bluish:bg-white/5 rounded-xl border border-gray-100 dark:border-zinc-700 bluish:border-white/5 transition-colors duration-300 shadow-sm">
+                                                    <div className="text-lg md:text-xl font-bold text-gray-900 dark:text-white bluish:text-white leading-tight">{businesses.length}</div>
+                                                    <div className="text-[10px] text-gray-500 dark:text-gray-400 bluish:text-gray-400 font-black uppercase tracking-wider">Businesses</div>
                                                 </div>
-                                                <div className="text-center px-4 py-2 bg-gray-50 dark:bg-zinc-800 bluish:bg-white/5 rounded-lg border border-gray-100 dark:border-zinc-700 bluish:border-white/5 transition-colors duration-300">
-                                                    <div className="text-xl font-bold text-blue-600 dark:text-emerald-400 bluish:text-blue-400">Active</div>
-                                                    <div className="text-xs text-gray-500 dark:text-gray-400 bluish:text-gray-400 font-medium">Status</div>
+                                                <div className="text-center flex-1 md:flex-none px-4 py-2.5 bg-gray-50 dark:bg-zinc-800 bluish:bg-white/5 rounded-xl border border-gray-100 dark:border-zinc-700 bluish:border-white/5 transition-colors duration-300 shadow-sm">
+                                                    <div className="text-lg md:text-xl font-bold text-blue-600 dark:text-emerald-400 bluish:text-blue-400 leading-tight">Active</div>
+                                                    <div className="text-[10px] text-gray-500 dark:text-gray-400 bluish:text-gray-400 font-black uppercase tracking-wider">Status</div>
                                                 </div>
                                             </div>
                                         )}
@@ -270,12 +282,12 @@ const Profile = () => {
                         {/* Main Column - Personal Info */}
                         <div className="lg:col-span-2 flex flex-col">
                             {/* Personal Info Card */}
-                            <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e] bluish:backdrop-blur-md rounded-xl shadow-sm bluish:shadow-lg border border-gray-200 dark:border-zinc-800 bluish:border-white/10 p-6 flex-1 h-full transition-colors duration-300">
-                                <h2 className="text-lg font-bold text-gray-900 dark:text-white bluish:text-white mb-5 flex items-center border-b border-gray-100 dark:border-zinc-800 bluish:border-white/5 pb-3">
-                                    <User size={20} className="mr-2 text-blue-600 dark:text-emerald-500 bluish:text-blue-500" /> Personal Information
+                            <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e] bluish:backdrop-blur-md rounded-2xl shadow-sm bluish:shadow-lg border border-gray-200 dark:border-zinc-800 bluish:border-white/10 p-5 md:p-8 flex-1 h-full transition-colors duration-300">
+                                <h2 className="text-xl font-bold text-gray-900 dark:text-white bluish:text-white mb-6 flex items-center border-b border-gray-100 dark:border-zinc-800 bluish:border-white/5 pb-4">
+                                    <User size={22} className="mr-3 text-blue-600 dark:text-emerald-500 bluish:text-blue-500" /> Personal Information
                                 </h2>
 
-                                <div className="grid md:grid-cols-2 gap-6">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
                                     <div className="space-y-1.5">
                                         <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 bluish:text-gray-400 uppercase">Full Name</label>
                                         {isEditing ? (
@@ -323,17 +335,17 @@ const Profile = () => {
 
                                     {/* Description Field - Full Width */}
                                     <div className="md:col-span-2 space-y-1.5">
-                                        <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">About Me</label>
+                                        <label className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">About Me</label>
                                         {isEditing ? (
                                             <textarea
-                                                rows="4"
-                                                className="w-full px-3 py-2 bg-white dark:bg-zinc-800 bluish:bg-white/5 border border-gray-300 dark:border-zinc-700 bluish:border-white/10 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-emerald-500 bluish:focus:ring-blue-500 focus:border-transparent outline-none text-sm transition-all resize-none dark:text-white bluish:text-white"
+                                                rows="5"
+                                                className="w-full px-4 py-3 bg-white dark:bg-zinc-800 bluish:bg-white/5 border border-gray-300 dark:border-zinc-700 bluish:border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-emerald-500 bluish:focus:ring-blue-500 focus:border-transparent outline-none text-sm transition-all resize-none dark:text-white bluish:text-white shadow-inner"
                                                 value={formData.description}
                                                 onChange={e => setFormData({ ...formData, description: e.target.value })}
                                                 placeholder="Share a bit about yourself..."
                                             />
                                         ) : (
-                                            <div className="text-gray-900 dark:text-gray-200 bluish:text-gray-200 font-medium text-sm leading-relaxed whitespace-pre-wrap">
+                                            <div className="text-gray-900 dark:text-gray-200 bluish:text-gray-200 font-medium text-sm leading-relaxed whitespace-pre-wrap bg-gray-50/50 dark:bg-white/5 p-4 rounded-xl border border-gray-100 dark:border-white/5">
                                                 {profile.description || 'No description provided.'}
                                             </div>
                                         )}
@@ -372,30 +384,30 @@ const Profile = () => {
                         {/* Sidebar Column */}
                         <div className="space-y-6">
                             {/* Appearance Card (Theme Toggle) */}
-                            <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e] bluish:backdrop-blur-md rounded-xl shadow-sm bluish:shadow-lg border border-gray-200 dark:border-zinc-800 bluish:border-white/10 p-6 transition-colors duration-300">
+                            <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e] bluish:backdrop-blur-md rounded-2xl shadow-sm bluish:shadow-lg border border-gray-200 dark:border-zinc-800 bluish:border-white/10 p-6 transition-colors duration-300">
                                 <h2 className="text-lg font-bold text-gray-900 dark:text-white bluish:text-white mb-5 flex items-center border-b border-gray-100 dark:border-zinc-800 bluish:border-white/5 pb-3">
-                                    {theme === 'dark' || theme === 'bluish' ? <Moon size={20} className="mr-2 text-indigo-400 bluish:text-blue-400" /> : <Sun size={20} className="mr-2 text-amber-500" />}
+                                    {theme === 'dark' || theme === 'bluish' ? <Moon size={20} className="mr-3 text-indigo-400 bluish:text-blue-400" /> : <Sun size={20} className="mr-3 text-amber-500" />}
                                     Appearance
                                 </h2>
-                                <div className="grid grid-cols-3 gap-2 bg-gray-100 dark:bg-zinc-800 bluish:bg-white/5 p-1 rounded-lg">
+                                <div className="grid grid-cols-3 gap-2 bg-gray-100/80 dark:bg-zinc-800/80 bluish:bg-white/5 p-1.5 rounded-xl">
                                     {['light', 'dark', 'default'].map((m) => (
                                         <button
                                             key={m}
                                             type="button"
                                             onClick={() => setMode(m)}
-                                            className={`py-2 px-3 rounded-md text-sm font-semibold transition-all duration-200 ${mode === m
-                                                ? 'bg-white dark:bg-emerald-600 bluish:bg-blue-600 text-gray-900 dark:text-white bluish:text-white shadow-sm'
+                                            className={`py-2 px-1 rounded-lg text-xs md:text-sm font-bold transition-all duration-200 ${mode === m
+                                                ? 'bg-white dark:bg-emerald-600 bluish:bg-blue-600 text-gray-900 dark:text-white bluish:text-white shadow-md scale-100'
                                                 : 'text-gray-500 dark:text-gray-400 bluish:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 bluish:hover:text-white'
                                                 }`}
                                         >
-                                            {m === 'default' ? 'Default' : m.charAt(0).toUpperCase() + m.slice(1)}
+                                            {m === 'default' ? 'Mirror' : m.charAt(0).toUpperCase() + m.slice(1)}
                                         </button>
                                     ))}
                                 </div>
-                                <p className="text-xs text-gray-400 dark:text-gray-500 mt-3 text-center">
+                                <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-4 text-center font-medium uppercase tracking-widest">
                                     {mode === 'default'
-                                        ? `Using device settings (${theme === 'dark' ? 'Dark' : 'Light'})`
-                                        : `Manually set to ${mode} mode`}
+                                        ? `System: ${theme.toUpperCase()}`
+                                        : `${mode.toUpperCase()} MODE`}
                                 </p>
                             </div>
 
@@ -476,27 +488,27 @@ const Profile = () => {
                             </div>
 
                             {businesses.length > 0 ? (
-                                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
                                     {businesses.slice(0, 3).map((b) => (
-                                        <div key={b._id} className="border border-gray-200 dark:border-zinc-700 bluish:border-white/10 rounded-lg p-4 hover:border-blue-300 dark:hover:border-blue-700 bluish:hover:border-blue-500/50 transition-colors group bg-gray-50/50 dark:bg-zinc-800/50 bluish:bg-white/5 flex flex-col">
-                                            <div className="flex items-start space-x-4">
-                                                <div className="h-16 w-16 bg-gray-200 dark:bg-zinc-700 bluish:bg-[#1e293b] rounded-lg flex-shrink-0 overflow-hidden">
+                                        <div key={b._id} className="border border-gray-200 dark:border-zinc-800 bluish:border-white/10 rounded-2xl p-5 hover:border-blue-300 dark:hover:border-blue-700 bluish:hover:border-blue-500/50 transition-all group bg-gray-50/30 dark:bg-white/5 flex flex-col shadow-sm hover:shadow-md">
+                                            <div className="flex items-center space-x-4 mb-4">
+                                                <div className="h-14 w-14 bg-gray-200 dark:bg-zinc-800 bluish:bg-[#1e293b] rounded-xl flex-shrink-0 overflow-hidden shadow-inner">
                                                     <img
                                                         src={(b.images && b.images.length > 0) ? b.images[0] : 'https://cdn-icons-png.freepik.com/512/1465/1465439.png'}
                                                         alt={b.businessName}
-                                                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                                                     />
                                                 </div>
                                                 <div className="flex-1 min-w-0">
-                                                    <h4 className="font-bold text-gray-900 dark:text-white bluish:text-white truncate">{b.businessName}</h4>
-                                                    <div className="flex items-center text-xs text-gray-500 dark:text-gray-400 bluish:text-gray-400 mt-1 mb-3">
-                                                        <MapPin size={12} className="mr-1" />
-                                                        <span className="truncate">{b.location.city}, {b.location.place}</span>
+                                                    <h4 className="font-bold text-gray-900 dark:text-white bluish:text-white truncate text-base">{b.businessName}</h4>
+                                                    <div className="flex items-center text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mt-0.5">
+                                                        <MapPin size={10} className="mr-1" />
+                                                        <span className="truncate">{b.location.city}</span>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <Link to={`/my-businesses/${b._id}`} className="mt-auto pt-3 text-xs font-semibold text-blue-600 dark:text-emerald-400 hover:underline border-t border-gray-200 dark:border-zinc-700 bluish:border-white/10 bluish:text-blue-400 flex items-center justify-center">
-                                                View Details
+                                            <Link to={`/my-businesses/${b._id}`} className={`mt-auto pt-4 text-xs font-black uppercase tracking-widest text-center border-t border-gray-100 dark:border-white/5 transition-colors ${accentClass} hover:opacity-80`}>
+                                                Manage Asset
                                             </Link>
                                         </div>
                                     ))}

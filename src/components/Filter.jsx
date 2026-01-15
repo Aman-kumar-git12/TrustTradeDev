@@ -40,7 +40,7 @@ const Filter = ({ filters, onFilterChange, onClear, onApply, onClose, accentColo
     const accentButton = accentColor === 'blue' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-600 dark:bg-emerald-600 hover:bg-blue-700 dark:hover:bg-emerald-700';
 
     return (
-        <div className="bg-white dark:bg-zinc-900 rounded-xl shadow-sm border border-gray-200 dark:border-zinc-800 p-6 h-fit sticky top-24 transition-colors duration-300">
+        <div className="bg-white dark:bg-black bluish:bg-[#131b2e] bluish:backdrop-blur-md rounded-xl shadow-sm border border-gray-200 dark:border-zinc-800 bluish:border-white/5 p-6 h-fit sticky top-24 transition-colors duration-300">
             <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center transition-colors">
                     <FilterIcon size={20} className="mr-2" /> Filters
@@ -59,7 +59,7 @@ const Filter = ({ filters, onFilterChange, onClear, onApply, onClose, accentColo
                         <input
                             type="text"
                             placeholder="Search assets or business name..."
-                            className={`w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-zinc-700 rounded-lg focus:ring-2 ${accentRing} outline-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-white transition-colors`}
+                            className={`w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 rounded-lg focus:ring-2 ${accentRing} outline-none bg-white dark:bg-zinc-800 bluish:bg-slate-800/50 text-gray-900 dark:text-white transition-colors`}
                             value={filters.search || ''}
                             onChange={(e) => handleChange('search', e.target.value)}
                         />
@@ -149,7 +149,7 @@ const Filter = ({ filters, onFilterChange, onClear, onApply, onClose, accentColo
                                         type="text"
                                         autoFocus
                                         placeholder="Type category..."
-                                        className={`w-full px-3 py-1.5 text-sm border border-gray-200 dark:border-zinc-700 rounded-lg focus:ring-2 ${accentRing} outline-none bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-white transition-colors`}
+                                        className={`w-full px-3 py-1.5 text-sm border border-gray-200 dark:border-zinc-700 bluish:border-white/10 rounded-lg focus:ring-2 ${accentRing} outline-none bg-gray-50 dark:bg-zinc-800 bluish:bg-slate-800/50 text-gray-900 dark:text-white transition-colors`}
                                         value={filters.category === 'Other' ? '' : filters.category}
                                         onChange={(e) => handleChange('category', e.target.value)}
                                     />
@@ -166,14 +166,14 @@ const Filter = ({ filters, onFilterChange, onClear, onApply, onClose, accentColo
                         <input
                             type="number"
                             placeholder="Min"
-                            className={`w-1/2 px-3 py-2 border border-gray-200 dark:border-zinc-700 rounded-lg focus:ring-2 ${accentRing} outline-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-white transition-colors`}
+                            className={`w-1/2 px-3 py-2 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 rounded-lg focus:ring-2 ${accentRing} outline-none bg-white dark:bg-zinc-800 bluish:bg-slate-800/50 text-gray-900 dark:text-white transition-colors`}
                             value={filters.minPrice || ''}
                             onChange={(e) => handleChange('minPrice', e.target.value)}
                         />
                         <input
                             type="number"
                             placeholder="Max"
-                            className={`w-1/2 px-3 py-2 border border-gray-200 dark:border-zinc-700 rounded-lg focus:ring-2 ${accentRing} outline-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-white transition-colors`}
+                            className={`w-1/2 px-3 py-2 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 rounded-lg focus:ring-2 ${accentRing} outline-none bg-white dark:bg-zinc-800 bluish:bg-slate-800/50 text-gray-900 dark:text-white transition-colors`}
                             value={filters.maxPrice || ''}
                             onChange={(e) => handleChange('maxPrice', e.target.value)}
                         />
@@ -184,7 +184,7 @@ const Filter = ({ filters, onFilterChange, onClear, onApply, onClose, accentColo
                 <div>
                     <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 transition-colors">Condition</label>
                     <select
-                        className={`w-full px-3 py-2 border border-gray-200 dark:border-zinc-700 rounded-lg focus:ring-2 ${accentRing} outline-none bg-white dark:bg-zinc-800 text-gray-900 dark:text-white transition-colors`}
+                        className={`w-full px-3 py-2 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 rounded-lg focus:ring-2 ${accentRing} outline-none bg-white dark:bg-zinc-800 bluish:bg-slate-800/50 text-gray-900 dark:text-white transition-colors`}
                         value={filters.condition || ''}
                         onChange={(e) => handleChange('condition', e.target.value)}
                     >

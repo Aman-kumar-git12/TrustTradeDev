@@ -648,17 +648,28 @@ const SellerLeads = () => {
     if (loading && leads.length === 0) return <LeadsShimmer />;
 
     return (
-        <div className="flex gap-8 items-start relative pb-20">
+        <div className="flex flex-col md:flex-row-reverse gap-8 items-start relative pb-20">
+            {/* Filter Sidebar */}
+            {isFilterOpen && (
+                <div className="w-full md:w-80 flex-shrink-0 transition-all duration-300 ease-in-out block animate-fade-in h-fit sticky top-24">
+                    <LeadFilter
+                        filters={filters}
+                        setFilters={setFilters}
+                        onClose={handleCloseFilter}
+                        onApply={() => fetchLeads(filters)}
+                        onClear={() => fetchLeads({})}
+                    />
+                </div>
+            )}
+
             {/* Main Content Area */}
             <div className="flex-1 min-w-0 transition-all duration-300 relative">
-
                 {/* Refetch Loading Overlay */}
                 {loading && (
                     <div className="absolute inset-0 bg-white/50 dark:bg-zinc-950/50 z-50 rounded-2xl flex items-start justify-center pt-48 backdrop-blur-[1px]">
                         <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500 dark:border-emerald-500"></div>
                     </div>
                 )}
-
 
                 {/* Headers */}
                 <div className="hidden md:grid grid-cols-[1.4fr_1.8fr_1fr_1.2fr_0.4fr] gap-4 px-4 pb-3 text-xs font-bold text-gray-400 dark:text-zinc-500 bluish:text-gray-400 uppercase tracking-wider pl-6">
@@ -693,19 +704,6 @@ const SellerLeads = () => {
                     )}
                 </div>
             </div>
-
-            {/* Right Side Filter Panel */}
-            {isFilterOpen && (
-                <div className="w-80 flex-shrink-0 transition-all duration-300 ease-in-out block h-[calc(100vh-8rem)] sticky top-24">
-                    <LeadFilter
-                        filters={filters}
-                        setFilters={setFilters}
-                        onClose={handleCloseFilter}
-                        onApply={() => fetchLeads(filters)}
-                        onClear={() => fetchLeads({})}
-                    />
-                </div>
-            )}
         </div>
     );
 };

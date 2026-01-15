@@ -49,6 +49,7 @@ const ScrollButtons = () => {
             <AnimatePresence>
                 {showUp && (
                     <motion.button
+                        key="scroll-up"
                         initial={{ opacity: 0, y: 20, scale: 0.8 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.8 }}
@@ -64,6 +65,7 @@ const ScrollButtons = () => {
 
                 {showDown && (
                     <motion.button
+                        key="scroll-down"
                         initial={{ opacity: 0, y: -20, scale: 0.8 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: -20, scale: 0.8 }}

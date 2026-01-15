@@ -1,6 +1,8 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import api from '../utils/api';
 
+import SplashScreen from '../components/SplashScreen';
+
 const AuthContext = createContext();
 
 export const useAuth = () => {
@@ -19,7 +21,10 @@ export const AuthProvider = ({ children }) => {
             } catch (error) {
                 setUser(null);
             } finally {
-                setLoading(false);
+                // Keep the loader for at least a second for premium feel
+                setTimeout(() => {
+                    setLoading(false);
+                }, 1000);
             }
         };
         checkLoggedIn();
@@ -49,7 +54,7 @@ export const AuthProvider = ({ children }) => {
 
     return (
         <AuthContext.Provider value={value}>
-            {!loading && children}
+            {loading ? <SplashScreen /> : children}
         </AuthContext.Provider>
     );
 };
