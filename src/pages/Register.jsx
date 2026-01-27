@@ -83,6 +83,7 @@ const Register = () => {
         setIsLoading(true);
         try {
             const { data } = await api.post('/auth/register', formData);
+            if (data.token) localStorage.setItem('trusttrade_token', data.token);
             setAuth(data); // Directly update user state
 
             showSnackbar('Registration successful! Welcome.', 'success');

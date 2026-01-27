@@ -5,6 +5,18 @@ const api = axios.create({
     withCredentials: true // Important for cookies
 });
 
+// Attach Bearer Token (Fallback for Cookies)
+api.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('trusttrade_token');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
+
 // Handle 401 globally & Retry for Cold Starts
 api.interceptors.response.use(
     (response) => response,
@@ -21,7 +33,17 @@ api.interceptors.response.use(
 
         // 2. Handle 401 Unauthorized
         if (response && response.status === 401) {
-            if (window.location.pathname !== '/login' && window.location.pathname !== '/') {
+            // Don't redirect if the error is from /auth/me (AuthContext handles this)
+            if (config.url.includes('/auth/me')) {
+                return Promise.reject(error);
+            }
+
+            // Don't redirect if we are on login, register, or landing pages
+            if (
+                window.location.pathname !== '/login' &&
+                window.location.pathname !== '/' &&
+                window.location.pathname !== '/register'
+            ) {
                 window.location.href = '/login';
             }
         }
