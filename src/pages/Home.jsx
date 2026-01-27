@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { ArrowRight, TrendingUp, Clock, Star, Award, Zap, ShieldCheck, Globe, ChevronRight, ChevronLeft, Sparkles, Building2 } from 'lucide-react';
 import api from '../utils/api';
 import { motion } from 'framer-motion';
-import { Tilt } from 'react-tilt';
+
 
 const Home = () => {
     const { user } = useAuth();
@@ -33,13 +33,14 @@ const Home = () => {
 
 
     return (
-        <div className="min-h-screen bg-transparent dark:bg-black bluish:bg-[#0a0f1d] text-gray-900 dark:text-gray-200 transaction-colors duration-300 relative overflow-x-hidden">
+        <div className="min-h-screen bg-transparent dark:bg-black bluish:bg-[#0a0f1d] text-gray-900 dark:text-gray-200 transition-colors duration-300 relative overflow-x-hidden">
             {/* Dotted Background - Local Override for Home */}
             <div className="fixed inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] dark:bg-[radial-gradient(#ffffff33_1px,#000000_1px)] bluish:bg-[radial-gradient(#ffffff33_1px,#0a0f1d_1px)] [background-size:20px_20px] opacity-20 dark:opacity-20 bluish:opacity-[0.26] pointer-events-none z-[1]"></div>
 
             {/* Ambient Background Glows - Global */}
-            <div className="fixed top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/20 dark:bg-emerald-600/10 bluish:bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-30 animate-blob pointer-events-none z-0"></div>
-            <div className="fixed bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-600/20 dark:bg-emerald-600/10 bluish:bg-purple-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-30 animate-blob animation-delay-2000 pointer-events-none z-0"></div>
+            {/* Ambient Background Glows - Global (Disabled Local Overrides for Performance) */}
+            <div className="hidden fixed top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/20 dark:bg-emerald-600/10 bluish:bg-blue-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-30 animate-blob pointer-events-none z-0"></div>
+            <div className="hidden fixed bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-blue-600/20 dark:bg-emerald-600/10 bluish:bg-purple-600/20 rounded-full mix-blend-screen filter blur-[120px] opacity-30 animate-blob animation-delay-2000 pointer-events-none z-0"></div>
 
             {/* 1. Hero / Billboard (Netflix Style) */}
             <div className="relative h-[75vh] w-full overflow-hidden group z-10">
@@ -242,14 +243,14 @@ const MarqueeItem = ({ icon, text }) => (
 );
 
 const ProductCard = ({ item }) => (
-    <Tilt options={{ max: 10, scale: 1.02, speed: 400, glare: true, 'max-glare': 0.05 }} style={{ height: '100%' }}>
-        <Link to={`/assets/${item._id || item.id}`} className="group block bg-white dark:bg-[#141414] bluish:bg-[#1e293b] rounded-xl overflow-hidden border border-gray-200 dark:border-white/5 bluish:border-slate-700/50 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-300 h-full flex flex-col transform-style-3d">
+    <div className="h-full">
+        <Link to={`/assets/${item._id || item.id}`} className="group block bg-white dark:bg-[#141414] bluish:bg-[#1e293b] rounded-xl overflow-hidden border border-gray-200 dark:border-white/5 bluish:border-slate-700/50 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-300 h-full flex flex-col transform hover:-translate-y-1">
             {/* Image Container */}
-            <div className="aspect-[4/3] relative overflow-hidden transform-style-3d">
+            <div className="aspect-[4/3] relative overflow-hidden">
                 <img
                     src={item.images?.[0] || 'https://via.placeholder.com/400'}
                     alt={item.title}
-                    className="w-full h-full object-cover transform-z-20"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
                 {/* Subtle gradient only for depth, not for text overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-gray-900/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -258,16 +259,16 @@ const ProductCard = ({ item }) => (
             </div>
 
             {/* Details Container - Below Image */}
-            <div className="p-4 flex flex-col flex-grow bg-white dark:bg-[#141414] bluish:bg-[#1e293b] group-hover:bg-gray-50 dark:group-hover:bg-[#1a1a1a] bluish:group-hover:bg-[#0a0f1d] transition-colors transform-style-3d">
-                <h3 className="text-gray-900 dark:text-white bluish:text-white font-bold text-lg line-clamp-1 mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors transform-z-20">{item.title}</h3>
+            <div className="p-4 flex flex-col flex-grow bg-white dark:bg-[#141414] bluish:bg-[#1e293b] group-hover:bg-gray-50 dark:group-hover:bg-[#1a1a1a] bluish:group-hover:bg-[#0a0f1d] transition-colors">
+                <h3 className="text-gray-900 dark:text-white bluish:text-white font-bold text-lg line-clamp-1 mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{item.title}</h3>
 
-                <div className="flex justify-between items-center text-sm mb-4 transform-z-10">
+                <div className="flex justify-between items-center text-sm mb-4">
                     <span className="text-blue-600 dark:text-blue-400 bluish:text-blue-400 font-bold text-xl">₹{item.price?.toLocaleString()}</span>
                     <span className="text-gray-500 dark:text-gray-400 text-xs flex items-center gap-1 bg-gray-100 dark:bg-white/5 px-2 py-1 rounded"><Clock className="w-3 h-3" /> 2h left</span>
                 </div>
 
                 {/* Action Buttons - Static/Always visible or transition in */}
-                <div className="grid grid-cols-4 gap-2 mt-auto transform-z-20">
+                <div className="grid grid-cols-4 gap-2 mt-auto">
                     <button className="col-span-3 bg-gradient-to-r from-blue-600 to-teal-600 dark:from-emerald-600 dark:to-emerald-500 bluish:from-blue-700 bluish:to-indigo-800 text-white hover:from-blue-500 hover:to-teal-500 dark:hover:from-emerald-500 dark:hover:to-emerald-400 bluish:hover:from-blue-600 bluish:hover:to-indigo-700 py-2 rounded font-bold text-xs transition-all flex items-center justify-center gap-1 shadow-lg shadow-blue-900/20 dark:shadow-emerald-900/20 bluish:shadow-blue-900/20 hover:shadow-blue-500/30 dark:hover:shadow-emerald-500/30 bluish:hover:shadow-blue-900/40 active:scale-95">
                         Place Bid
                     </button>
@@ -275,7 +276,7 @@ const ProductCard = ({ item }) => (
                 </div>
             </div>
         </Link>
-    </Tilt>
+    </div>
 );
 
 const ProductSection = ({ title, items }) => (
