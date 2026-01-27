@@ -221,7 +221,7 @@ const LeadRow = ({ lead, isExpanded, onToggle, onStatusUpdate, onLeadUpdate }) =
         if (!confirmed) return;
 
         try {
-            const { data: newSale } = await api.post('/sales/sales', {
+            const { data: newSale } = await api.post('/sales', {
                 price: 0,
                 status: 'unsold',
                 interestId: lead._id,

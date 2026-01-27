@@ -29,13 +29,7 @@ const Home = () => {
         fetchHomeStats();
     }, []);
 
-    if (loading) {
-        return (
-            <div className="min-h-screen bg-gray-50 dark:bg-[#0a0f1d] flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 dark:border-emerald-500 bluish:border-blue-500"></div>
-            </div>
-        );
-    }
+
 
 
     return (

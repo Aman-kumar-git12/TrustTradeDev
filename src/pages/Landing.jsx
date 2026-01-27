@@ -151,7 +151,7 @@ const Landing = () => {
 
 
             {/* Split Section: Sellers vs Buyers */}
-            < section className="py-12 border-t border-white/5" >
+            <section className="py-12 border-t border-white/5 relative z-10">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="grid md:grid-cols-2 gap-8">
                         {/* Sellers Card */}

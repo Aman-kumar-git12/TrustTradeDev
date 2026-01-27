@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import QuickRegisterButton from '../components/QuickRegisterButton';
 
 const containerVariants = {
     hidden: { opacity: 0, y: -30 },
@@ -154,6 +155,10 @@ const Login = () => {
                             <>Sign In <ArrowRight className="ml-2" size={16} /></>
                         )}
                     </button>
+
+                    <div className="animate-fade-in-up" style={{ animationDelay: '0.7s' }}>
+                        <QuickRegisterButton />
+                    </div>
                 </form>
 
                 <motion.div

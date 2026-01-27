@@ -6,9 +6,12 @@ import api from '../utils/api';
 import { useUI } from '../context/UIContext';
 import { useAuth } from '../context/AuthContext';
 
+import QuickRegisterButton from '../components/QuickRegisterButton';
+
 const Register = () => {
     const [searchParams] = useSearchParams();
     const initialRole = searchParams.get('role') === 'seller' ? 'seller' : 'buyer';
+    const autoFill = searchParams.get('autoFill') === 'true';
 
     const [formData, setFormData] = useState({
         fullName: '',
@@ -18,9 +21,56 @@ const Register = () => {
     });
     const [isLoading, setIsLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
+    const [isHighlightingRole, setIsHighlightingRole] = useState(false);
+    const [isAutoFilled, setIsAutoFilled] = useState(false);
+
     const { showSnackbar } = useUI();
-    const { login, user, loading } = useAuth();
+    const { setAuth, user, loading } = useAuth();
     const navigate = useNavigate();
+
+    const generateRandomData = () => {
+        const randomId = Math.floor(1000 + Math.random() * 9000);
+        const dynamicName = `User${randomId}`;
+        return {
+            fullName: dynamicName,
+            email: `user${randomId}@gmail.com`,
+            password: `${dynamicName}@123`
+        };
+    };
+
+    useEffect(() => {
+        if (autoFill) {
+            const data = generateRandomData();
+            setFormData(prev => ({ ...prev, ...data }));
+            setIsHighlightingRole(true);
+            setIsAutoFilled(true);
+            const timer = setTimeout(() => setIsHighlightingRole(false), 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [autoFill]);
+
+    const handleQuickRegisterToggle = () => {
+        if (isAutoFilled) {
+            // Clear Data
+            setFormData({
+                fullName: '',
+                email: '',
+                password: '',
+                role: initialRole
+            });
+            setIsAutoFilled(false);
+            // Remove query param if present without reloading
+            navigate('/register', { replace: true });
+        } else {
+            // Fill Data
+            const data = generateRandomData();
+            setFormData(prev => ({ ...prev, ...data }));
+            setIsHighlightingRole(true);
+            setIsAutoFilled(true);
+            setTimeout(() => setIsHighlightingRole(false), 2000);
+        }
+    };
+
 
     useEffect(() => {
         if (!loading && user) {
@@ -33,12 +83,11 @@ const Register = () => {
         setIsLoading(true);
         try {
             const { data } = await api.post('/auth/register', formData);
-            login(data); // Use context login
+            setAuth(data); // Directly update user state
 
             showSnackbar('Registration successful! Welcome.', 'success');
 
-            if (data.role === 'seller') navigate('/dashboard/seller');
-            else navigate(`/dashboard/buyer/${data._id}`);
+            navigate('/home');
 
         } catch (err) {
             const msg = err.response?.data?.message || 'Registration failed';
@@ -113,7 +162,7 @@ const Register = () => {
 
                     <div className="animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
                         <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">I want to...</label>
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className={`grid grid-cols-2 gap-3 p-1 rounded-2xl transition-all duration-300 ${isHighlightingRole ? 'animate-siren' : ''}`}>
                             <button
                                 type="button"
                                 onClick={() => setFormData({ ...formData, role: 'buyer' })}
@@ -141,6 +190,10 @@ const Register = () => {
                             'Register'
                         )}
                     </button>
+
+                    <div className="mt-3 animate-fade-in-up" style={{ animationDelay: '0.7s' }}>
+                        <QuickRegisterButton onClick={handleQuickRegisterToggle} />
+                    </div>
                 </form>
 
                 <div className="mt-6 text-center text-xs text-gray-400 animate-fade-in-up" style={{ animationDelay: '0.7s' }}>
