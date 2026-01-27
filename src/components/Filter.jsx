@@ -17,7 +17,6 @@ const CONDITIONS = [
 ];
 
 const STATUSES = [
-    'Pending',
     'Negotiating',
     'Accepted',
     'Rejected'
@@ -92,7 +91,9 @@ const Filter = ({ filters, onFilterChange, onClear, onApply, onClose, accentColo
                                         onChange={() => handleChange('status', stat.toLowerCase())}
                                         className={accentRadio}
                                     />
-                                    <label htmlFor={`status-${stat.toLowerCase()}`} className="ml-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">{stat}</label>
+                                    <label htmlFor={`status-${stat.toLowerCase()}`} className="ml-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">
+                                        {stat}
+                                    </label>
                                 </div>
                             ))}
                         </div>

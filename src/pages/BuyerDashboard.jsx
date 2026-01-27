@@ -27,6 +27,7 @@ import Hover from '../components/Hover';
 import { useUI } from '../context/UIContext';
 import Filter from '../components/Filter';
 import BuyerDashboardShimmer from '../components/shimmers/BuyerDashboardShimmer';
+import { startPayment, loadRazorpay } from '../assets/razorpay';
 
 const StatCard = ({ title, value, icon: Icon, colorClass }) => (
     <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800 bluish:to-slate-900 p-5 rounded-2xl border border-gray-100 dark:border-zinc-800 bluish:border-white/5 shadow-sm flex items-center justify-between group hover:shadow-md transition-all">
@@ -40,17 +41,29 @@ const StatCard = ({ title, value, icon: Icon, colorClass }) => (
     </div>
 );
 
-const InterestCard = ({ interest, isExpanded, onToggle, onDelete }) => {
+const InterestCard = ({ interest, isExpanded, onToggle, onDelete, navigate, setActiveTab }) => {
     const { theme } = useTheme();
     const isDark = theme === 'dark';
 
     const getStatusColor = (status) => {
         switch (status) {
-            case 'accepted': return 'bg-blue-100/80 text-blue-900 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800 bluish:bg-blue-900/30 bluish:text-blue-300 bluish:border-blue-800';
+            case 'accepted': return 'bg-emerald-100/80 text-emerald-900 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800';
             case 'rejected': return 'bg-rose-100/80 text-rose-900 border-rose-300 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800';
-            case 'negotiating': return 'bg-blue-100/80 text-blue-900 border-blue-300 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800 bluish:bg-blue-900/30 bluish:text-blue-300 bluish:border-blue-800';
-            default: return 'bg-amber-100/80 text-amber-900 border-amber-300 dark:bg-amber-900/30 dark:text-amber-200 dark:border-amber-800';
+            case 'negotiating': return 'bg-amber-100/80 text-amber-900 border-amber-300 dark:bg-amber-900/30 dark:text-amber-200 dark:border-amber-800';
+            default: return 'bg-gray-100 text-gray-900 border-gray-300';
         }
+    };
+
+    const handlePayment = async (e) => {
+        e.stopPropagation();
+        const amount = interest.soldTotalAmount || (interest.soldPrice * interest.soldQuantity) || (interest.asset?.price * interest.quantity);
+
+        await loadRazorpay();
+        await startPayment(amount, { interestId: interest._id }, () => {
+            // Success Callback: Switch to orders tab
+            setActiveTab('orders');
+            navigate(`?tab=orders`);
+        });
     };
 
     return (
@@ -97,10 +110,19 @@ const InterestCard = ({ interest, isExpanded, onToggle, onDelete }) => {
 
                 {/* Status and Action */}
                 <div className="flex items-center justify-between md:justify-end gap-4 min-w-[200px]">
+                    {(interest.status === 'accepted' || interest.status === 'negotiating') && interest.salesStatus !== 'sold' && (
+                        <button
+                            onClick={handlePayment}
+                            className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-black rounded-lg transition-all shadow-lg shadow-blue-500/20 active:scale-95 flex items-center gap-1.5 whitespace-nowrap"
+                        >
+                            <Zap size={14} fill="currentColor" />
+                            PAY NOW
+                        </button>
+                    )}
                     {interest.salesStatus === 'sold' ? (
                         <span className="flex items-center px-3 py-1 text-[10px] font-extrabold rounded-full border border-blue-500 dark:border-blue-500 bluish:border-blue-400 bg-blue-500/10 dark:bg-blue-500/10 bluish:bg-blue-400/10 text-blue-500 dark:text-blue-500 bluish:text-blue-400 uppercase tracking-wider">
-                            <CheckCircle size={12} className="mr-1" />
-                            Paid & Secure
+                            <ShieldCheck size={12} className="mr-1" />
+                            PAID & SECURE
                         </span>
                     ) : (
                         <span className={`px-3 py-1 text-[10px] font-extrabold rounded-full border uppercase tracking-wider ${getStatusColor(interest.status)}`}>
@@ -194,7 +216,7 @@ const InterestCard = ({ interest, isExpanded, onToggle, onDelete }) => {
                                 </div>
 
                                 {/* Deletion/Retraction Option */}
-                                {['pending', 'negotiating'].includes(interest.status) && (
+                                {interest.status === 'negotiating' && (
                                     <div className="md:col-span-2 pt-4 border-t border-gray-50 dark:border-zinc-800 flex justify-end">
                                         <button
                                             onClick={(e) => {
@@ -263,8 +285,8 @@ const OrderCard = ({ order, isExpanded, onToggle }) => {
                 {/* Status and Action */}
                 <div className="flex items-center justify-between md:justify-end gap-4 min-w-[200px]">
                     <span className="flex items-center px-3 py-1 text-[10px] font-extrabold rounded-full border border-blue-500 dark:border-blue-500 bluish:border-blue-400 bg-blue-500/10 dark:bg-blue-500/10 bluish:bg-blue-400/10 text-blue-500 dark:text-blue-500 bluish:text-blue-400 uppercase tracking-wider">
-                        <CheckCircle size={12} className="mr-1" />
-                        Paid & Secured
+                        <ShieldCheck size={12} className="mr-1" />
+                        PAID & SECURE
                     </span>
                     <div className={`p-2 rounded-lg transition-transform ${isExpanded ? 'rotate-180 bg-blue-50 dark:bg-blue-900/20 bluish:bg-blue-500/10 text-blue-600 dark:text-blue-400 bluish:text-blue-400' : 'text-gray-400'}`}>
                         <ChevronDown size={20} />
@@ -287,7 +309,7 @@ const OrderCard = ({ order, isExpanded, onToggle }) => {
                                     <div className="p-4 bg-gray-50 dark:bg-zinc-800/30 rounded-xl border border-gray-100 dark:border-zinc-800">
                                         <div className="flex justify-between items-center mb-2 pb-2 border-b border-gray-200 dark:border-zinc-700">
                                             <span className="text-xs text-gray-400 font-mono">ID: #{order._id.slice(-8).toUpperCase()}</span>
-                                            <span className="text-xs font-bold text-blue-600 dark:text-blue-400 bluish:text-blue-400 bg-blue-100 dark:bg-blue-900/30 bluish:bg-blue-900/30 px-2 py-0.5 rounded">PAID</span>
+                                            <span className="text-xs font-bold text-blue-600 dark:text-blue-400 bluish:text-blue-400 bg-blue-100 dark:bg-blue-900/30 bluish:bg-blue-900/30 px-2 py-0.5 rounded">PAID & SECURE</span>
                                         </div>
                                         <div className="flex justify-between items-center mb-2">
                                             <span className="text-xs text-gray-500">Unit Price</span>
@@ -341,7 +363,8 @@ const BuyerDashboard = () => {
     const navigate = useNavigate();
     const [interests, setInterests] = useState([]);
     const [orders, setOrders] = useState([]);
-    const [activeTab, setActiveTab] = useState('interests'); // 'interests' | 'orders'
+    const initialTab = searchParams.get('tab');
+    const [activeTab, setActiveTab] = useState(initialTab === 'orders' || initialTab === 'interests' ? initialTab : 'interests'); // 'interests' | 'orders'
     const [loading, setLoading] = useState(true);
     const [expandedId, setExpandedId] = useState(null);
     const [showStats, setShowStats] = useState(false);
@@ -663,6 +686,8 @@ const BuyerDashboard = () => {
                                         isExpanded={expandedId === item._id}
                                         onToggle={() => setExpandedId(expandedId === item._id ? null : item._id)}
                                         onDelete={handleDeleteInterest}
+                                        navigate={navigate}
+                                        setActiveTab={setActiveTab}
                                     />
                                 ) : (
                                     <OrderCard

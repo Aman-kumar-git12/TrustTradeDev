@@ -241,7 +241,7 @@ const SellerDashboard = () => {
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                                         <StatCard
                                             title="Total Revenue"
-                                            value={`$${(dashboardStats?.totalRevenue || 0).toLocaleString()}`}
+                                            value={`₹${(dashboardStats?.totalRevenue || 0).toLocaleString()}`}
                                             icon={TrendingUp}
                                             colorClass="bg-blue-500 dark:bg-emerald-500"
                                         />

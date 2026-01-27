@@ -12,7 +12,7 @@ const LeadFilter = ({ filters, setFilters, onClose, onApply, onClear, hideStatus
         onClear?.();
     };
 
-    const statuses = ['pending', 'negotiating', 'accepted', 'rejected'];
+    const statuses = ['negotiating', 'accepted', 'rejected'];
 
     return (
         <div className="bg-white dark:bg-black bluish:bg-[#131b2e] bluish:backdrop-blur-md rounded-xl shadow-sm border border-gray-200 dark:border-zinc-800 bluish:border-white/5 p-6 h-fit sticky top-24 transition-colors duration-300">
@@ -69,7 +69,9 @@ const LeadFilter = ({ filters, setFilters, onClose, onApply, onClear, hideStatus
                                         onChange={() => handleChange('status', status)}
                                         className="text-blue-600 focus:ring-blue-500 bg-gray-100 dark:bg-zinc-800 bluish:bg-slate-800 border-gray-300 dark:border-zinc-600 bluish:border-white/10"
                                     />
-                                    <label htmlFor={`status-${status}`} className="ml-2 text-sm text-gray-600 dark:text-gray-400 bluish:text-slate-400 capitalize">{status}</label>
+                                    <label htmlFor={`status-${status}`} className="ml-2 text-sm text-gray-600 dark:text-gray-400 bluish:text-slate-400 capitalize">
+                                        {status}
+                                    </label>
                                 </div>
                             ))}
                         </div>

@@ -115,14 +115,14 @@ const PriceInputModal = ({ isOpen, onClose, onSubmit, title, maxQuantity, reques
                                 <span className="text-gray-500 font-medium">Quantity</span>
                                 <span className="font-bold text-gray-900 dark:text-white bluish:text-white">{quantity}</span>
                             </div>
-                            <div className="flex justify-between items-center text-sm">
-                                <span className="text-gray-500 font-medium">Total Price</span>
-                                <span className="font-bold text-blue-600 dark:text-blue-400 bluish:text-blue-400 text-2xl">₹{totalPrice ? parseFloat(totalPrice).toLocaleString() : '0.00'}</span>
-                            </div>
-                            <div className="h-px bg-gray-200 dark:bg-zinc-700 border-t border-dashed"></div>
                             <div className="flex justify-between items-center">
                                 <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">Unit Price</span>
-                                <span className="text-xs font-medium text-gray-500">₹{effectiveUnitPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}/item</span>
+                                <span className="text-xs font-medium text-gray-500">₹{originalPrice?.toLocaleString()}</span>
+                            </div>
+                            <div className="h-px bg-indigo-100 dark:bg-indigo-900/30 border-t border-dashed my-2"></div>
+                            <div className="flex justify-between items-center text-sm">
+                                <span className="text-gray-500 font-medium">Total Price</span>
+                                <span className="font-bold text-blue-600 dark:text-blue-400 text-2xl">₹{totalPrice ? parseFloat(totalPrice).toLocaleString() : '0.00'}</span>
                             </div>
                         </div>
                     </div>
@@ -194,6 +194,7 @@ const LeadRow = ({ lead, isExpanded, onToggle, onStatusUpdate, onLeadUpdate }) =
             onLeadUpdate({
                 ...lead,
                 salesStatus: 'sold',
+                isManuallyMarkedSold: true,
                 saleId: newSale._id,
                 soldQuantity: quantity,
                 soldPrice: price,
@@ -213,7 +214,7 @@ const LeadRow = ({ lead, isExpanded, onToggle, onStatusUpdate, onLeadUpdate }) =
 
         const confirmed = await confirm({
             title: "Mark as Unsold",
-            message: "Are you sure you want to mark this item as Unsold? This will set the price to $0.",
+            message: "Are you sure you want to mark this item as Unsold? This will set the price to ₹0.",
             confirmText: "Mark Unsold",
             isDangerous: true
         });
@@ -260,10 +261,10 @@ const LeadRow = ({ lead, isExpanded, onToggle, onStatusUpdate, onLeadUpdate }) =
     // Conditional Styling
     const rowBaseClasses = `bg-white dark:bg-zinc-900 bluish:bg-gradient-to-r bluish:from-[#1e293b] bluish:to-[#0f172a] bluish:backdrop-blur-md rounded-xl border transition-all duration-300 overflow-hidden`;
     let rowClasses = rowBaseClasses;
-    if (lead.salesStatus === 'sold') {
-        rowClasses = `bg-blue-100/70 dark:bg-emerald-900/20 rounded-xl border border-blue-400 dark:border-emerald-800 transition-all duration-200 overflow-hidden hover:shadow-md`;
+    if (lead.salesStatus === 'sold' && lead.isManuallyMarkedSold) {
+        rowClasses = `bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-200 dark:border-emerald-800 transition-all duration-200 overflow-hidden hover:shadow-md`;
     } else if (lead.salesStatus === 'unsold') {
-        rowClasses = `bg-rose-100/70 dark:bg-rose-900/20 rounded-xl border border-rose-400 dark:border-rose-800 transition-all duration-200 overflow-hidden hover:shadow-md`;
+        rowClasses = `bg-rose-50 dark:bg-rose-900/20 rounded-xl border border-rose-200 dark:border-rose-800 transition-all duration-200 overflow-hidden hover:shadow-md`;
     } else {
         rowClasses = `${rowBaseClasses} ${isExpanded ? 'shadow-lg border-blue-400 ring-1 ring-blue-100 dark:border-emerald-500 dark:ring-emerald-900 bluish:border-blue-500/50 bluish:ring-blue-500/20' : 'border-gray-200 dark:border-zinc-800 bluish:border-white/5 hover:border-gray-400 dark:hover:border-zinc-600 bluish:hover:border-blue-500/30 hover:shadow-md'}`;
     }
@@ -296,7 +297,7 @@ const LeadRow = ({ lead, isExpanded, onToggle, onStatusUpdate, onLeadUpdate }) =
                             <div className="flex items-center gap-2 mt-1">
                                 <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 bluish:text-gray-500 md:hidden">{new Date(lead.createdAt).toLocaleDateString()}</span>
                                 <span className="hidden md:inline-flex items-center px-2 py-1 rounded text-xs font-bold bg-gray-100 dark:bg-zinc-800 bluish:bg-white/5 text-gray-700 dark:text-gray-300 bluish:text-gray-300 border border-gray-200 dark:border-zinc-700 bluish:border-white/10">
-                                    Listed: ${lead.asset.price?.toLocaleString() || '0'}/unit
+                                    Listed: ₹{lead.asset.price?.toLocaleString() || '0'}/unit
                                 </span>
                             </div>
                         </div>
@@ -324,16 +325,26 @@ const LeadRow = ({ lead, isExpanded, onToggle, onStatusUpdate, onLeadUpdate }) =
                     {/* Status Badge */}
                     <div className="flex flex-col items-start gap-1">
                         <div className="flex items-center">
-                            <span className={`px-3 py-1 text-[11px] font-extrabold rounded-full border uppercase tracking-wider inline-flex items-center shadow-sm ${lead.status === 'pending' ? 'bg-amber-100 text-amber-900 border-amber-300 dark:bg-amber-900/30 dark:text-amber-200 dark:border-amber-800' :
-                                lead.status === 'accepted' ? 'bg-blue-100 text-blue-900 border-blue-300 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800' :
-                                    lead.status === 'negotiating' ? 'bg-blue-100 text-blue-900 border-blue-300 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800' :
-                                        'bg-rose-100 text-rose-900 border-rose-300 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800'
+                            <span className={`px-3 py-1 text-[11px] font-extrabold rounded-full border uppercase tracking-wider inline-flex items-center shadow-sm ${lead.salesStatus === 'sold' ? 'bg-emerald-100 text-emerald-900 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800' :
+                                lead.salesStatus === 'unsold' ? 'bg-rose-100 text-rose-900 border-rose-300 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800' :
+                                    lead.status === 'accepted' ? 'bg-emerald-100 text-emerald-900 border-emerald-300 dark:bg-emerald-900/30 dark:text-emerald-300 dark:border-emerald-800' :
+                                        lead.status === 'negotiating' ? 'bg-amber-100 text-amber-900 border-amber-300 dark:bg-amber-900/30 dark:text-amber-200 dark:border-amber-800' :
+                                            'bg-rose-100 text-rose-900 border-rose-300 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800'
                                 }`}>
-                                {lead.status === 'pending' && <span className="w-1.5 h-1.5 rounded-full bg-amber-600 dark:bg-amber-400 mr-1.5 animate-pulse"></span>}
-                                {lead.status}
+                                {lead.salesStatus === 'sold' ? (
+                                    <>
+                                        <CheckCircle size={12} className="mr-1.5" />
+                                        PAID
+                                    </>
+                                ) : (
+                                    <>
+                                        {lead.status === 'negotiating' && <span className="w-1.5 h-1.5 rounded-full bg-amber-600 dark:bg-amber-400 mr-1.5 animate-pulse"></span>}
+                                        {lead.status === 'accepted' ? 'ACCEPTED' : lead.status.toUpperCase()}
+                                    </>
+                                )}
                             </span>
-                            {lead.salesStatus === 'sold' && <span className="ml-2 px-2.5 py-1 text-[10px] font-extrabold rounded-full bg-blue-200/70 dark:bg-emerald-900/50 text-blue-800 dark:text-emerald-300 border border-blue-300 dark:border-emerald-700 shadow-sm tracking-wider">SOLD</span>}
-                            {lead.salesStatus === 'unsold' && <span className="ml-2 px-2.5 py-1 text-[10px] font-extrabold rounded-full bg-rose-200/70 dark:bg-rose-900/50 text-rose-800 dark:text-rose-300 border border-rose-300 dark:border-rose-700 shadow-sm tracking-wider">UNSOLD</span>}
+                            {lead.salesStatus === 'sold' && lead.isManuallyMarkedSold && <span className="ml-2 px-2.5 py-1 text-[10px] font-extrabold rounded-full bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700 shadow-sm tracking-wider">SOLD</span>}
+                            {lead.salesStatus === 'unsold' && <span className="ml-2 px-2.5 py-1 text-[10px] font-extrabold rounded-full bg-rose-100 dark:bg-rose-900/50 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-700 shadow-sm tracking-wider">UNSOLD</span>}
                         </div>
                     </div>
 
@@ -346,34 +357,33 @@ const LeadRow = ({ lead, isExpanded, onToggle, onStatusUpdate, onLeadUpdate }) =
 
                     {/* Actions */}
                     <div className="relative z-20 flex justify-end items-center gap-2" onClick={(e) => e.stopPropagation()}>
-                        {(lead.status === 'pending' || lead.status === 'negotiating') ? (
+                        {lead.status === 'negotiating' && lead.salesStatus !== 'sold' ? (
                             <>
                                 <button
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onStatusUpdate(lead._id, 'accepted');
-                                    }}
+                                    onClick={(e) => { e.stopPropagation(); onStatusUpdate(lead._id, 'accepted'); }}
                                     title="Accept"
-                                    className="p-2 bg-white dark:bg-zinc-800 bluish:bg-white/5 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 text-blue-600 dark:text-emerald-400 bluish:text-blue-400 hover:bg-blue-50 dark:hover:bg-emerald-900/30 bluish:hover:bg-blue-500/20 hover:border-blue-200 dark:hover:border-emerald-800 bluish:hover:border-blue-500/50 rounded-lg transition-all shadow-sm hover:shadow-md group/btn"
+                                    className="p-2 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/10 rounded-lg transition-all shadow-sm hover:shadow-md"
                                 >
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover/btn:scale-110 transition-transform"><path d="M20 6 9 17l-5-5" /></svg>
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
                                 </button>
-                                {lead.salesStatus !== 'sold' && (
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            onStatusUpdate(lead._id, 'rejected');
-                                        }}
-                                        title="Reject"
-                                        className="p-2 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/30 hover:border-rose-200 dark:hover:border-rose-800 rounded-lg transition-all shadow-sm hover:shadow-md group/btn"
-                                    >
-                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="group-hover/btn:scale-110 transition-transform"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
-                                    </button>
-                                )}
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); onStatusUpdate(lead._id, 'rejected'); }}
+                                    title="Reject"
+                                    className="p-2 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/10 rounded-lg transition-all shadow-sm hover:shadow-md"
+                                >
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+                                </button>
                             </>
                         ) : (
-                            <div className={`text-[10px] font-bold px-3 py-1 rounded-full ${lead.status === 'accepted' ? 'text-blue-700 dark:text-emerald-300 bg-blue-200/70 dark:bg-emerald-900/40' : 'text-rose-700 dark:text-rose-300 bg-rose-200/70 dark:bg-rose-900/40'}`}>
-                                {lead.status === 'accepted' ? 'ACCEPTED' : 'REJECTED'}
+                            <div className={`text-[9px] font-black px-3 py-1 rounded-full shadow-sm border transition-all ${(lead.salesStatus === 'sold' && !lead.negotiationStartDate && !lead.message)
+                                ? 'bg-[#059669] text-white border-transparent'
+                                : lead.status === 'accepted'
+                                    ? 'bg-emerald-50 text-emerald-800 border-emerald-100 dark:bg-emerald-900/40 dark:text-emerald-300 dark:border-emerald-800/50'
+                                    : (lead.status === 'rejected' || lead.salesStatus === 'unsold' ? 'bg-rose-50 text-rose-800 border-rose-100 dark:bg-rose-900/40 dark:text-rose-300 dark:border-rose-800/50' : 'bg-blue-50 text-blue-700 border-blue-100 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-800/50')
+                                }`}>
+                                {(lead.salesStatus === 'sold' && !lead.negotiationStartDate && !lead.message)
+                                    ? 'PAID'
+                                    : lead.status.toUpperCase()}
                             </div>
                         )}
                     </div>
@@ -397,41 +407,32 @@ const LeadRow = ({ lead, isExpanded, onToggle, onStatusUpdate, onLeadUpdate }) =
                                         <h3 className="font-bold text-gray-900 dark:text-white bluish:text-white text-lg mt-1">{lead.asset.title}</h3>
                                     </div>
                                     <div className="flex gap-3">
-                                        {!lead.salesStatus && (
-                                            <>
+                                        {(lead.salesStatus === 'sold' && (!lead.isOnlinePayment || lead.isManuallyMarkedSold)) ? (
+                                            <div className="px-6 py-2 bg-emerald-600 text-white text-xs font-black rounded-xl shadow-md border border-transparent flex items-center">
+                                                <CheckCircle size={14} className="mr-2" />
+                                                Marked as SOLD
+                                            </div>
+                                        ) : lead.salesStatus === 'unsold' ? (
+                                            <div className="px-6 py-2 bg-rose-600 text-white text-xs font-black rounded-xl shadow-md border border-transparent flex items-center">
+                                                Marked as UNSOLD
+                                            </div>
+                                        ) : (
+                                            <div className="flex items-center gap-3">
                                                 {lead.status !== 'rejected' && (
                                                     <button
                                                         onClick={handleMarkAsSold}
-                                                        className="bg-blue-600 dark:bg-emerald-600 hover:bg-blue-700 dark:hover:bg-emerald-700 text-white text-xs font-bold py-2 px-4 rounded-lg shadow-sm shadow-blue-200/20 dark:shadow-emerald-500/20 transition-all hover:-translate-y-0.5"
+                                                        className="px-6 py-2 bg-blue-600 dark:bg-blue-600 text-white text-xs font-black rounded-xl shadow-lg border border-transparent transition-all active:scale-95"
                                                     >
                                                         Mark as Sold
                                                     </button>
                                                 )}
-                                                <button
-                                                    onClick={handleMarkAsUnsold}
-                                                    className="bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 hover:bg-gray-50 dark:hover:bg-zinc-700 text-gray-700 dark:text-gray-200 text-xs font-bold py-2 px-4 rounded-lg shadow-sm transition-all hover:-translate-y-0.5"
-                                                >
-                                                    Mark as Unsold
-                                                </button>
-                                            </>
-                                        )}
-                                        {lead.salesStatus && (
-                                            <div className="flex items-center gap-3 bg-white dark:bg-zinc-800 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-zinc-700 shadow-sm">
-                                                <span className={`text-xs font-bold flex items-center ${lead.salesStatus === 'sold' ? 'text-blue-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
-                                                    <span className={`w-2 h-2 rounded-full mr-2 ${lead.salesStatus === 'sold' ? 'bg-blue-500 dark:bg-emerald-500' : 'bg-rose-500'}`}></span>
-                                                    Marked as {lead.salesStatus.toUpperCase()}
-                                                </span>
-                                                {lead.salesStatus === 'sold' && (
-                                                    <>
-                                                        <div className="h-4 w-px bg-gray-200 dark:bg-zinc-600 mx-1"></div>
-                                                        <button
-                                                            onClick={(e) => { e.stopPropagation(); handleStatusUpdate(lead._id, 'accepted'); }}
-                                                            className="p-2 rounded-lg bg-blue-50 dark:bg-emerald-900/20 bluish:bg-blue-50 bluish:dark:bg-blue-900/20 text-blue-600 dark:text-emerald-400 bluish:text-blue-600 bluish:dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-emerald-900/40 bluish:hover:bg-blue-100 bluish:dark:hover:bg-blue-900/40 transition-colors"
-                                                            title="Accept Offer"
-                                                        >
-                                                            <CheckCircle size={18} />
-                                                        </button>
-                                                    </>
+                                                {(lead.status === 'negotiating' || lead.status === 'rejected') && (
+                                                    <button
+                                                        onClick={handleMarkAsUnsold}
+                                                        className="px-6 py-2 bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 text-gray-700 dark:text-gray-200 text-xs font-black rounded-xl shadow-sm transition-all hover:bg-gray-50 active:scale-95"
+                                                    >
+                                                        Mark as Unsold
+                                                    </button>
                                                 )}
                                             </div>
                                         )}
@@ -452,16 +453,16 @@ const LeadRow = ({ lead, isExpanded, onToggle, onStatusUpdate, onLeadUpdate }) =
                                                     <span className="text-gray-500 font-medium">Quantity</span>
                                                     <span className="font-bold text-gray-900 dark:text-white">{lead.quantity}</span>
                                                 </div>
-                                                <div className="flex justify-between items-center text-sm">
-                                                    <span className="text-gray-500 font-medium">Total Price</span>
-                                                    <span className="font-bold text-indigo-600 dark:text-indigo-400 font-mono text-xl">
-                                                        ${(lead.asset.price * lead.quantity).toLocaleString()}
-                                                    </span>
-                                                </div>
-                                                <div className="h-px bg-indigo-100 dark:bg-indigo-900/30 border-t border-dashed"></div>
                                                 <div className="flex justify-between items-center">
                                                     <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">Unit Price</span>
                                                     <span className="text-xs font-medium text-gray-500">₹{lead.asset.price?.toLocaleString()}</span>
+                                                </div>
+                                                <div className="h-px bg-indigo-100 dark:bg-indigo-900/30 border-t border-dashed my-2"></div>
+                                                <div className="flex justify-between items-center text-sm">
+                                                    <span className="text-gray-500 font-medium">Total Price</span>
+                                                    <span className="font-bold text-indigo-600 dark:text-indigo-400 font-mono text-2xl">
+                                                        ₹{(lead.asset.price * lead.quantity).toLocaleString()}
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -488,17 +489,17 @@ const LeadRow = ({ lead, isExpanded, onToggle, onStatusUpdate, onLeadUpdate }) =
                                                         {lead.salesStatus === 'sold' ? lead.soldQuantity : lead.quantity}
                                                     </span>
                                                 </div>
-                                                <div className="flex justify-between items-center text-sm">
-                                                    <span className="text-gray-500 font-medium">{lead.salesStatus === 'sold' ? 'Total Paid' : 'Est. Total'}</span>
-                                                    <span className={`font-bold font-mono text-2xl ${lead.salesStatus === 'sold' ? 'text-blue-600 dark:text-emerald-400' : 'text-gray-400 dark:text-gray-500'}`}>
-                                                        ${(lead.salesStatus === 'sold' ? lead.soldTotalAmount : (lead.asset.price * lead.quantity))?.toLocaleString()}
-                                                    </span>
-                                                </div>
-                                                <div className="h-px bg-gray-100 dark:bg-zinc-700 border-t border-dashed"></div>
                                                 <div className="flex justify-between items-center">
                                                     <span className="text-xs font-bold text-gray-400 uppercase tracking-wide">Unit Price</span>
                                                     <span className="text-xs font-medium text-gray-500">
-                                                        ${(lead.salesStatus === 'sold' ? (lead.soldPrice || lead.asset.price) : lead.asset.price)?.toLocaleString()}
+                                                        ₹{(lead.salesStatus === 'sold' ? (lead.soldPrice || lead.asset.price) : lead.asset.price)?.toLocaleString()}
+                                                    </span>
+                                                </div>
+                                                <div className="h-px bg-gray-100 dark:bg-zinc-700 border-t border-dashed my-2"></div>
+                                                <div className="flex justify-between items-center text-sm">
+                                                    <span className="text-gray-500 font-medium">{lead.salesStatus === 'sold' ? 'Total Paid' : 'Est. Total'}</span>
+                                                    <span className={`font-bold font-mono text-2xl ${lead.salesStatus === 'sold' ? 'text-blue-600 dark:text-emerald-400' : 'text-gray-400 dark:text-gray-500'}`}>
+                                                        ₹{(lead.salesStatus === 'sold' ? lead.soldTotalAmount : (lead.asset.price * lead.quantity))?.toLocaleString()}
                                                     </span>
                                                 </div>
                                             </div>
@@ -544,7 +545,7 @@ const LeadRow = ({ lead, isExpanded, onToggle, onStatusUpdate, onLeadUpdate }) =
                         </motion.div>
                     )}
                 </AnimatePresence>
-            </div >
+            </div>
         </>
     );
 };
@@ -629,10 +630,10 @@ const SellerLeads = () => {
     // Calculate Stats
     const stats = useMemo(() => {
         const total = leads.length;
-        const pending = leads.filter(l => l.status === 'pending').length;
-        const accepted = leads.filter(l => l.status === 'accepted').length;
-        const conversionRate = total > 0 ? ((accepted / total) * 100).toFixed(1) : 0;
-        return { total, pending, accepted, conversionRate };
+        const negotiating = leads.filter(l => l.status === 'negotiating').length;
+        const paid = leads.filter(l => l.status === 'accepted').length;
+        const conversionRate = total > 0 ? ((paid / total) * 100).toFixed(1) : 0;
+        return { total, negotiating, paid, conversionRate };
     }, [leads]);
 
     const location = useLocation();
@@ -708,4 +709,4 @@ const SellerLeads = () => {
     );
 };
 
-export default SellerLeads;
+export default SellerLeads

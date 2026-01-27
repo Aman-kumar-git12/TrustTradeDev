@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import { useUI } from '../context/UIContext';
 import AssetDetailsShimmer from '../components/shimmers/AssetDetailsShimmer';
 import { motion, AnimatePresence } from 'framer-motion';
+import { loadRazorpay, startPayment } from '../assets/razorpay';
 
 const AssetDetails = () => {
     const { id } = useParams();
@@ -65,10 +66,21 @@ const AssetDetails = () => {
         // Default messages based on action
         if (action === 'negotiating') {
             setMessage(`I would like to negotiate the price for "${asset.title}". My initial thoughts are...`);
+            setShowInterestModal(true);
         } else {
-            setMessage(`I am interested in acquiring "${asset.title}". Could you please provide more details?`);
+            handlePayNow();
         }
-        setShowInterestModal(true);
+    };
+
+    const handlePayNow = async () => {
+        if (!user) return navigate('/login');
+        const amount = asset.price * quantity;
+
+        await loadRazorpay();
+        await startPayment(amount, { assetId: asset._id, quantity }, () => {
+            // Success Callback: Redirect to Buyer Dashboard (Orders)
+            navigate(`/dashboard/buyer/${user._id}?tab=orders`);
+        });
     };
 
     const handleShowInterest = async () => {
@@ -232,10 +244,10 @@ const AssetDetails = () => {
                         ) : (
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <button
-                                    onClick={() => handleOpenModal('pending')}
+                                    onClick={handlePayNow}
                                     className="bg-blue-600 hover:bg-blue-700 dark:bg-emerald-600 dark:hover:bg-emerald-700 bluish:bg-gradient-to-r bluish:from-blue-600 bluish:to-teal-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-blue-500/20 dark:shadow-emerald-500/20 bluish:shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all transform hover:scale-[1.02] bluish:hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] border border-transparent bluish:border-blue-400/30"
                                 >
-                                    Show Interest
+                                    Pay Now
                                 </button>
                                 <button
                                     onClick={() => handleOpenModal('negotiating')}
