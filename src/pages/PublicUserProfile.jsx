@@ -74,20 +74,9 @@ const PublicUserProfile = () => {
     return (
         <div className="min-h-[calc(100vh-64px)] bg-slate-50 dark:bg-black bluish:bg-[#0a0f1d] selection:bg-blue-500/30 dark:selection:bg-emerald-500/30 bluish:selection:bg-blue-500/30 font-sans transition-colors duration-300 relative z-0 overflow-hidden">
             {/* Dynamic Background Elements - Bluish Theme Only */}
+            {/* Dynamic Background Elements - Bluish Theme Only - Optimized */}
             <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden hidden bluish:block">
-                <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob"></div>
-                <div className="absolute top-[20%] right-[-10%] w-96 h-96 bg-purple-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob animation-delay-2000"></div>
-                <div className="absolute bottom-[-10%] left-[20%] w-96 h-96 bg-emerald-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob animation-delay-4000"></div>
-
-                {/* Background Image & Overlay */}
-                <div className="absolute inset-0">
-                    <img
-                        src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2670&auto=format&fit=crop"
-                        alt="Background"
-                        className="absolute inset-0 w-full h-full object-cover opacity-10 mix-blend-overlay"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f1d]/90 via-[#0a0f1d]/80 to-[#0a0f1d]"></div>
-                </div>
+                <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f1d] via-[#111827] to-[#0a0f1d]"></div>
             </div>
 
             {/* Page Background (Standard Modes) */}

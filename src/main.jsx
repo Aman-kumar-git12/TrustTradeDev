@@ -6,6 +6,7 @@ import './index.css'
 import { UIProvider } from './context/UIContext'
 import { AuthProvider } from './context/AuthContext'
 import { ThemeProvider } from './context/ThemeContext'
+import { MarketplaceProvider } from './context/MarketplaceContext'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
@@ -13,7 +14,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             <UIProvider>
                 <AuthProvider>
                     <ThemeProvider>
-                        <App />
+                        <MarketplaceProvider>
+                            <App />
+                        </MarketplaceProvider>
                     </ThemeProvider>
                 </AuthProvider>
             </UIProvider>

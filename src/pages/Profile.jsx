@@ -146,26 +146,15 @@ const Profile = () => {
         <div className="min-h-[calc(100vh-64px)] bg-transparent dark:bg-black bluish:bg-[#0a0f1d] py-8 px-4 sm:px-6 lg:px-8 font-sans transition-colors duration-300 relative overflow-hidden">
             <div className="fixed inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] dark:bg-[radial-gradient(#ffffff33_1px,#000000_1px)] bluish:bg-[radial-gradient(#ffffff33_1px,#0a0f1d_1px)] [background-size:20px_20px] opacity-20 dark:opacity-[0.26] bluish:opacity-[0.26] pointer-events-none z-[1]"></div>
             {/* Dynamic Background Elements - Bluish Theme Only */}
+            {/* Dynamic Background Elements - Bluish Theme Only - Optimized */}
             <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden hidden bluish:block">
-                <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob"></div>
-                <div className="absolute top-[20%] right-[-10%] w-96 h-96 bg-purple-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob animation-delay-2000"></div>
-                <div className="absolute bottom-[-10%] left-[20%] w-96 h-96 bg-blue-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob animation-delay-4000"></div>
-
-                {/* Background Image & Overlay */}
-                <div className="absolute inset-0">
-                    <img
-                        src="https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=2000"
-                        alt="Background"
-                        className="absolute inset-0 w-full h-full object-cover opacity-10 mix-blend-overlay"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-tr from-[#0a0f1d] via-[#0a0f1d]/90 to-[#0f172a]/80"></div>
-                </div>
+                <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f1d] via-[#111827] to-[#0a0f1d]"></div>
             </div>
 
             <div className="max-w-6xl mx-auto relative z-10">
                 <form onSubmit={handleUpdate}>
                     {/* Header Section */}
-                    <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e] bluish:backdrop-blur-md rounded-xl shadow-sm bluish:shadow-xl border border-gray-200 dark:border-zinc-800 bluish:border-white/10 overflow-hidden mb-6 transition-colors duration-300">
+                    <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e] rounded-xl shadow-sm bluish:shadow-xl border border-gray-200 dark:border-zinc-800 bluish:border-white/10 overflow-hidden mb-6 transition-colors duration-300">
                         {/* Cover Area */}
                         <div className="h-40 md:h-48 bg-slate-900 relative">
                             {/* Texture/Image */}
@@ -282,7 +271,7 @@ const Profile = () => {
                         {/* Main Column - Personal Info */}
                         <div className="lg:col-span-2 flex flex-col">
                             {/* Personal Info Card */}
-                            <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e] bluish:backdrop-blur-md rounded-2xl shadow-sm bluish:shadow-lg border border-gray-200 dark:border-zinc-800 bluish:border-white/10 p-5 md:p-8 flex-1 h-full transition-colors duration-300">
+                            <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e] rounded-2xl shadow-sm bluish:shadow-lg border border-gray-200 dark:border-zinc-800 bluish:border-white/10 p-5 md:p-8 flex-1 h-full transition-colors duration-300">
                                 <h2 className="text-xl font-bold text-gray-900 dark:text-white bluish:text-white mb-6 flex items-center border-b border-gray-100 dark:border-zinc-800 bluish:border-white/5 pb-4">
                                     <User size={22} className="mr-3 text-blue-600 dark:text-emerald-500 bluish:text-blue-500" /> Personal Information
                                 </h2>
@@ -384,7 +373,7 @@ const Profile = () => {
                         {/* Sidebar Column */}
                         <div className="space-y-6">
                             {/* Appearance Card (Theme Toggle) */}
-                            <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e] bluish:backdrop-blur-md rounded-2xl shadow-sm bluish:shadow-lg border border-gray-200 dark:border-zinc-800 bluish:border-white/10 p-6 transition-colors duration-300">
+                            <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e] rounded-2xl shadow-sm bluish:shadow-lg border border-gray-200 dark:border-zinc-800 bluish:border-white/10 p-6 transition-colors duration-300">
                                 <h2 className="text-lg font-bold text-gray-900 dark:text-white bluish:text-white mb-5 flex items-center border-b border-gray-100 dark:border-zinc-800 bluish:border-white/5 pb-3">
                                     {theme === 'dark' || theme === 'bluish' ? <Moon size={20} className="mr-3 text-indigo-400 bluish:text-blue-400" /> : <Sun size={20} className="mr-3 text-amber-500" />}
                                     Appearance
@@ -412,7 +401,7 @@ const Profile = () => {
                             </div>
 
                             {/* Security Card */}
-                            <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e] bluish:backdrop-blur-md rounded-xl shadow-sm bluish:shadow-lg border border-gray-200 dark:border-zinc-800 bluish:border-white/10 p-6 transition-colors duration-300">
+                            <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e] rounded-xl shadow-sm bluish:shadow-lg border border-gray-200 dark:border-zinc-800 bluish:border-white/10 p-6 transition-colors duration-300">
                                 <h2 className="text-lg font-bold text-gray-900 dark:text-white bluish:text-white mb-5 flex items-center border-b border-gray-100 dark:border-zinc-800 bluish:border-white/5 pb-3">
                                     <Shield size={20} className="mr-2 text-blue-600 dark:text-emerald-500 bluish:text-blue-500" /> Security
                                 </h2>
@@ -444,7 +433,7 @@ const Profile = () => {
                             </div>
 
                             {/* Activity Card */}
-                            <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e] bluish:backdrop-blur-md rounded-xl shadow-sm bluish:shadow-lg border border-gray-200 dark:border-zinc-800 bluish:border-white/10 p-6 transition-colors duration-300">
+                            <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e] rounded-xl shadow-sm bluish:shadow-lg border border-gray-200 dark:border-zinc-800 bluish:border-white/10 p-6 transition-colors duration-300">
                                 <h2 className="text-lg font-bold text-gray-900 dark:text-white bluish:text-white mb-5 flex items-center border-b border-gray-100 dark:border-zinc-800 bluish:border-white/5 pb-3">
                                     <Clock size={20} className="mr-2 text-purple-600 bluish:text-purple-400" /> Activity
                                 </h2>
@@ -477,7 +466,7 @@ const Profile = () => {
 
                     {/* My Businesses Section - Full Width Bottom */}
                     {profile.role === 'seller' && (
-                        <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e] bluish:backdrop-blur-md rounded-xl shadow-sm bluish:shadow-lg border border-gray-200 dark:border-zinc-800 bluish:border-white/10 p-6 transition-colors duration-300">
+                        <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e] rounded-xl shadow-sm bluish:shadow-lg border border-gray-200 dark:border-zinc-800 bluish:border-white/10 p-6 transition-colors duration-300">
                             <div className="flex items-center justify-between mb-5 border-b border-gray-100 dark:border-zinc-800 bluish:border-white/5 pb-3">
                                 <h2 className="text-lg font-bold text-gray-900 dark:text-white bluish:text-white flex items-center">
                                     <Building size={20} className="mr-2 text-amber-600 bluish:text-amber-400" /> My Businesses

@@ -85,7 +85,7 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className={`fixed top-0 left-0 right-0 w-full z-[1999] border-b shadow-2xl transition-all duration-300 ${isBluish ? 'bg-[#0f172a]/80 border-white/5 text-white backdrop-blur-md' :
+            <nav className={`fixed top-0 left-0 right-0 w-full z-[1999] border-b shadow-2xl transition-all duration-300 ${isBluish ? 'bg-[#0f172a] border-white/5 text-white' :
                 isDark ? 'bg-gray-900/80 border-white/5 text-white backdrop-blur-md' :
                     'bg-gray-900 text-white border-white/5'
                 }`}>
