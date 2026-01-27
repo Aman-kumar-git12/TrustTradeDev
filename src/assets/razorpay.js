@@ -10,7 +10,7 @@ export const loadRazorpay = () => {
     });
 };
 
-export const startPayment = async (amount, { interestId = null, assetId = null, quantity = null } = {}, onSuccess = null) => {
+export const startPayment = async (amount, { interestId = null, assetId = null, quantity = null } = {}, onSuccess = null, onFailure = null) => {
     try {
         const { data: order } = await api.post('/payment/create-order', {
             amount,
@@ -44,15 +44,18 @@ export const startPayment = async (amount, { interestId = null, assetId = null, 
                         }
                     } else {
                         alert("Payment Verification Failed. Please contact support.");
+                        if (onFailure) onFailure("Verification Failed");
                     }
                 } catch (error) {
                     console.error("Verification Error:", error);
                     alert("An error occurred during payment verification.");
+                    if (onFailure) onFailure(error);
                 }
             },
             modal: {
                 ondismiss: function () {
                     console.log("Checkout form closed");
+                    if (onFailure) onFailure("Payment Cancelled");
                 }
             },
             prefill: {
@@ -69,5 +72,6 @@ export const startPayment = async (amount, { interestId = null, assetId = null, 
     } catch (error) {
         console.error("Payment Error:", error);
         alert(error.message || "Failed to initiate payment. Please try again.");
+        if (onFailure) onFailure(error);
     }
 };

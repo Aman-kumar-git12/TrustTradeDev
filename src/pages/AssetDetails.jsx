@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import api from '../utils/api';
-import { MapPin, Tag, CheckCircle, ArrowLeft, X, PartyPopper, ArrowRight } from 'lucide-react';
+import { MapPin, Tag, CheckCircle, ArrowLeft, X, PartyPopper, ArrowRight, Building2 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useUI } from '../context/UIContext';
 import AssetDetailsShimmer from '../components/shimmers/AssetDetailsShimmer';
@@ -19,6 +19,9 @@ const AssetDetails = () => {
     const [showInterestModal, setShowInterestModal] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
     const [showLightbox, setShowLightbox] = useState(false);
+    const [searchParams, setSearchParams] = useSearchParams();
+    const showPaymentModal = searchParams.get('bill') === 'true';
+    const [isPaymentInitiating, setIsPaymentInitiating] = useState(false);
     const [modalAction, setModalAction] = useState('pending'); // 'pending' or 'negotiating'
     const [message, setMessage] = useState('');
     const [quantity, setQuantity] = useState(1);
@@ -68,19 +71,47 @@ const AssetDetails = () => {
             setMessage(`I would like to negotiate the price for "${asset.title}". My initial thoughts are...`);
             setShowInterestModal(true);
         } else {
-            handlePayNow();
+            setSearchParams(prev => {
+                const newParams = new URLSearchParams(prev);
+                newParams.set('bill', 'true');
+                return newParams;
+            });
         }
     };
 
     const handlePayNow = async () => {
         if (!user) return navigate('/login');
+
+        setIsPaymentInitiating(true);
         const amount = asset.price * quantity;
 
-        await loadRazorpay();
-        await startPayment(amount, { assetId: asset._id, quantity }, () => {
-            // Success Callback: Redirect to Buyer Dashboard (Orders)
-            navigate(`/dashboard/buyer/${user._id}?tab=orders`);
-        });
+        try {
+            await loadRazorpay();
+            await startPayment(
+                amount,
+                { assetId: asset._id, quantity },
+                () => {
+                    // Success Callback
+                    setIsPaymentInitiating(false);
+                    setSearchParams(prev => {
+                        const newParams = new URLSearchParams(prev);
+                        newParams.delete('bill');
+                        return newParams;
+                    });
+                    navigate(`/dashboard/buyer/${user._id}?tab=orders`);
+                },
+                () => {
+                    // Failure/Cancel Callback
+                    setIsPaymentInitiating(false);
+                    // Optional: You can choose to close the modal here or keep it open for retry
+                    // For now, keeping it open so user can try again easily
+                }
+            );
+        } catch (error) {
+            console.error("Payment failed", error);
+            setIsPaymentInitiating(false);
+            showSnackbar("Payment initialization failed", "error");
+        }
     };
 
     const handleShowInterest = async () => {
@@ -130,7 +161,7 @@ const AssetDetails = () => {
                 {/* Navigation and Heading */}
                 <div className="flex items-center justify-between mb-8 border-b border-gray-100 dark:border-zinc-800 pb-4">
                     <button
-                        onClick={() => navigate(-1)}
+                        onClick={() => navigate('/marketplace')}
                         className="flex items-center text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white transition-colors group"
                     >
                         <ArrowLeft size={20} className="mr-2 group-hover:-translate-x-1 transition-transform" />
@@ -208,7 +239,7 @@ const AssetDetails = () => {
                         </h1>
                         <div className="text-3xl font-display font-bold text-gray-900 dark:text-gray-200 bluish:text-white mb-2 transition-colors duration-300 flex items-center gap-2">
                             <span className="bluish:text-cyan-400 bluish:drop-shadow-[0_0_10px_rgba(34,211,238,0.5)]">
-                                ${asset.price.toLocaleString()}
+                                ₹{asset.price.toLocaleString('en-IN')}
                             </span>
                         </div>
                         <div className="flex items-center space-x-4 mb-8">
@@ -232,8 +263,19 @@ const AssetDetails = () => {
                             <div className="flex items-center text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">
                                 <MapPin className="mr-2 text-blue-500 dark:text-emerald-400" /> Location: <strong className="ml-1 text-gray-900 dark:text-white">{asset.location}</strong>
                             </div>
+                            {asset.business && (
+                                <div className="flex items-center text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">
+                                    <Building2 className="mr-2 text-blue-500 dark:text-emerald-400" /> Business:
+                                    <Link to={`/businessdetails/${asset.business._id}`} className="ml-1 font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-emerald-400 hover:underline transition-all">
+                                        {asset.business.businessName}
+                                    </Link>
+                                </div>
+                            )}
                             <div className="flex items-center text-gray-700 dark:text-gray-300 transition-colors duration-300">
-                                <CheckCircle className="mr-2 text-blue-500 dark:text-emerald-400" /> Seller: <strong className="ml-1 text-gray-900 dark:text-white">{asset.seller?.fullName}</strong>
+                                <CheckCircle className="mr-2 text-blue-500 dark:text-emerald-400" /> Seller:
+                                <Link to={`/user/${asset.seller?._id}`} className="ml-1 font-bold text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-emerald-400 hover:underline transition-all">
+                                    {asset.seller?.fullName}
+                                </Link>
                             </div>
                         </div>
 
@@ -244,7 +286,11 @@ const AssetDetails = () => {
                         ) : (
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 <button
-                                    onClick={handlePayNow}
+                                    onClick={() => setSearchParams(prev => {
+                                        const newParams = new URLSearchParams(prev);
+                                        newParams.set('bill', 'true');
+                                        return newParams;
+                                    })}
                                     className="bg-blue-600 hover:bg-blue-700 dark:bg-emerald-600 dark:hover:bg-emerald-700 bluish:bg-gradient-to-r bluish:from-blue-600 bluish:to-teal-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-blue-500/20 dark:shadow-emerald-500/20 bluish:shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all transform hover:scale-[1.02] bluish:hover:shadow-[0_0_30px_rgba(16,185,129,0.5)] border border-transparent bluish:border-blue-400/30"
                                 >
                                     Pay Now
@@ -262,6 +308,118 @@ const AssetDetails = () => {
 
                 {/* Modals */}
                 <AnimatePresence>
+                    {/* Payment Bill Modal */}
+                    {showPaymentModal && (
+                        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                                transition={{ type: "spring", duration: 0.5, bounce: 0.3 }}
+                                className="bg-white dark:bg-zinc-900 rounded-2xl max-w-md w-full p-0 relative border border-gray-100 dark:border-zinc-800 shadow-2xl overflow-hidden"
+                            >
+                                <div className="p-6 border-b border-gray-100 dark:border-zinc-800 bg-gray-50/50 dark:bg-zinc-900/50">
+                                    <div className="flex justify-between items-center mb-1">
+                                        <h3 className="text-xl font-bold text-gray-900 dark:text-white">Payment Summary</h3>
+                                        <button
+                                            onClick={() => setSearchParams(prev => {
+                                                const newParams = new URLSearchParams(prev);
+                                                newParams.delete('bill');
+                                                return newParams;
+                                            })}
+                                            className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 transition-colors"
+                                        >
+                                            <X size={20} />
+                                        </button>
+                                    </div>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">Review your order before paying</p>
+                                </div>
+
+                                <div className="p-6 space-y-6">
+                                    {/* Asset Details */}
+                                    <div className="flex gap-4">
+                                        <div className="w-16 h-16 rounded-lg bg-gray-100 dark:bg-zinc-800 overflow-hidden flex-shrink-0">
+                                            {asset.images && asset.images.length > 0 ? (
+                                                <img src={asset.images[0]} alt={asset.title} className="w-full h-full object-cover" />
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center text-xs text-gray-400">No Img</div>
+                                            )}
+                                        </div>
+                                        <div>
+                                            <h4 className="font-bold text-gray-900 dark:text-white line-clamp-1">{asset.title}</h4>
+                                            <p className="text-sm text-gray-500 dark:text-gray-400">{asset.category}</p>
+                                            <div className="text-sm font-medium text-blue-600 dark:text-emerald-400 mt-1">
+                                                ₹{asset.price.toLocaleString('en-IN')} / unit
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Quantity Adjuster */}
+                                    <div>
+                                        <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Quantity</label>
+                                        <div className="flex items-center justify-between bg-gray-50 dark:bg-zinc-800/50 rounded-xl p-2 border border-gray-200 dark:border-zinc-700">
+                                            <button
+                                                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                                                className="w-10 h-10 rounded-lg bg-white dark:bg-zinc-800 shadow-sm flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-emerald-400 transition-colors disabled:opacity-50"
+                                                disabled={quantity <= 1}
+                                            >
+                                                -
+                                            </button>
+                                            <span className="font-bold text-lg text-gray-900 dark:text-white">{quantity}</span>
+                                            <button
+                                                onClick={() => setQuantity(Math.min(asset.quantity, quantity + 1))}
+                                                className="w-10 h-10 rounded-lg bg-white dark:bg-zinc-800 shadow-sm flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-emerald-400 transition-colors disabled:opacity-50"
+                                                disabled={quantity >= asset.quantity}
+                                            >
+                                                +
+                                            </button>
+                                        </div>
+                                        <p className="text-xs text-right text-gray-500 mt-1">
+                                            {asset.quantity} units available
+                                        </p>
+                                    </div>
+
+                                    {/* Bill Breakdown */}
+                                    <div className="bg-gray-50 dark:bg-zinc-800/30 rounded-xl p-4 space-y-2">
+                                        <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
+                                            <span>Subtotal</span>
+                                            <span>₹{(asset.price * quantity).toLocaleString('en-IN')}</span>
+                                        </div>
+                                        <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
+                                            <span>Processing Fee</span>
+                                            <span>₹0.00</span>
+                                        </div>
+                                        <div className="border-t border-gray-200 dark:border-zinc-700 pt-2 flex justify-between font-bold text-lg text-gray-900 dark:text-white">
+                                            <span>Total</span>
+                                            <span>₹{(asset.price * quantity).toLocaleString('en-IN')}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="p-6 pt-0">
+                                    <button
+                                        onClick={handlePayNow}
+                                        disabled={isPaymentInitiating}
+                                        className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white py-4 rounded-xl font-bold text-lg shadow-lg flex items-center justify-center transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                                    >
+                                        {isPaymentInitiating ? (
+                                            <>
+                                                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
+                                                Payment Initiated...
+                                            </>
+                                        ) : (
+                                            <>
+                                                Pay ₹{(asset.price * quantity).toLocaleString('en-IN')}
+                                                <ArrowRight size={20} className="ml-2" />
+                                            </>
+                                        )}
+                                    </button>
+                                </div>
+                            </motion.div>
+                        </div>
+                    )}
+
+
                     {/* Input Modal */}
                     {showInterestModal && (
                         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">

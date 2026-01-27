@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef, useMemo } from 'react';
-import { useOutletContext, useNavigate, useLocation, useSearchParams } from 'react-router-dom';
+import { useOutletContext, useNavigate, useLocation, useSearchParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Inbox, CheckCircle, Clock, XCircle, TrendingUp, Users, Mail, Phone, ChevronDown, MessageCircle, AlertCircle, CheckSquare, XSquare, ShoppingBag } from 'lucide-react';
 import api from '../utils/api';
@@ -304,10 +304,17 @@ const LeadRow = ({ lead, isExpanded, onToggle, onStatusUpdate, onLeadUpdate }) =
                     </div>
 
                     {/* Buyer Info */}
+                    {/* Buyer Info */}
                     <div className="flex items-center space-x-3 overflow-hidden min-w-0">
-                        <div className="h-9 w-9 rounded-full bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-zinc-800 dark:to-zinc-700 bluish:from-blue-500/20 bluish:to-indigo-500/20 border border-indigo-200 dark:border-zinc-600 bluish:border-white/10 flex-shrink-0 flex items-center justify-center text-xs font-bold text-indigo-700 dark:text-indigo-300 bluish:text-blue-300 shadow-sm">
-                            {lead.buyer?.fullName?.charAt(0) || '?'}
-                        </div>
+                        <Link
+                            to={`/user/${lead.buyer?._id}`}
+                            onClick={(e) => e.stopPropagation()}
+                            className="flex-shrink-0 group/logo"
+                        >
+                            <div className="h-9 w-9 rounded-full bg-gradient-to-br from-indigo-50 to-indigo-100 dark:from-zinc-800 dark:to-zinc-700 bluish:from-blue-500/20 bluish:to-indigo-500/20 border border-indigo-200 dark:border-zinc-600 bluish:border-white/10 flex items-center justify-center text-xs font-bold text-indigo-700 dark:text-indigo-300 bluish:text-blue-300 shadow-sm transition-transform group-hover/logo:scale-105">
+                                {lead.buyer?.fullName?.charAt(0) || '?'}
+                            </div>
+                        </Link>
                         <div className="min-w-0">
                             <p className="text-sm font-bold text-gray-900 dark:text-gray-200 bluish:text-gray-200 truncate">{lead.buyer?.fullName || 'Unknown Buyer'}</p>
                             <div className="flex flex-wrap items-center gap-2 mt-1.5">

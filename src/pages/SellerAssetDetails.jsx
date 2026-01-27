@@ -18,7 +18,8 @@ const SellerAssetDetails = () => {
         description: '',
         location: '',
         category: '',
-        condition: ''
+        condition: '',
+        quantity: ''
     });
 
     useEffect(() => {
@@ -33,7 +34,8 @@ const SellerAssetDetails = () => {
                     description: data.description,
                     location: data.location,
                     category: data.category,
-                    condition: data.condition
+                    condition: data.condition,
+                    quantity: data.quantity
                 });
             } catch (error) {
                 console.error("Failed to fetch asset", error);
@@ -243,6 +245,29 @@ const SellerAssetDetails = () => {
                         )}
                     </div>
 
+                    {/* Quantity Section */}
+                    <div>
+                        {!isEditing ? (
+                            <div className="flex items-center space-x-2 text-gray-700 dark:text-gray-300 transition-colors duration-300">
+                                <span className="font-bold text-lg">Quantity Available:</span>
+                                <span className="text-xl font-bold text-blue-600 dark:text-white">{asset.quantity}</span>
+                            </div>
+                        ) : (
+                            <div>
+                                <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1 transition-colors duration-300">Quantity</label>
+                                <input
+                                    type="number"
+                                    name="quantity"
+                                    value={editForm.quantity}
+                                    onChange={handleInputChange}
+                                    min="0"
+                                    className="w-full px-4 py-3 text-xl font-bold text-gray-900 dark:text-white bg-white dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-emerald-500/20 focus:border-blue-500 dark:focus:border-emerald-500 outline-none transition-all"
+                                    placeholder="Quantity"
+                                />
+                            </div>
+                        )}
+                    </div>
+
                     {/* Stats Row */}
                     {/* Stats Row */}
                     <div className="flex items-center gap-6 py-4 border-y border-gray-100 dark:border-zinc-800 transition-colors duration-300">
@@ -322,8 +347,10 @@ const SellerAssetDetails = () => {
                                             price: asset.price,
                                             description: asset.description,
                                             location: asset.location,
+                                            location: asset.location,
                                             category: asset.category,
-                                            condition: asset.condition
+                                            condition: asset.condition,
+                                            quantity: asset.quantity
                                         });
                                     }}
                                     className="flex-1 bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 text-gray-700 dark:text-gray-300 py-3 px-6 rounded-xl font-bold transition-all flex items-center justify-center gap-2"
