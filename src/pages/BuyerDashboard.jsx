@@ -72,65 +72,67 @@ const InterestCard = ({ interest, isExpanded, onToggle, onDelete, navigate, setA
             : 'border-gray-100 dark:border-zinc-800 bluish:border-white/5 hover:border-blue-500/30 dark:hover:border-blue-500/30 bluish:hover:border-blue-500/30 shadow-sm hover:shadow-md'
             }`}>
             <div
-                className="p-5 flex flex-col md:flex-row md:items-center gap-6 cursor-pointer"
+                className="p-3 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 cursor-pointer"
                 onClick={onToggle}
             >
-                {/* Asset Image/Icon */}
-                <div className="h-16 w-16 rounded-xl bg-gray-50 dark:bg-zinc-800 flex-shrink-0 flex items-center justify-center overflow-hidden border border-gray-100 dark:border-zinc-700">
-                    {interest.asset?.images?.[0] ? (
-                        <img src={interest.asset.images[0]} alt={interest.asset.title} className="w-full h-full object-cover" />
-                    ) : (
-                        <Building2 className="text-gray-400" size={24} />
-                    )}
+                {/* Top Section: Image + Info (Grouped for mobile horizontal layout) */}
+                <div className="flex flex-row gap-3 sm:gap-6 w-full sm:w-auto flex-1 items-start sm:items-center">
+                    {/* Asset Image/Icon */}
+                    <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-xl bg-gray-50 dark:bg-zinc-800 flex-shrink-0 flex items-center justify-center overflow-hidden border border-gray-100 dark:border-zinc-700">
+                        {interest.asset?.images?.[0] ? (
+                            <img src={interest.asset.images[0]} alt={interest.asset.title} className="w-full h-full object-cover" />
+                        ) : (
+                            <Building2 className="text-gray-400" size={20} />
+                        )}
+                    </div>
+
+                    {/* Info Area */}
+                    <div className="flex-1 min-w-0 py-0.5">
+                        <div className="flex items-center space-x-2 text-[9px] font-extrabold text-blue-600 dark:text-blue-400 bluish:text-blue-400 uppercase tracking-widest mb-0.5">
+                            <Tag size={9} />
+                            <span>{interest.asset?.category || 'General'}</span>
+                        </div>
+                        <h4 className="text-sm sm:text-lg font-bold text-gray-900 dark:text-white truncate mb-0.5">
+                            {interest.asset?.title}
+                        </h4>
+                        <div className="flex items-center text-[10px] sm:text-[11px] font-bold text-gray-500 dark:text-zinc-500 mb-1">
+                            <Building2 size={10} className="mr-1 text-blue-500 dark:text-blue-500 bluish:text-blue-400" />
+                            <span className="truncate max-w-[150px]">{interest.asset?.business?.businessName || 'Independent Seller'}</span>
+                        </div>
+                        <div className="flex items-center text-[10px] sm:text-sm font-semibold text-gray-500 dark:text-gray-400 flex-wrap gap-y-1">
+                            <span className="text-gray-900 dark:text-gray-200">₹{interest.asset?.price?.toLocaleString()}</span>
+                            <span className="mx-1.5">•</span>
+                            <span className="flex items-center">
+                                <ShoppingBag size={10} className="mr-1 text-blue-500 dark:text-blue-500 bluish:text-blue-400" />
+                                Qty: {interest.quantity}
+                            </span>
+                        </div>
+                    </div>
                 </div>
 
-                {/* Info Area */}
-                <div className="flex-1 min-w-0">
-                    <div className="flex items-center space-x-2 text-[10px] font-extrabold text-blue-600 dark:text-blue-400 bluish:text-blue-400 uppercase tracking-widest mb-1">
-                        <Tag size={10} />
-                        <span>{interest.asset?.category || 'General'}</span>
-                    </div>
-                    <h4 className="text-lg font-bold text-gray-900 dark:text-white truncate">
-                        {interest.asset?.title}
-                    </h4>
-                    <div className="flex items-center text-[11px] font-bold text-gray-500 dark:text-zinc-500 mb-2">
-                        <Building2 size={12} className="mr-1 text-blue-500 dark:text-blue-500 bluish:text-blue-400" />
-                        <span>{interest.asset?.business?.businessName || 'Independent Seller'}</span>
-                    </div>
-                    <div className="flex items-center text-sm font-semibold text-gray-500 dark:text-gray-400">
-                        <span className="text-gray-900 dark:text-gray-200">₹{interest.asset?.price?.toLocaleString()}</span>
-                        <span className="mx-2">•</span>
-                        <MapPin size={14} className="mr-1" />
-                        <span>{interest.asset?.location}</span>
-                        <span className="mx-2">•</span>
-                        <ShoppingBag size={14} className="mr-1 text-blue-500 dark:text-blue-500 bluish:text-blue-400" />
-                        <span>Qty: {interest.quantity}</span>
-                    </div>
-                </div>
-
-                {/* Status and Action */}
-                <div className="flex items-center justify-between md:justify-end gap-4 min-w-[200px]">
+                {/* Status and Action - Full width on mobile, auto on desktop */}
+                <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-4 w-full sm:w-auto sm:min-w-[200px] border-t sm:border-0 border-gray-100 dark:border-zinc-800 pt-2 sm:pt-0 mt-1 sm:mt-0">
                     {(interest.status === 'accepted' || interest.status === 'negotiating') && interest.salesStatus !== 'sold' && (
                         <button
                             onClick={handlePayment}
-                            className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-[10px] font-black rounded-lg transition-all shadow-lg shadow-blue-500/20 active:scale-95 flex items-center gap-1.5 whitespace-nowrap"
+                            className="flex-1 sm:flex-none justify-center px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-[10px] sm:text-xs font-black rounded-lg transition-all shadow-lg shadow-blue-500/20 active:scale-95 flex items-center gap-1.5 whitespace-nowrap"
                         >
-                            <Zap size={14} fill="currentColor" />
+                            <Zap size={12} fill="currentColor" />
                             PAY NOW
                         </button>
                     )}
                     {interest.salesStatus === 'sold' ? (
-                        <span className="flex items-center px-3 py-1 text-[10px] font-extrabold rounded-full border border-blue-500 dark:border-blue-500 bluish:border-blue-400 bg-blue-500/10 dark:bg-blue-500/10 bluish:bg-blue-400/10 text-blue-500 dark:text-blue-500 bluish:text-blue-400 uppercase tracking-wider">
-                            <ShieldCheck size={12} className="mr-1" />
-                            PAID & SECURE
+                        <span className="flex items-center px-2 py-1 text-[9px] sm:text-[10px] font-extrabold rounded-full border border-blue-500 dark:border-blue-500 bluish:border-blue-400 bg-blue-500/10 dark:bg-blue-500/10 bluish:bg-blue-400/10 text-blue-500 dark:text-blue-500 bluish:text-blue-400 uppercase tracking-wider">
+                            <ShieldCheck size={10} className="mr-1" />
+                            PAID
                         </span>
                     ) : (
-                        <span className={`px-3 py-1 text-[10px] font-extrabold rounded-full border uppercase tracking-wider ${getStatusColor(interest.status)}`}>
+                        <span className={`px-2 py-1 text-[9px] sm:text-[10px] font-extrabold rounded-full border uppercase tracking-wider ${getStatusColor(interest.status)}`}>
                             {interest.status}
                         </span>
                     )}
-                    <div className={`p-2 rounded-lg transition-transform ${isExpanded ? 'rotate-180 bg-blue-50 dark:bg-blue-900/20 bluish:bg-blue-500/10 text-blue-600 dark:text-blue-400 bluish:text-blue-400' : 'text-gray-400'}`}>
-                        <ChevronDown size={20} />
+                    <div className={`p-1.5 sm:p-2 rounded-lg transition-transform ml-auto sm:ml-0 ${isExpanded ? 'rotate-180 bg-blue-50 dark:bg-blue-900/20 bluish:bg-blue-500/10 text-blue-600 dark:text-blue-400 bluish:text-blue-400' : 'text-gray-400'}`}>
+                        <ChevronDown size={16} />
                     </div>
                 </div>
             </div>
@@ -246,50 +248,52 @@ const OrderCard = ({ order, isExpanded, onToggle }) => {
             : 'border-gray-100 dark:border-zinc-800 bluish:border-white/5 hover:border-blue-500/30 dark:hover:border-blue-500/30 bluish:hover:border-blue-500/30 shadow-sm hover:shadow-md'
             }`}>
             <div
-                className="p-5 flex flex-col md:flex-row md:items-center gap-6 cursor-pointer"
+                className="p-3 sm:p-5 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6 cursor-pointer"
                 onClick={onToggle}
             >
-                {/* Asset Image/Icon */}
-                <div className="h-16 w-16 rounded-xl bg-gray-50 dark:bg-zinc-800 flex-shrink-0 flex items-center justify-center overflow-hidden border border-gray-100 dark:border-zinc-700">
-                    {order.asset?.images?.[0] ? (
-                        <img src={order.asset.images[0]} alt={order.asset?.title} className="w-full h-full object-cover" />
-                    ) : (
-                        <Building2 className="text-gray-400" size={24} />
-                    )}
-                </div>
+                {/* Top Section: Image + Info */}
+                <div className="flex flex-row gap-3 sm:gap-6 w-full sm:w-auto flex-1 items-start sm:items-center">
+                    {/* Asset Image/Icon */}
+                    <div className="h-14 w-14 sm:h-16 sm:w-16 rounded-xl bg-gray-50 dark:bg-zinc-800 flex-shrink-0 flex items-center justify-center overflow-hidden border border-gray-100 dark:border-zinc-700">
+                        {order.asset?.images?.[0] ? (
+                            <img src={order.asset.images[0]} alt={order.asset?.title} className="w-full h-full object-cover" />
+                        ) : (
+                            <Building2 className="text-gray-400" size={20} />
+                        )}
+                    </div>
 
-                {/* Info Area */}
-                <div className="flex-1 min-w-0">
-                    <div className="flex items-center space-x-2 text-[10px] font-extrabold text-blue-600 dark:text-blue-400 bluish:text-blue-400 uppercase tracking-widest mb-1">
-                        <CheckCircle size={10} />
-                        <span>Completed Order</span>
-                    </div>
-                    <h4 className="text-lg font-bold text-gray-900 dark:text-white truncate">
-                        {order.asset?.title}
-                    </h4>
-                    <div className="flex items-center text-[11px] font-bold text-gray-500 dark:text-zinc-500 mb-2">
-                        <Building2 size={12} className="mr-1 text-blue-500 dark:text-blue-500 bluish:text-blue-400" />
-                        <span>{order.asset?.business?.businessName || 'Independent Seller'}</span>
-                    </div>
-                    <div className="flex items-center text-sm font-semibold text-gray-500 dark:text-gray-400">
-                        <span className="text-gray-900 dark:text-white font-bold">₹{order.price?.toLocaleString()}</span>
-                        <span className="mx-2">•</span>
-                        <ShoppingBag size={14} className="mr-1 text-blue-500 dark:text-blue-500 bluish:text-blue-400" />
-                        <span>Qty: {order.quantity}</span>
-                        <span className="mx-2">•</span>
-                        <Clock size={14} className="mr-1" />
-                        <span>{new Date(order.createdAt).toLocaleDateString()}</span>
+                    {/* Info Area */}
+                    <div className="flex-1 min-w-0 py-0.5">
+                        <div className="flex items-center space-x-2 text-[9px] font-extrabold text-blue-600 dark:text-blue-400 bluish:text-blue-400 uppercase tracking-widest mb-0.5">
+                            <CheckCircle size={9} />
+                            <span>Completed</span>
+                        </div>
+                        <h4 className="text-sm sm:text-lg font-bold text-gray-900 dark:text-white truncate mb-0.5">
+                            {order.asset?.title}
+                        </h4>
+                        <div className="flex items-center text-[10px] sm:text-[11px] font-bold text-gray-500 dark:text-zinc-500 mb-1">
+                            <Building2 size={10} className="mr-1 text-blue-500 dark:text-blue-500 bluish:text-blue-400" />
+                            <span className="truncate max-w-[150px]">{order.asset?.business?.businessName || 'Independent Seller'}</span>
+                        </div>
+                        <div className="flex items-center text-[10px] sm:text-sm font-semibold text-gray-500 dark:text-gray-400 flex-wrap gap-y-1">
+                            <span className="text-gray-900 dark:text-white font-bold">₹{order.price?.toLocaleString()}</span>
+                            <span className="mx-1.5">•</span>
+                            <span className="flex items-center">
+                                <ShoppingBag size={10} className="mr-1 text-blue-500 dark:text-blue-500 bluish:text-blue-400" />
+                                Qty: {order.quantity}
+                            </span>
+                        </div>
                     </div>
                 </div>
 
                 {/* Status and Action */}
-                <div className="flex items-center justify-between md:justify-end gap-4 min-w-[200px]">
-                    <span className="flex items-center px-3 py-1 text-[10px] font-extrabold rounded-full border border-blue-500 dark:border-blue-500 bluish:border-blue-400 bg-blue-500/10 dark:bg-blue-500/10 bluish:bg-blue-400/10 text-blue-500 dark:text-blue-500 bluish:text-blue-400 uppercase tracking-wider">
-                        <ShieldCheck size={12} className="mr-1" />
-                        PAID & SECURE
+                <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-4 w-full sm:w-auto sm:min-w-[200px] border-t sm:border-0 border-gray-100 dark:border-zinc-800 pt-2 sm:pt-0 mt-1 sm:mt-0">
+                    <span className="flex items-center px-2 py-1 text-[9px] sm:text-[10px] font-extrabold rounded-full border border-blue-500 dark:border-blue-500 bluish:border-blue-400 bg-blue-500/10 dark:bg-blue-500/10 bluish:bg-blue-400/10 text-blue-500 dark:text-blue-500 bluish:text-blue-400 uppercase tracking-wider">
+                        <ShieldCheck size={10} className="mr-1" />
+                        PAID
                     </span>
-                    <div className={`p-2 rounded-lg transition-transform ${isExpanded ? 'rotate-180 bg-blue-50 dark:bg-blue-900/20 bluish:bg-blue-500/10 text-blue-600 dark:text-blue-400 bluish:text-blue-400' : 'text-gray-400'}`}>
-                        <ChevronDown size={20} />
+                    <div className={`p-1.5 sm:p-2 rounded-lg transition-transform ml-auto sm:ml-0 ${isExpanded ? 'rotate-180 bg-blue-50 dark:bg-blue-900/20 bluish:bg-blue-500/10 text-blue-600 dark:text-blue-400 bluish:text-blue-400' : 'text-gray-400'}`}>
+                        <ChevronDown size={16} />
                     </div>
                 </div>
             </div>
@@ -503,59 +507,61 @@ const BuyerDashboard = () => {
 
                 <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-8 gap-6">
                     {/* Navigation Hub: Interests, Orders, Intelligence Grouped */}
-                    <div className="flex p-1 bg-gray-100 dark:bg-zinc-900 bluish:bg-[#1e293b]/50 rounded-xl w-fit border border-gray-200 dark:border-zinc-800 bluish:border-white/5 items-center relative">
-                        {[
-                            { id: 'interests', label: 'My Interests', icon: Tag, count: activityCounts.interests },
-                            { id: 'orders', label: 'My Orders', icon: ShoppingBag, count: activityCounts.orders }
-                        ].map((tab) => (
-                            <button
-                                key={tab.id}
-                                onClick={() => {
-                                    setActiveTab(tab.id);
-                                    setExpandedId(null);
-                                    setShowStats(false);
-                                    setFilters({
-                                        search: '',
-                                        category: '',
-                                        minPrice: '',
-                                        maxPrice: '',
-                                        condition: '',
-                                        status: ''
-                                    });
-                                }}
-                                className="relative px-6 py-2.5 rounded-lg text-sm font-bold transition-all flex items-center z-10"
-                            >
-                                {activeTab === tab.id && (
-                                    <motion.div
-                                        layoutId="buyer-tab-pill"
-                                        className="absolute inset-0 bg-white dark:bg-zinc-800 bluish:bg-blue-500/20 rounded-lg shadow-sm border border-gray-200 dark:border-zinc-700 bluish:border-blue-500/20"
-                                        initial={false}
-                                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                                    />
-                                )}
-                                <span className={`relative flex items-center z-20 ${activeTab === tab.id ? 'text-blue-600 dark:text-emerald-400 bluish:text-blue-400' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}>
-                                    <tab.icon size={16} className="mr-2" />
-                                    {tab.label}
-                                    <span className={`ml-2 px-1.5 py-0.5 text-[10px] rounded-md transition-colors ${activeTab === tab.id ? 'bg-blue-100 dark:bg-emerald-900/30 bluish:bg-blue-500/20' : 'bg-gray-200 dark:bg-zinc-800'}`}>
-                                        {tab.count}
+                    <div className="w-full lg:w-fit overflow-x-auto custom-scrollbar-hide flex p-1 bg-gray-100 dark:bg-zinc-900 bluish:bg-[#1e293b]/50 rounded-xl border border-gray-200 dark:border-zinc-800 bluish:border-white/5 relative no-scrollbar">
+                        <div className="flex min-w-max items-center">
+                            {[
+                                { id: 'interests', label: 'My Interests', icon: Tag, count: activityCounts.interests },
+                                { id: 'orders', label: 'My Orders', icon: ShoppingBag, count: activityCounts.orders }
+                            ].map((tab) => (
+                                <button
+                                    key={tab.id}
+                                    onClick={() => {
+                                        setActiveTab(tab.id);
+                                        setExpandedId(null);
+                                        setShowStats(false);
+                                        setFilters({
+                                            search: '',
+                                            category: '',
+                                            minPrice: '',
+                                            maxPrice: '',
+                                            condition: '',
+                                            status: ''
+                                        });
+                                    }}
+                                    className="relative px-6 py-2.5 rounded-lg text-sm font-bold transition-all flex items-center z-10"
+                                >
+                                    {activeTab === tab.id && (
+                                        <motion.div
+                                            layoutId="buyer-tab-pill"
+                                            className="absolute inset-0 bg-white dark:bg-zinc-800 bluish:bg-blue-500/20 rounded-lg shadow-sm border border-gray-200 dark:border-zinc-700 bluish:border-blue-500/20"
+                                            initial={false}
+                                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                        />
+                                    )}
+                                    <span className={`relative flex items-center z-20 whitespace-nowrap ${activeTab === tab.id ? 'text-blue-600 dark:text-emerald-400 bluish:text-blue-400' : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}>
+                                        <tab.icon size={16} className="mr-2" />
+                                        {tab.label}
+                                        <span className={`ml-2 px-1.5 py-0.5 text-[10px] rounded-md transition-colors ${activeTab === tab.id ? 'bg-blue-100 dark:bg-emerald-900/30 bluish:bg-blue-500/20' : 'bg-gray-200 dark:bg-zinc-800'}`}>
+                                            {tab.count}
+                                        </span>
                                     </span>
-                                </span>
-                            </button>
-                        ))}
+                                </button>
+                            ))}
 
-                        <div className="w-px h-5 bg-gray-200 dark:bg-zinc-800 mx-2 md:block hidden" />
+                            <div className="w-px h-5 bg-gray-200 dark:bg-zinc-800 mx-2 md:block hidden" />
 
-                        <Hover text="Intelligence Hub">
-                            <button
-                                onClick={() => navigate(`/dashboard/buyer/${userId}/insights/1m`)}
-                                className={`flex items-center px-6 py-2.5 rounded-lg font-bold text-sm transition-all shadow-sm group ${location.pathname.includes('/insights')
-                                    ? 'bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-emerald-500/20 dark:to-emerald-500/5 bluish:from-blue-500/20 bluish:to-blue-500/5 text-blue-600 dark:text-emerald-400 bluish:text-blue-400 border border-blue-100/50 dark:border-emerald-500/20 bluish:border-blue-500/20'
-                                    : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
-                            >
-                                <Zap size={16} className="mr-2 group-hover:scale-110 transition-transform" />
-                                Intelligence Hub
-                            </button>
-                        </Hover>
+                            <Hover text="Intelligence Hub">
+                                <button
+                                    onClick={() => navigate(`/dashboard/buyer/${userId}/insights/1m`)}
+                                    className={`flex items-center px-6 py-2.5 rounded-lg font-bold text-sm transition-all shadow-sm group whitespace-nowrap ${location.pathname.includes('/insights')
+                                        ? 'bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-emerald-500/20 dark:to-emerald-500/5 bluish:from-blue-500/20 bluish:to-blue-500/5 text-blue-600 dark:text-emerald-400 bluish:text-blue-400 border border-blue-100/50 dark:border-emerald-500/20 bluish:border-blue-500/20'
+                                        : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}
+                                >
+                                    <Zap size={16} className="mr-2 group-hover:scale-110 transition-transform" />
+                                    Intelligence Hub
+                                </button>
+                            </Hover>
+                        </div>
                     </div>
 
                     {/* Right Side: Actions Group */}

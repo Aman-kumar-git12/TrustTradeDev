@@ -233,7 +233,7 @@ const Marketplace = () => {
                             <GridShimmer />
                         ) : (
                             <>
-                                <div className={`grid gap-8 ${isFilterOpen ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'}`}>
+                                <div className={`grid gap-3 sm:gap-8 ${isFilterOpen ? 'grid-cols-2 md:grid-cols-2' : 'grid-cols-2 md:grid-cols-2 lg:grid-cols-3'}`}>
                                     {assets.map((asset, index) => {
                                         if (assets.length === index + 1) {
                                             return <AssetCard ref={lastAssetElementRef} key={asset._id} asset={asset} />;

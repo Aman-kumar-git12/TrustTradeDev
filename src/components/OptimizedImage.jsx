@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 
 const OptimizedImage = ({ src, alt, className, ...props }) => {
-    const [isLoaded, setIsLoaded] = useState(false);
     const [hasError, setHasError] = useState(false);
-
-    const handleLoad = () => {
-        setIsLoaded(true);
-    };
+    const [isLoaded, setIsLoaded] = useState(false);
 
     const handleError = () => {
         setHasError(true);
+    };
+
+    const handleLoad = () => {
+        setIsLoaded(true);
     };
 
     if (hasError) {
@@ -22,18 +22,19 @@ const OptimizedImage = ({ src, alt, className, ...props }) => {
 
     return (
         <div className={`relative overflow-hidden bg-gray-100 dark:bg-zinc-800 bluish:bg-white/5 ${className}`}>
+            {/* Shimmer Background - Visible until loaded */}
+            {!isLoaded && (
+                <div className="absolute inset-0 bg-gray-200 dark:bg-zinc-700 bluish:bg-white/10 animate-pulse z-0" />
+            )}
+
             <img
                 src={src}
                 alt={alt}
-                loading="lazy"
-                onLoad={handleLoad}
                 onError={handleError}
-                className={`w-full h-full object-cover transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'} ${className}`}
+                onLoad={handleLoad}
+                className={`w-full h-full object-cover relative z-10 transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'} ${className}`}
                 {...props}
             />
-            {!isLoaded && (
-                <div className="absolute inset-0 bg-gray-200 dark:bg-zinc-700 bluish:bg-white/10 animate-pulse" />
-            )}
         </div>
     );
 };
