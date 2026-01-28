@@ -1,11 +1,12 @@
 import { useEffect, useState, useRef, useMemo } from 'react';
 import { useOutletContext, useNavigate, useLocation, useSearchParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Inbox, CheckCircle, Clock, XCircle, TrendingUp, Users, Mail, Phone, ChevronDown, MessageCircle, AlertCircle, CheckSquare, XSquare, ShoppingBag } from 'lucide-react';
+import { Inbox, CheckCircle, Clock, XCircle, TrendingUp, Users, Mail, Phone, ChevronDown, MessageCircle, AlertCircle, CheckSquare, XSquare, ShoppingBag, Download } from 'lucide-react';
 import api from '../utils/api';
 import LeadFilter from '../components/LeadFilter';
 import LeadsShimmer from '../components/shimmers/LeadsShimmer';
 import { useUI } from '../context/UIContext';
+import { generateInvoice } from '../utils/invoiceGenerator';
 
 const PriceInputModal = ({ isOpen, onClose, onSubmit, title, maxQuantity, requestedQuantity, originalPrice }) => {
     const [totalPrice, setTotalPrice] = useState('');
@@ -258,6 +259,21 @@ const LeadRow = ({ lead, isExpanded, onToggle, onStatusUpdate, onLeadUpdate }) =
         }
     };
 
+    const handleExportBill = () => {
+        generateInvoice({
+            saleId: lead.saleId || lead._id,
+            status: lead.salesStatus,
+            buyerName: lead.buyer?.fullName || 'Unknown Buyer',
+            buyerEmail: lead.buyer?.email || 'N/A',
+            buyerPhone: lead.buyer?.phone || 'N/A',
+            assetTitle: lead.asset.title,
+            quantity: lead.salesStatus === 'sold' ? (lead.soldQuantity || lead.quantity) : lead.quantity,
+            unitPrice: lead.salesStatus === 'sold' ? (lead.soldPrice || 0) : 0,
+            totalAmount: lead.salesStatus === 'sold' ? (lead.soldTotalAmount || 0) : 0
+        });
+        showSnackbar("Invoice downloaded! 📄", "success");
+    };
+
     // Conditional Styling
     const rowBaseClasses = `bg-white dark:bg-zinc-900 bluish:bg-gradient-to-r bluish:from-[#1e293b] bluish:to-[#0f172a] rounded-xl border transition-all duration-300 overflow-hidden relative z-10`;
     let rowClasses = rowBaseClasses;
@@ -413,16 +429,36 @@ const LeadRow = ({ lead, isExpanded, onToggle, onStatusUpdate, onLeadUpdate }) =
                                         <span className="text-[10px] font-extrabold text-gray-400 dark:text-zinc-500 bluish:text-gray-500 uppercase tracking-widest mr-2">Asset Interest</span>
                                         <h3 className="font-bold text-gray-900 dark:text-white bluish:text-white text-lg mt-1">{lead.asset.title}</h3>
                                     </div>
-                                    <div className="flex gap-3">
+                                    <div className="flex gap-3 items-center">
                                         {(lead.salesStatus === 'sold' && (!lead.isOnlinePayment || lead.isManuallyMarkedSold)) ? (
-                                            <div className="px-6 py-2 bg-emerald-600 text-white text-xs font-black rounded-xl shadow-md border border-transparent flex items-center">
-                                                <CheckCircle size={14} className="mr-2" />
-                                                Marked as SOLD
-                                            </div>
+                                            <>
+                                                <button
+                                                    onClick={handleExportBill}
+                                                    className="px-4 py-2 bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-gray-300 text-xs font-bold rounded-xl shadow-sm border border-gray-200 dark:border-zinc-700 hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors flex items-center"
+                                                    title="Download Invoice"
+                                                >
+                                                    <Download size={14} className="mr-2" />
+                                                    Export Bill
+                                                </button>
+                                                <div className="px-6 py-2 bg-emerald-600 text-white text-xs font-black rounded-xl shadow-md border border-transparent flex items-center">
+                                                    <CheckCircle size={14} className="mr-2" />
+                                                    Marked as SOLD
+                                                </div>
+                                            </>
                                         ) : lead.salesStatus === 'unsold' ? (
-                                            <div className="px-6 py-2 bg-rose-600 text-white text-xs font-black rounded-xl shadow-md border border-transparent flex items-center">
-                                                Marked as UNSOLD
-                                            </div>
+                                            <>
+                                                <button
+                                                    onClick={handleExportBill}
+                                                    className="px-4 py-2 bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-gray-300 text-xs font-bold rounded-xl shadow-sm border border-gray-200 dark:border-zinc-700 hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors flex items-center"
+                                                    title="Download Invoice"
+                                                >
+                                                    <Download size={14} className="mr-2" />
+                                                    Export Bill
+                                                </button>
+                                                <div className="px-6 py-2 bg-rose-600 text-white text-xs font-black rounded-xl shadow-md border border-transparent flex items-center">
+                                                    Marked as UNSOLD
+                                                </div>
+                                            </>
                                         ) : (
                                             <div className="flex items-center gap-3">
                                                 {lead.status !== 'rejected' && (

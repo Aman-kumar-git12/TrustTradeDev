@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { User, Mail, Building, Shield, Calendar, Clock, Edit2, Save, X, Phone, Camera, Link as LinkIcon, AlertCircle, Briefcase, MapPin, Sun, Moon, Loader2 } from 'lucide-react';
+import { User, Mail, Building, Shield, Calendar, Clock, Edit2, Save, X, Phone, Camera, Link as LinkIcon, AlertCircle, Briefcase, MapPin, Sun, Moon, Loader2, Sparkles, Zap, ChevronRight, Settings } from 'lucide-react';
 import api from '../utils/api';
 import ProfileShimmer from '../components/shimmers/ProfileShimmer';
 
@@ -64,29 +64,20 @@ const Profile = () => {
         const file = e.target.files[0];
         if (!file) return;
 
-        // Instant Upload Logic
         try {
             setUploadingImage(true);
-
-            // 1. Upload to Cloudinary
             const imageFormData = new FormData();
             imageFormData.append('image', file);
-
             const uploadRes = await api.post('/images/upload', imageFormData);
             const newAvatarUrl = uploadRes.data.url;
-
-            // 2. Update Profile with new URL immediately
             const { data } = await api.put('/auth/profile', { avatarUrl: newAvatarUrl });
-
-            // 3. Update local state
             setProfile(data);
             showSnackbar('Profile picture updated!', 'success');
         } catch (error) {
             console.error('Image upload failed', error);
-            showSnackbar('Failed to upload image. Please try again.', 'error');
+            showSnackbar('Failed to upload image', 'error');
         } finally {
             setUploadingImage(false);
-            // Reset input so same file can be selected again if needed
             if (fileInputRef.current) fileInputRef.current.value = '';
         }
     };
@@ -97,10 +88,9 @@ const Profile = () => {
 
     const handleUpdate = async (e) => {
         e.preventDefault();
-
         const isConfirmed = await confirm({
             title: 'Update Profile',
-            message: 'Are you sure you want to save these changes to your profile?',
+            message: 'Save these changes to your profile?',
             confirmText: 'Save Changes'
         });
 
@@ -109,9 +99,7 @@ const Profile = () => {
         try {
             const payload = { ...formData };
             if (!payload.password) delete payload.password;
-
             const { data } = await api.put('/auth/profile', payload);
-
             setProfile(data);
             setIsEditing(false);
             showSnackbar('Profile updated successfully!', 'success');
@@ -121,404 +109,276 @@ const Profile = () => {
         }
     };
 
-    const isDark = theme === 'dark';
-    const isBluish = theme === 'bluish' || mode === 'bluish';
-    const accentColor = isDark && !isBluish ? 'emerald' : 'blue';
-
-    const accentClass = accentColor === 'emerald' ? 'text-emerald-500' : 'text-blue-500';
-    const accentBgClass = accentColor === 'emerald' ? 'bg-emerald-500/10' : 'bg-blue-500/10';
-    const buttonClass = accentColor === 'emerald'
-        ? 'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-500/20 hover:shadow-emerald-500/40'
-        : 'bg-blue-600 hover:bg-blue-700 shadow-blue-500/20 hover:shadow-blue-500/40';
-
     if (loading) return <ProfileShimmer />;
-
     if (!profile) return (
         <div className="min-h-screen flex items-center justify-center bg-white dark:bg-zinc-950">
-            <div className="text-center text-red-500 font-medium bg-white dark:bg-zinc-900 p-6 rounded-lg shadow-sm border border-red-100 dark:border-red-900/20">
-                <AlertCircle className="mx-auto h-10 w-10 mb-3 opacity-80" />
-                Failed to load profile. Please try logging in again.
+            <div className="text-center">
+                <AlertCircle className="mx-auto h-12 w-12 text-red-500 mb-4 opacity-80" />
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white">Failed to load profile</h3>
+                <p className="text-gray-500 mt-2">Please try refreshing the page.</p>
             </div>
         </div>
     );
 
     return (
-        <div className="min-h-[calc(100vh-64px)] bg-transparent dark:bg-black bluish:bg-[#0a0f1d] py-8 px-4 sm:px-6 lg:px-8 font-sans transition-colors duration-300 relative overflow-hidden">
-            <div className="fixed inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] dark:bg-[radial-gradient(#ffffff33_1px,#000000_1px)] bluish:bg-[radial-gradient(#ffffff33_1px,#0a0f1d_1px)] [background-size:20px_20px] opacity-20 dark:opacity-[0.26] bluish:opacity-[0.26] pointer-events-none z-[1]"></div>
-            {/* Dynamic Background Elements - Bluish Theme Only */}
-            {/* Dynamic Background Elements - Bluish Theme Only - Optimized */}
-            <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden hidden bluish:block">
-                <div className="absolute inset-0 bg-gradient-to-b from-[#0a0f1d] via-[#111827] to-[#0a0f1d]"></div>
+        <div className="min-h-screen bg-gray-50 dark:bg-black bluish:bg-[#020617] font-sans pb-20 relative overflow-hidden transition-colors duration-500">
+            {/* Ambient Background Glows */}
+            <div className="fixed top-0 left-1/4 w-[500px] h-[500px] bg-blue-500/10 dark:bg-purple-500/5 rounded-full blur-[120px] pointer-events-none" />
+            <div className="fixed bottom-0 right-1/4 w-[500px] h-[500px] bg-emerald-500/10 dark:bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
+
+            {/* Header Banner */}
+            <div className="h-64 md:h-80 w-full relative overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20 z-0" />
+                <div
+                    className="absolute inset-0 bg-cover bg-center opacity-60 scale-105 blur-sm"
+                    style={{ backgroundImage: `url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=2564')` }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-gray-50 dark:from-black bluish:from-[#020617] via-transparent to-transparent" />
             </div>
 
-            <div className="max-w-6xl mx-auto relative z-10">
+            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-40 md:-mt-60 relative z-10 animate-fade-in-up">
+                <style>{`
+                    @keyframes fadeInUp {
+                        from { opacity: 0; transform: translateY(20px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+                    @keyframes float {
+                        0%, 100% { transform: translateY(0); }
+                        50% { transform: translateY(-10px); }
+                    }
+                    .animate-fade-in-up {
+                        animation: fadeInUp 0.8s ease-out forwards;
+                    }
+                    .animate-float {
+                        animation: float 6s ease-in-out infinite;
+                    }
+                `}</style>
                 <form onSubmit={handleUpdate}>
-                    {/* Header Section */}
-                    <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e] rounded-xl shadow-sm bluish:shadow-xl border border-gray-200 dark:border-zinc-800 bluish:border-white/10 overflow-hidden mb-6 transition-colors duration-300">
-                        {/* Cover Area */}
-                        <div className="h-40 md:h-48 bg-slate-900 relative">
-                            {/* Texture/Image */}
-                            <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1557683316-973673baf926?auto=format&fit=crop&w=2000')] bg-cover bg-center opacity-30"></div>
+                    {/* Main Profile Header Card */}
+                    <div className="bg-gradient-to-br from-white/90 to-blue-50/90 dark:from-zinc-900/90 dark:to-black/90 bluish:from-slate-900/90 bluish:to-slate-950/90 backdrop-blur-xl rounded-3xl p-6 md:p-10 shadow-xl border border-white/20 dark:border-white/5 bluish:border-slate-700/50 mb-8 flex flex-col md:flex-row gap-8 items-center md:items-start text-center md:text-left transition-all hover:shadow-2xl hover:scale-[1.01] duration-500 group/card">
 
-                            {/* Action Buttons */}
-                            <div className="absolute top-4 right-4 z-10">
-                                {isEditing ? (
-                                    <div className="flex space-x-2">
-                                        <button
-                                            type="button"
-                                            onClick={() => {
-                                                setIsEditing(false);
-                                            }}
-                                            className="bg-white dark:bg-zinc-800 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-lg text-sm font-semibold shadow-sm hover:bg-gray-50 dark:hover:bg-zinc-700 border border-gray-200 dark:border-zinc-700 transition-colors flex items-center"
-                                        >
-                                            <X size={16} className="mr-2" /> Cancel
-                                        </button>
-                                        <button
-                                            type="submit"
-                                            className="bg-blue-600 dark:bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-sm hover:bg-blue-700 dark:hover:bg-emerald-700 transition-colors flex items-center"
-                                        >
-                                            <Save size={16} className="mr-2" /> Save
-                                        </button>
-                                    </div>
-                                ) : (
-                                    <button
-                                        type="button"
-                                        onClick={() => setIsEditing(true)}
-                                        className="bg-white/10 backdrop-blur-sm border border-white/20 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-white/20 transition-colors flex items-center"
-                                    >
-                                        <Edit2 size={16} className="mr-2" /> Edit Profile
-                                    </button>
-                                )}
-                            </div>
-                        </div>
-
-                        {/* Profile Info Bar */}
-                        <div className="px-6 md:px-8 pb-6 bg-white dark:bg-zinc-900 bluish:bg-transparent relative transition-colors duration-300">
-                            <div className="flex flex-col md:flex-row items-center md:items-end -mt-10 md:-mt-12 mb-2 text-center md:text-left">
-                                {/* Avatar */}
-                                <div className="relative z-10 group mb-4 md:mb-0">
-                                    <div className="h-24 w-24 md:h-28 md:w-28 rounded-xl border-4 border-white dark:border-zinc-900 bluish:border-[#131b2e] bg-gray-200 dark:bg-zinc-800 bluish:bg-[#1e293b] shadow-lg overflow-hidden relative transition-colors duration-300">
-                                        {profile.avatarUrl ? (
-                                            <img src={profile.avatarUrl} alt={profile.fullName} className="w-full h-full object-cover" />
-                                        ) : (
-                                            <div className="w-full h-full flex items-center justify-center bg-gray-100 dark:bg-zinc-800 text-gray-300 text-3xl md:text-4xl font-bold">
-                                                {profile.fullName.charAt(0)}
-                                            </div>
-                                        )}
-                                        {uploadingImage && (
-                                            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-                                                <Loader2 className="text-white animate-spin" size={24} />
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {/* Camera Button - Always Visible or on Hover */}
-                                    <div
-                                        onClick={triggerFileInput}
-                                        className="absolute -bottom-2 -right-2 bg-blue-600 dark:bg-emerald-600 bluish:bg-blue-600 text-white p-2 rounded-lg border-2 border-white dark:border-zinc-900 bluish:border-[#131b2e] shadow-md cursor-pointer hover:bg-blue-700 dark:hover:bg-emerald-700 bluish:hover:bg-blue-700 transition-colors z-20"
-                                        title="Change Profile Picture"
-                                    >
-                                        <Camera size={14} />
-                                        <input
-                                            type="file"
-                                            ref={fileInputRef}
-                                            className="hidden"
-                                            onChange={handleFileSelect}
-                                            accept="image/*"
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Text Info */}
-                                <div className="md:ml-6 mt-2 md:mt-0 flex-1 w-full">
-                                    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                                        <div className="flex flex-col items-center md:items-start">
-                                            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white bluish:text-white transition-colors duration-300 leading-tight">{profile.fullName}</h1>
-                                            <div className="flex flex-col sm:flex-row items-center text-gray-500 dark:text-gray-400 text-sm mt-1.5 gap-2 sm:gap-4">
-                                                <div className="flex items-center">
-                                                    <Mail size={14} className="mr-1.5" />
-                                                    <span>{profile.email}</span>
-                                                </div>
-                                                <span className={`px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider border ${profile.role === 'seller'
-                                                    ? 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/20 dark:text-amber-400 dark:border-amber-800 bluish:bg-amber-900/20 bluish:text-amber-400 bluish:border-amber-800'
-                                                    : 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/20 dark:text-blue-400 dark:border-blue-800 bluish:bg-blue-900/20 bluish:text-blue-400 bluish:border-blue-800'
-                                                    }`}>
-                                                    {profile.role}
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                        {/* Simple Stats */}
-                                        {profile.role === 'seller' && (
-                                            <div className="flex justify-center md:justify-end gap-3 w-full md:w-auto">
-                                                <div className="text-center flex-1 md:flex-none px-4 py-2.5 bg-gray-50 dark:bg-zinc-800 bluish:bg-white/5 rounded-xl border border-gray-100 dark:border-zinc-700 bluish:border-white/5 transition-colors duration-300 shadow-sm">
-                                                    <div className="text-lg md:text-xl font-bold text-gray-900 dark:text-white bluish:text-white leading-tight">{businesses.length}</div>
-                                                    <div className="text-[10px] text-gray-500 dark:text-gray-400 bluish:text-gray-400 font-black uppercase tracking-wider">Businesses</div>
-                                                </div>
-                                                <div className="text-center flex-1 md:flex-none px-4 py-2.5 bg-gray-50 dark:bg-zinc-800 bluish:bg-white/5 rounded-xl border border-gray-100 dark:border-zinc-700 bluish:border-white/5 transition-colors duration-300 shadow-sm">
-                                                    <div className="text-lg md:text-xl font-bold text-blue-600 dark:text-emerald-400 bluish:text-blue-400 leading-tight">Active</div>
-                                                    <div className="text-[10px] text-gray-500 dark:text-gray-400 bluish:text-gray-400 font-black uppercase tracking-wider">Status</div>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="grid lg:grid-cols-3 gap-6 mb-6">
-                        {/* Main Column - Personal Info */}
-                        <div className="lg:col-span-2 flex flex-col">
-                            {/* Personal Info Card */}
-                            <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e] rounded-2xl shadow-sm bluish:shadow-lg border border-gray-200 dark:border-zinc-800 bluish:border-white/10 p-5 md:p-8 flex-1 h-full transition-colors duration-300">
-                                <h2 className="text-xl font-bold text-gray-900 dark:text-white bluish:text-white mb-6 flex items-center border-b border-gray-100 dark:border-zinc-800 bluish:border-white/5 pb-4">
-                                    <User size={22} className="mr-3 text-blue-600 dark:text-emerald-500 bluish:text-blue-500" /> Personal Information
-                                </h2>
-
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-                                    <div className="space-y-1.5">
-                                        <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 bluish:text-gray-400 uppercase">Full Name</label>
-                                        {isEditing ? (
-                                            <input
-                                                type="text"
-                                                className="w-full px-3 py-2 bg-white dark:bg-zinc-800 bluish:bg-white/5 border border-gray-300 dark:border-zinc-700 bluish:border-white/10 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-emerald-500 bluish:focus:ring-blue-500 focus:border-transparent outline-none text-sm transition-all dark:text-white bluish:text-white"
-                                                value={formData.fullName}
-                                                onChange={e => setFormData({ ...formData, fullName: e.target.value })}
-                                            />
-                                        ) : (
-                                            <div className="text-gray-900 dark:text-gray-200 bluish:text-gray-200 font-medium">{profile.fullName}</div>
-                                        )}
-                                    </div>
-
-                                    <div className="space-y-1.5">
-                                        <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Email</label>
-                                        {isEditing ? (
-                                            <input
-                                                type="email"
-                                                disabled
-                                                className="w-full px-3 py-2 bg-gray-50 dark:bg-zinc-800 bluish:bg-white/5 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 rounded-lg text-gray-500 dark:text-gray-400 bluish:text-gray-400 text-sm cursor-not-allowed"
-                                                value={formData.email}
-                                            />
-                                        ) : (
-                                            <div className="text-gray-900 dark:text-gray-200 bluish:text-gray-200 font-medium">{profile.email}</div>
-                                        )}
-                                    </div>
-
-                                    <div className="space-y-1.5">
-                                        <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Phone</label>
-                                        {isEditing ? (
-                                            <input
-                                                type="text"
-                                                className="w-full px-3 py-2 bg-white dark:bg-zinc-800 bluish:bg-white/5 border border-gray-300 dark:border-zinc-700 bluish:border-white/10 rounded-lg focus:ring-2 focus:ring-blue-500 bluish:focus:ring-blue-500 focus:border-transparent outline-none text-sm transition-all dark:text-white bluish:text-white"
-                                                value={formData.phone}
-                                                onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                                                placeholder="+1 (555) 000-0000"
-                                            />
-                                        ) : (
-                                            <div className="text-gray-900 dark:text-gray-200 bluish:text-gray-200 font-medium">{profile.phone || 'Not provided'}</div>
-                                        )}
-                                    </div>
-
-
-
-                                    {/* Description Field - Full Width */}
-                                    <div className="md:col-span-2 space-y-1.5">
-                                        <label className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest">About Me</label>
-                                        {isEditing ? (
-                                            <textarea
-                                                rows="5"
-                                                className="w-full px-4 py-3 bg-white dark:bg-zinc-800 bluish:bg-white/5 border border-gray-300 dark:border-zinc-700 bluish:border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500 dark:focus:ring-emerald-500 bluish:focus:ring-blue-500 focus:border-transparent outline-none text-sm transition-all resize-none dark:text-white bluish:text-white shadow-inner"
-                                                value={formData.description}
-                                                onChange={e => setFormData({ ...formData, description: e.target.value })}
-                                                placeholder="Share a bit about yourself..."
-                                            />
-                                        ) : (
-                                            <div className="text-gray-900 dark:text-gray-200 bluish:text-gray-200 font-medium text-sm leading-relaxed whitespace-pre-wrap bg-gray-50/50 dark:bg-white/5 p-4 rounded-xl border border-gray-100 dark:border-white/5">
-                                                {profile.description || 'No description provided.'}
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {isEditing && (
-                                        <div className="md:col-span-2 space-y-1.5">
-                                            <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">Avatar URL (Optional)</label>
-                                            <div className="relative">
-                                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                    <LinkIcon size={14} className="text-gray-400" />
-                                                </div>
-                                                <input
-                                                    type="url"
-                                                    className="w-full pl-9 px-3 py-2 bg-white dark:bg-zinc-800 bluish:bg-white/5 border border-gray-300 dark:border-zinc-700 bluish:border-white/10 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-emerald-500 bluish:focus:ring-blue-500 focus:border-transparent outline-none text-sm transition-all dark:text-white bluish:text-white"
-                                                    value={formData.avatarUrl}
-                                                    onChange={e => {
-                                                        setFormData({ ...formData, avatarUrl: e.target.value });
-                                                        // Update preview immediately if it looks like a valid URL
-                                                        if (e.target.value.startsWith('http')) {
-                                                            setProfile(prev => ({ ...prev, avatarUrl: e.target.value }));
-                                                        }
-                                                    }}
-                                                    placeholder="https://example.com/image.jpg"
-                                                />
-                                            </div>
-                                            <p className="text-[10px] text-gray-400">Or use the camera button on your profile picture to upload a file.</p>
+                        {/* Avatar Section */}
+                        <div className="relative group shrink-0 animate-float">
+                            <div className="w-32 h-32 md:w-40 md:h-40 rounded-[2.5rem] p-2 bg-white/30 dark:bg-white/10 backdrop-blur-md border border-white/50 dark:border-white/20 shadow-2xl relative z-10 transition-transform duration-500 group-hover:scale-105">
+                                <div className="w-full h-full rounded-[2rem] overflow-hidden bg-gray-100 dark:bg-zinc-900 relative shadow-inner">
+                                    {profile.avatarUrl ? (
+                                        <img src={profile.avatarUrl} alt={profile.fullName} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                                    ) : (
+                                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-500 to-purple-600 text-white text-4xl font-bold">
+                                            {profile.fullName.charAt(0)}
                                         </div>
                                     )}
-
-                                    {/* Removed Manual Avatar URL input to avoid confusion */}
+                                    {uploadingImage && <div className="absolute inset-0 bg-black/50 flex items-center justify-center"><Loader2 className="text-white animate-spin" /></div>}
                                 </div>
                             </div>
+
+                            {/* Floating Camera Button */}
+                            <button
+                                type="button"
+                                onClick={triggerFileInput}
+                                className="absolute -bottom-2 -right-2 bg-black dark:bg-white text-white dark:text-black p-3 rounded-xl shadow-lg hover:scale-110 active:scale-95 transition-all duration-300 z-20"
+                            >
+                                <Camera size={18} />
+                            </button>
+                            <input ref={fileInputRef} type="file" className="hidden" onChange={handleFileSelect} accept="image/*" />
                         </div>
 
-                        {/* Sidebar Column */}
-                        <div className="space-y-6">
-                            {/* Appearance Card (Theme Toggle) */}
-                            <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e] rounded-2xl shadow-sm bluish:shadow-lg border border-gray-200 dark:border-zinc-800 bluish:border-white/10 p-6 transition-colors duration-300">
-                                <h2 className="text-lg font-bold text-gray-900 dark:text-white bluish:text-white mb-5 flex items-center border-b border-gray-100 dark:border-zinc-800 bluish:border-white/5 pb-3">
-                                    {theme === 'dark' || theme === 'bluish' ? <Moon size={20} className="mr-3 text-indigo-400 bluish:text-blue-400" /> : <Sun size={20} className="mr-3 text-amber-500" />}
-                                    Appearance
-                                </h2>
-                                <div className="grid grid-cols-3 gap-2 bg-gray-100/80 dark:bg-zinc-800/80 bluish:bg-white/5 p-1.5 rounded-xl">
-                                    {['light', 'dark', 'default'].map((m) => (
-                                        <button
-                                            key={m}
-                                            type="button"
-                                            onClick={() => setMode(m)}
-                                            className={`py-2 px-1 rounded-lg text-xs md:text-sm font-bold transition-all duration-200 ${mode === m
-                                                ? 'bg-white dark:bg-emerald-600 bluish:bg-blue-600 text-gray-900 dark:text-white bluish:text-white shadow-md scale-100'
-                                                : 'text-gray-500 dark:text-gray-400 bluish:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 bluish:hover:text-white'
-                                                }`}
-                                        >
-                                            {m === 'default' ? 'Mirror' : m.charAt(0).toUpperCase() + m.slice(1)}
+                        {/* Text Info section */}
+                        <div className="flex-1 w-full pt-2 md:pt-4">
+                            <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-4 mb-4">
+                                <div>
+                                    <h1 className="text-3xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-2 tracking-tight">
+                                        {profile.fullName}
+                                    </h1>
+                                    <div className="flex flex-wrap justify-center md:justify-start gap-3 items-center text-gray-500 dark:text-gray-400 font-medium">
+                                        <div className="flex items-center px-3 py-1 rounded-full bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10">
+                                            <Mail size={14} className="mr-2" /> {profile.email}
+                                        </div>
+                                        <div className={`px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider border flex items-center gap-1.5 ${profile.role === 'seller' ?
+                                            'bg-gradient-to-r from-amber-500/10 to-orange-500/10 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800' :
+                                            'bg-gradient-to-r from-blue-500/10 to-indigo-500/10 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-800'
+                                            }`}>
+                                            {profile.role === 'seller' ? <Briefcase size={12} /> : <User size={12} />}
+                                            {profile.role}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Action Buttons */}
+                                <div className="flex gap-3">
+                                    {isEditing ? (
+                                        <>
+                                            <button type="button" onClick={() => setIsEditing(false)} className="px-5 py-2.5 rounded-xl font-bold bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-zinc-700 transition-all">Cancel</button>
+                                            <button type="submit" className="px-5 py-2.5 rounded-xl font-bold bg-black dark:bg-white text-white dark:text-black hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl transition-all flex items-center gap-2">
+                                                <Save size={18} /> Save
+                                            </button>
+                                        </>
+                                    ) : (
+                                        <button type="button" onClick={() => setIsEditing(true)} className="px-5 py-2.5 rounded-xl font-bold bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white hover:bg-gray-50 dark:hover:bg-white/10 transition-all flex items-center gap-2 shadow-sm hover:shadow-md">
+                                            <Edit2 size={16} /> Edit Profile
                                         </button>
-                                    ))}
+                                    )}
                                 </div>
-                                <p className="text-[10px] text-gray-400 dark:text-gray-500 mt-4 text-center font-medium uppercase tracking-widest">
-                                    {mode === 'default'
-                                        ? `System: ${theme.toUpperCase()}`
-                                        : `${mode.toUpperCase()} MODE`}
-                                </p>
                             </div>
 
-                            {/* Security Card */}
-                            <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e] rounded-xl shadow-sm bluish:shadow-lg border border-gray-200 dark:border-zinc-800 bluish:border-white/10 p-6 transition-colors duration-300">
-                                <h2 className="text-lg font-bold text-gray-900 dark:text-white bluish:text-white mb-5 flex items-center border-b border-gray-100 dark:border-zinc-800 bluish:border-white/5 pb-3">
-                                    <Shield size={20} className="mr-2 text-blue-600 dark:text-emerald-500 bluish:text-blue-500" /> Security
-                                </h2>
-
+                            {/* Bio / Description */}
+                            <div className="max-w-2xl bg-gray-50 dark:bg-black/20 rounded-2xl p-4 md:p-0 md:bg-transparent md:dark:bg-transparent border border-gray-100 dark:border-white/5 md:border-none">
                                 {isEditing ? (
-                                    <div className="space-y-3">
-                                        <label className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">New Password</label>
-                                        <input
-                                            type="password"
-                                            placeholder="Min 6 characters"
-                                            className="w-full px-3 py-2 bg-white dark:bg-zinc-800 bluish:bg-white/5 border border-gray-300 dark:border-zinc-700 bluish:border-white/10 rounded-lg focus:ring-2 focus:ring-blue-500 dark:focus:ring-emerald-500 bluish:focus:ring-blue-500 focus:border-transparent outline-none text-sm transition-all dark:text-white bluish:text-white"
-                                            value={formData.password}
-                                            onChange={e => setFormData({ ...formData, password: e.target.value })}
-                                        />
-                                        <p className="text-[10px] text-gray-400">Leave blank to keep current.</p>
-                                    </div>
+                                    <textarea
+                                        rows="3"
+                                        className="w-full px-4 py-3 bg-white dark:bg-zinc-900/50 border border-gray-200 dark:border-zinc-700 rounded-xl focus:ring-2 focus:ring-black dark:focus:ring-white outline-none text-gray-700 dark:text-gray-200 resize-none shadow-inner"
+                                        value={formData.description}
+                                        onChange={e => setFormData({ ...formData, description: e.target.value })}
+                                        placeholder="Tell us about yourself..."
+                                    />
                                 ) : (
-                                    <div className="space-y-3">
-                                        <div className="flex justify-between items-center py-1">
-                                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300 bluish:text-gray-300">Password</span>
-                                            <span className="text-xs text-gray-400 font-mono">••••••••</span>
-                                        </div>
-                                        <div className="flex justify-between items-center py-1">
-                                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">2FA</span>
-                                            <span className="text-[10px] font-bold bg-gray-100 dark:bg-zinc-800 text-gray-500 dark:text-gray-400 px-2 py-0.5 rounded border border-gray-200 dark:border-zinc-700">OFF</span>
-                                        </div>
-                                    </div>
+                                    <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm md:text-base">
+                                        {profile.description || "No bio added yet. Click edit to tell your story."}
+                                    </p>
                                 )}
-                            </div>
-
-                            {/* Activity Card */}
-                            <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e] rounded-xl shadow-sm bluish:shadow-lg border border-gray-200 dark:border-zinc-800 bluish:border-white/10 p-6 transition-colors duration-300">
-                                <h2 className="text-lg font-bold text-gray-900 dark:text-white bluish:text-white mb-5 flex items-center border-b border-gray-100 dark:border-zinc-800 bluish:border-white/5 pb-3">
-                                    <Clock size={20} className="mr-2 text-purple-600 bluish:text-purple-400" /> Activity
-                                </h2>
-                                <div className="space-y-4">
-                                    <div className="flex items-start">
-                                        <div className="bg-blue-50 dark:bg-emerald-900/20 bluish:bg-blue-900/20 p-1.5 rounded-md mr-3 text-blue-600 dark:text-emerald-400 bluish:text-blue-400">
-                                            <Calendar size={16} />
-                                        </div>
-                                        <div>
-                                            <div className="text-xs text-gray-500 dark:text-gray-400 bluish:text-gray-400 font-medium uppercase">Joined</div>
-                                            <div className="text-sm text-gray-900 dark:text-gray-200 bluish:text-gray-200 font-semibold">{new Date(profile.createdAt).toLocaleDateString()}</div>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-start">
-                                        <div className="bg-green-50 dark:bg-emerald-900/20 bluish:bg-blue-900/20 p-1.5 rounded-md mr-3 text-blue-600 dark:text-emerald-400 bluish:text-blue-400">
-                                            <Clock size={16} />
-                                        </div>
-                                        <div>
-                                            <div className="text-xs text-gray-500 dark:text-gray-400 bluish:text-gray-400 font-medium uppercase">Last Active</div>
-                                            <div className="text-sm text-gray-900 dark:text-gray-200 bluish:text-gray-200 font-semibold flex items-center">
-                                                <span className="w-1.5 h-1.5 bg-blue-500 dark:bg-emerald-500 bluish:bg-blue-400 rounded-full mr-1.5"></span>
-                                                Now
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* My Businesses Section - Full Width Bottom */}
-                    {profile.role === 'seller' && (
-                        <div className="bg-white dark:bg-zinc-900 bluish:bg-[#131b2e] rounded-xl shadow-sm bluish:shadow-lg border border-gray-200 dark:border-zinc-800 bluish:border-white/10 p-6 transition-colors duration-300">
-                            <div className="flex items-center justify-between mb-5 border-b border-gray-100 dark:border-zinc-800 bluish:border-white/5 pb-3">
-                                <h2 className="text-lg font-bold text-gray-900 dark:text-white bluish:text-white flex items-center">
-                                    <Building size={20} className="mr-2 text-amber-600 bluish:text-amber-400" /> My Businesses
-                                </h2>
-                                <Link to="/my-businesses" className="text-sm font-semibold text-blue-600 dark:text-emerald-400 bluish:text-blue-400 hover:text-blue-500 dark:hover:text-emerald-300 transition-colors">
-                                    Manage All
-                                </Link>
+                    {/* Content Grid */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                        {/* Details Column */}
+                        <div className="lg:col-span-2 space-y-6">
+
+                            {/* Basic Info Card */}
+                            <div className="bg-gradient-to-br from-white to-blue-50/30 dark:from-zinc-900 dark:to-zinc-950 bluish:from-slate-900 bluish:to-slate-950 rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 dark:border-zinc-800 bluish:border-slate-800 hover:shadow-md transition-shadow duration-300">
+                                <div className="flex items-center gap-3 mb-6">
+                                    <div className="p-3 rounded-2xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400">
+                                        <Zap size={24} />
+                                    </div>
+                                    <h2 className="text-xl font-bold text-gray-900 dark:text-white">Profile Details</h2>
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Full Name</label>
+                                        {isEditing ? (
+                                            <input type="text" value={formData.fullName} onChange={e => setFormData({ ...formData, fullName: e.target.value })} className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-white border border-gray-200 dark:border-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-medium" />
+                                        ) : (
+                                            <div className="p-3 bg-gray-50 dark:bg-zinc-800/50 rounded-xl font-semibold text-gray-700 dark:text-gray-200">{profile.fullName}</div>
+                                        )}
+                                    </div>
+                                    <div className="space-y-2">
+                                        <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Phone Number</label>
+                                        {isEditing ? (
+                                            <input type="text" value={formData.phone} onChange={e => setFormData({ ...formData, phone: e.target.value })} placeholder="+1234567890" className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-white border border-gray-200 dark:border-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-medium" />
+                                        ) : (
+                                            <div className="p-3 bg-gray-50 dark:bg-zinc-800/50 rounded-xl font-semibold text-gray-700 dark:text-gray-200">{profile.phone || 'N/A'}</div>
+                                        )}
+                                    </div>
+                                    <div className="space-y-2 md:col-span-2">
+                                        <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Email Address</label>
+                                        <div className="p-3 bg-gray-50 dark:bg-zinc-800/50 rounded-xl font-semibold text-gray-500 dark:text-gray-400 flex justify-between items-center opacity-75 cursor-not-allowed">
+                                            {profile.email}
+                                            <Shield size={14} className="text-green-500" />
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
-                            {businesses.length > 0 ? (
-                                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                                    {businesses.slice(0, 3).map((b) => (
-                                        <div key={b._id} className="border border-gray-200 dark:border-zinc-800 bluish:border-white/10 rounded-2xl p-5 hover:border-blue-300 dark:hover:border-blue-700 bluish:hover:border-blue-500/50 transition-all group bg-gray-50/30 dark:bg-white/5 flex flex-col shadow-sm hover:shadow-md">
-                                            <div className="flex items-center space-x-4 mb-4">
-                                                <div className="h-14 w-14 bg-gray-200 dark:bg-zinc-800 bluish:bg-[#1e293b] rounded-xl flex-shrink-0 overflow-hidden shadow-inner">
-                                                    <img
-                                                        src={(b.images && b.images.length > 0) ? b.images[0] : 'https://cdn-icons-png.freepik.com/512/1465/1465439.png'}
-                                                        alt={b.businessName}
-                                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                                                    />
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <h4 className="font-bold text-gray-900 dark:text-white bluish:text-white truncate text-base">{b.businessName}</h4>
-                                                    <div className="flex items-center text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mt-0.5">
-                                                        <MapPin size={10} className="mr-1" />
-                                                        <span className="truncate">{b.location.city}</span>
+                            {/* Businesses Section */}
+                            {profile.role === 'seller' && (
+                                <div className="bg-gradient-to-br from-white to-amber-50/30 dark:from-zinc-900 dark:to-zinc-950 bluish:from-slate-900 bluish:to-slate-950 rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 dark:border-zinc-800 bluish:border-slate-800 hover:shadow-md transition-shadow duration-300">
+                                    <div className="flex justify-between items-center mb-6">
+                                        <div className="flex items-center gap-3">
+                                            <div className="p-3 rounded-2xl bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400">
+                                                <Building size={24} />
+                                            </div>
+                                            <h2 className="text-xl font-bold text-gray-900 dark:text-white">My Businesses</h2>
+                                        </div>
+                                        <Link to="/my-businesses" className="text-sm font-bold text-blue-600 dark:text-blue-400 hover:underline">View All</Link>
+                                    </div>
+
+                                    {businesses.length > 0 ? (
+                                        <div className="grid sm:grid-cols-2 gap-4">
+                                            {businesses.slice(0, 4).map(b => (
+                                                <Link key={b._id} to={`/my-businesses/${b._id}`} className="group p-4 rounded-2xl bg-gray-50 dark:bg-zinc-800/50 hover:bg-white dark:hover:bg-zinc-800 border border-transparent hover:border-gray-200 dark:hover:border-zinc-700 shadow-sm hover:shadow-lg transition-all duration-300 flex items-center gap-4">
+                                                    <div className="w-12 h-12 rounded-xl bg-gray-200 dark:bg-zinc-700 overflow-hidden shrink-0">
+                                                        <img src={(b.images?.[0]) || 'https://via.placeholder.com/150'} alt="" className="w-full h-full object-cover" />
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <Link to={`/my-businesses/${b._id}`} className={`mt-auto pt-4 text-xs font-black uppercase tracking-widest text-center border-t border-gray-100 dark:border-white/5 transition-colors ${accentClass} hover:opacity-80`}>
-                                                Manage Asset
-                                            </Link>
+                                                    <div className="min-w-0">
+                                                        <h4 className="font-bold text-gray-900 dark:text-white truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{b.businessName}</h4>
+                                                        <div className="flex items-center text-xs text-gray-500 mt-0.5">
+                                                            <MapPin size={10} className="mr-1" /> {b.location?.city}
+                                                        </div>
+                                                    </div>
+                                                    <ChevronRight size={16} className="ml-auto text-gray-300 group-hover:text-blue-500 transition-colors" />
+                                                </Link>
+                                            ))}
                                         </div>
-                                    ))}
-                                    {businesses.length > 3 && (
-                                        <Link to="/my-businesses" className="border border-dashed border-gray-300 dark:border-zinc-700 rounded-lg p-4 flex flex-col items-center justify-center text-gray-500 hover:text-blue-600 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-all text-sm font-medium h-full">
-                                            <span>+{businesses.length - 3} More</span>
-                                        </Link>
+                                    ) : (
+                                        <div className="text-center py-8 rounded-2xl border-2 border-dashed border-gray-200 dark:border-zinc-800">
+                                            <p className="text-gray-500 font-medium">No businesses listed yet.</p>
+                                            <Link to="/my-businesses/new" className="inline-block mt-3 px-4 py-2 bg-black dark:bg-white text-white dark:text-black rounded-lg text-sm font-bold hover:opacity-80 transition-opacity">Add Business</Link>
+                                        </div>
                                     )}
-                                </div>
-                            ) : (
-                                <div className="text-center py-8 bg-gray-50 dark:bg-zinc-800 rounded-lg border border-dashed border-gray-300 dark:border-zinc-700">
-                                    <p className="text-gray-500 text-sm mb-3">No businesses added yet.</p>
-                                    <Link to="/my-businesses/new" className="inline-flex items-center bg-white dark:bg-zinc-700 border border-gray-300 dark:border-zinc-600 text-gray-700 dark:text-gray-200 px-4 py-1.5 rounded-lg text-sm font-semibold hover:bg-gray-50 dark:hover:bg-zinc-600 transition-colors shadow-sm">
-                                        Add Business
-                                    </Link>
                                 </div>
                             )}
                         </div>
-                    )}
+
+                        {/* Sidebar */}
+                        <div className="space-y-6">
+
+                            {/* Stats Card - Floating aesthetic */}
+                            <div className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
+                                <div className="absolute top-0 right-0 p-3 opacity-10"><Sparkles size={100} /></div>
+                                <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><Sparkles size={18} /> Impact Score</h3>
+                                <div className="grid grid-cols-2 gap-4 relative z-10">
+                                    <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10">
+                                        <div className="text-3xl font-black mb-1">{businesses.length}</div>
+                                        <div className="text-xs font-medium opacity-80 uppercase tracking-wider">Listings</div>
+                                    </div>
+                                    <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10">
+                                        <div className="text-3xl font-black mb-1">Active</div>
+                                        <div className="text-xs font-medium opacity-80 uppercase tracking-wider">Status</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Appearance Settings */}
+                            <div className="bg-gradient-to-br from-white to-purple-50/30 dark:from-zinc-900 dark:to-zinc-950 bluish:from-slate-900 bluish:to-slate-950 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-zinc-800 bluish:border-slate-800 hover:shadow-md transition-shadow duration-300">
+                                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                                    <Settings size={18} /> Preferences
+                                </h3>
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 block">Theme</label>
+                                        <div className="grid grid-cols-3 gap-2 p-1.5 bg-gray-100 dark:bg-zinc-800 rounded-xl">
+                                            {['light', 'dark', 'default'].map((m) => (
+                                                <button
+                                                    type="button"
+                                                    key={m}
+                                                    onClick={() => setMode(m)}
+                                                    className={`py-2 rounded-lg text-xs font-bold capitalize transition-all ${mode === m ? 'bg-white dark:bg-zinc-700 text-black dark:text-white shadow-sm' : 'text-gray-500 hover:text-gray-900 dark:hover:text-gray-300'
+                                                        }`}
+                                                >
+                                                    {m}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Date Joined */}
+                            <div className="bg-white dark:bg-zinc-900 bluish:bg-slate-900 rounded-3xl p-6 shadow-sm border border-gray-100 dark:border-zinc-800 bluish:border-slate-800 flex items-center justify-between">
+                                <div>
+                                    <div className="text-xs font-bold text-gray-400 uppercase tracking-wider">Member Since</div>
+                                    <div className="text-gray-900 dark:text-white font-bold">{new Date(profile.createdAt).toLocaleDateString(undefined, { month: 'long', year: 'numeric' })}</div>
+                                </div>
+                                <Calendar size={24} className="text-gray-300 dark:text-zinc-700" />
+                            </div>
+
+                        </div>
+                    </div>
                 </form>
-            </div>
+            </main>
         </div>
     );
 };

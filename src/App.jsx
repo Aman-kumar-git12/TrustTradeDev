@@ -83,7 +83,7 @@ function App() {
     };
 
     return (
-        <div className={`min-h-screen bg-gray-50 dark:bg-black bluish:bg-[#0a0f1d] text-gray-900 dark:text-gray-200 transition-colors duration-300 relative overflow-x-hidden ${!shouldHideNavbar() ? 'pt-16' : ''}`}>
+        <div className={`min-h-screen bg-gray-50 dark:bg-black bluish:bg-[#0a0f1d] text-gray-900 dark:text-gray-200 transition-colors duration-300 relative overflow-x-hidden ${(!shouldHideNavbar() && location.pathname !== '/profile') ? 'pt-16' : ''}`}>
             {/* Global Dotted Background */}
             <div className="fixed inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] dark:bg-[radial-gradient(#ffffff33_1px,#000000_1px)] bluish:bg-[radial-gradient(#ffffff33_1px,#0a0f1d_1px)] [background-size:20px_20px] opacity-20 dark:opacity-[0.26] bluish:opacity-[0.26] pointer-events-none z-[1]"></div>
 
