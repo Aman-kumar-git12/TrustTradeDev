@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { ArrowRight, TrendingUp, Clock, Star, Award, Zap, ShieldCheck, Globe, ChevronRight, ChevronLeft, Sparkles, Building2 } from 'lucide-react';
 import api from '../utils/api';
 import { motion } from 'framer-motion';
+import Footer from '../components/Footer';
 
 
 const Home = () => {
@@ -172,7 +173,7 @@ const Home = () => {
             )}
 
             {/* 4. Content Sections */}
-            <div className="space-y-20 px-4 sm:px-6 lg:px-12 mt-8 relative z-20 pb-20">
+            <div className="space-y-20 px-4 sm:px-6 lg:px-12 mt-8 relative z-20 pb-10">
 
                 {stats.trendingAssets.length > 0 && (
                     <ProductSection
@@ -232,6 +233,8 @@ const Home = () => {
                     </div>
                 </div>
             </div>
+
+            <Footer />
 
             <style>{`
                 @keyframes marquee {

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Building2, ArrowRight, Briefcase, MapPin } from 'lucide-react';
 import api from '../utils/api';
+import DashboardSelectionShimmer from '../components/shimmers/DashboardSelectionShimmer';
 
 const SellerSelectDashboardBusiness = () => {
     const [businesses, setBusinesses] = useState([]);
@@ -22,12 +23,7 @@ const SellerSelectDashboardBusiness = () => {
         fetchBusinesses();
     }, []);
 
-    if (loading) return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 dark:bg-zinc-950 bluish:bg-[#0a0f1d] transition-colors duration-300">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 dark:border-emerald-500 bluish:border-blue-500 mb-4"></div>
-            <p className="text-gray-500 dark:text-gray-400 bluish:text-gray-400 font-medium transition-colors">Loading your businesses...</p>
-        </div>
-    );
+    if (loading) return <DashboardSelectionShimmer />;
 
     return (
         <div className="min-h-[calc(100vh-64px)] bg-slate-50 dark:bg-zinc-950 bluish:bg-[#0a0f1d] py-16 px-4 sm:px-6 lg:px-8 font-sans transition-colors duration-300 relative overflow-hidden">

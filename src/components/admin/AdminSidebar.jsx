@@ -1,14 +1,15 @@
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, ShoppingCart, Settings, LogOut, Shield, UserCog, Home } from 'lucide-react';
+import { LayoutDashboard, ShoppingCart, Settings, LogOut, Shield, UserCog, Home, MessageSquare, Store } from 'lucide-react';
 
 const AdminSidebar = () => {
     const location = useLocation();
 
     const menuItems = [
+        { path: '/admin/support', icon: MessageSquare, label: 'Support Asks' },
         { path: '/admin', icon: LayoutDashboard, label: 'Overview' },
         { path: '/admin/orders', icon: ShoppingCart, label: 'All Orders' },
         { path: '/admin/users', icon: UserCog, label: 'Manage Users' },
-        { path: '/admin/settings', icon: Settings, label: 'Settings' },
+        { path: '/admin/businesses', icon: Store, label: 'All Businesses' },
     ];
 
     return (

@@ -4,6 +4,7 @@ import { Package, DollarSign, Activity, ShoppingBag, Clock, Users, TrendingUp, A
 import api from '../../utils/api';
 import { motion } from 'framer-motion';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import AdminDashboardShimmer from '../../components/shimmers/AdminDashboardShimmer';
 
 const AdminDashboard = () => {
     const [stats, setStats] = useState({
@@ -11,21 +12,43 @@ const AdminDashboard = () => {
         totalRevenue: 0,
         recentSales: []
     });
+    const [activities, setActivities] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const { data } = await api.get('/admin/stats');
-                setStats(data);
+                const [statsRes, activityRes] = await Promise.all([
+                    api.get('/admin/stats'),
+                    api.get('/admin/activity')
+                ]);
+                setStats(statsRes.data);
+                setActivities(activityRes.data);
             } catch (error) {
-                console.error("Failed to fetch admin stats", error);
+                console.error("Failed to fetch admin dashboard data", error);
             } finally {
                 setLoading(false);
             }
         };
         fetchStats();
     }, []);
+
+    // Format time helper (e.g. "2M AGO")
+    const formatTimeAgo = (date) => {
+        const now = new Date();
+        const past = new Date(date);
+        const diffInSeconds = Math.floor((now - past) / 1000);
+
+        if (diffInSeconds < 60) return `${diffInSeconds}S AGO`;
+        const diffInMinutes = Math.floor(diffInSeconds / 60);
+        if (diffInMinutes < 60) return `${diffInMinutes}M AGO`;
+        const diffInHours = Math.floor(diffInMinutes / 60);
+        if (diffInHours < 24) return `${diffInHours}H AGO`;
+        const diffInDays = Math.floor(diffInHours / 24);
+        return `${diffInDays}D AGO`;
+    };
+
+    // ... (rest of code)
 
     // Mock data for the chart - in a real app, this would come from the backend
     const chartData = [
@@ -38,7 +61,28 @@ const AdminDashboard = () => {
         { name: 'Sun', revenue: 3490 },
     ];
 
-    if (loading) return <div className="p-8 text-center bg-transparent bluish:bg-[#0a0f1d] min-h-screen">Loading command center...</div>;
+    // Helper for status badge colors
+    const getStatusColor = (status) => {
+        switch (status?.toLowerCase()) {
+            case 'sold':
+            case 'completed':
+                return 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20';
+            case 'refunded':
+                return 'bg-red-500/10 text-red-500 border-red-500/20';
+            case 'disputed':
+                return 'bg-orange-500/10 text-orange-500 border-orange-500/20';
+            default:
+                return 'bg-blue-500/10 text-blue-500 border-blue-500/20';
+        }
+    };
+
+
+
+    // ... (existing imports)
+
+    // ... (inside component)
+
+    if (loading) return <AdminDashboardShimmer />;
 
     return (
         <div className="flex-1 h-full p-8">
@@ -129,23 +173,26 @@ const AdminDashboard = () => {
                         <Clock className="w-5 h-5 text-blue-500" /> Recent Activity
                     </h2>
                     <div className="space-y-6">
-                        {[
-                            { user: "Aman", action: "Updated Featured Event", time: "2m ago", type: "event" },
-                            { user: "System", action: "User 'John Doe' became Seller", time: "15m ago", type: "role" },
-                            { user: "Admin", action: "Marked Order #892 as Sold", time: "1h ago", type: "order" },
-                            { user: "System", action: "New Business 'EcoTech' listed", time: "3h ago", type: "listing" },
-                            { user: "Aman", action: "Adjusted platform commission", time: "5h ago", type: "fees" }
-                        ].map((activity, i) => (
-                            <div key={i} className="flex gap-4 items-start group">
-                                <div className="w-2 h-2 rounded-full bg-blue-500 mt-2 group-hover:scale-150 transition-transform"></div>
-                                <div>
-                                    <p className="text-sm font-medium text-gray-200">
-                                        <span className="text-blue-400 font-bold">{activity.user}</span> {activity.action}
-                                    </p>
-                                    <p className="text-[10px] text-gray-500 mt-1 uppercase tracking-widest">{activity.time}</p>
-                                </div>
-                            </div>
-                        ))}
+                        {activities.length > 0 ? (
+                            activities.map((activity, i) => {
+                                const userName = activity.user?.fullName || 'System';
+                                const description = activity.description.replace(userName, '').trim();
+
+                                return (
+                                    <div key={activity._id || i} className="flex gap-4 items-start group">
+                                        <div className="w-2 h-2 rounded-full bg-blue-500 mt-2 group-hover:scale-150 transition-transform"></div>
+                                        <div>
+                                            <p className="text-sm font-medium text-gray-200">
+                                                <span className="text-blue-400 font-bold">{userName}</span> {description || activity.description}
+                                            </p>
+                                            <p className="text-[10px] text-gray-500 mt-1 uppercase tracking-widest">{formatTimeAgo(activity.createdAt)}</p>
+                                        </div>
+                                    </div>
+                                );
+                            })
+                        ) : (
+                            <div className="text-center text-gray-500 py-4">No recent activity</div>
+                        )}
                     </div>
                     <div className="mt-8 pt-6 border-t border-white/5">
                         <div className="p-4 bg-gradient-to-br from-blue-600/20 to-indigo-700/20 border border-blue-500/20 rounded-2xl">
@@ -177,16 +224,24 @@ const AdminDashboard = () => {
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-100 dark:divide-white/5">
-                            {stats.recentSales?.map((sale) => (
-                                <tr key={sale._id} className="text-sm hover:bg-gray-50 dark:hover:bg-white/5 transition-all group">
-                                    <td className="py-5 px-2 font-bold uppercase tracking-tighter text-gray-900 dark:text-gray-100">{sale.asset?.title}</td>
-                                    <td className="py-5 px-2 text-gray-500">{sale.buyer?.fullName}</td>
-                                    <td className="py-5 px-2 font-bold text-blue-600 dark:text-emerald-400">₹{(sale.totalAmount || 0).toLocaleString()}</td>
-                                    <td className="py-5 px-2">
-                                        <span className="bg-blue-500/10 text-blue-500 text-[10px] px-2 py-1 rounded-full font-bold uppercase border border-blue-500/20">SENT</span>
-                                    </td>
+                            {stats.recentSales?.length > 0 ? (
+                                stats.recentSales.map((sale) => (
+                                    <tr key={sale._id} className="text-sm hover:bg-gray-50 dark:hover:bg-white/5 transition-all group">
+                                        <td className="py-5 px-2 font-bold uppercase tracking-tighter text-gray-900 dark:text-gray-100">{sale.asset?.title}</td>
+                                        <td className="py-5 px-2 text-gray-500">{sale.buyer?.fullName}</td>
+                                        <td className="py-5 px-2 font-bold text-blue-600 dark:text-emerald-400">₹{(sale.totalAmount || 0).toLocaleString()}</td>
+                                        <td className="py-5 px-2">
+                                            <span className={`px-2 py-1 rounded-full font-bold uppercase text-[10px] border ${getStatusColor(sale.status)}`}>
+                                                {sale.status || 'SENT'}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan="4" className="py-8 text-center text-gray-500">No recent transactions</td>
                                 </tr>
-                            ))}
+                            )}
                         </tbody>
                     </table>
                 </div>

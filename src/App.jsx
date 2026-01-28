@@ -33,7 +33,9 @@ import Checkout from './pages/checkout'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminOrders from './pages/admin/AdminOrders'
 import AdminUsers from './pages/admin/AdminUsers'
-import AdminSettings from './pages/admin/AdminSettings'
+
+import AdminSupport from './pages/admin/AdminSupport'
+import AdminBusinesses from './pages/admin/AdminBusinesses'
 import AdminLayout from './components/admin/AdminLayout'
 import ProtectedRoute from './components/ProtectedRoute'
 import Dashboard from './pages/Dashboard'
@@ -200,7 +202,11 @@ function App() {
                     <Route path="orders/:orderId" element={<AdminOrders />} />
                     <Route path="users" element={<AdminUsers />} />
                     <Route path="users/:userId" element={<AdminUsers />} />
-                    <Route path="settings" element={<AdminSettings />} />
+                    <Route path="users/:userId/:tab" element={<AdminUsers />} />
+                    <Route path="support" element={<AdminSupport />} />
+                    <Route path="support/:queryId" element={<AdminSupport />} />
+                    <Route path="businesses" element={<AdminBusinesses />} />
+
                 </Route>
             </Routes>
         </div>
