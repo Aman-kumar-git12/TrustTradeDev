@@ -30,7 +30,13 @@ import PublicBusinessDetails from './pages/PublicBusinessDetails'
 import PublicBusinessListings from './pages/PublicBusinessListings'
 import PublicUserProfile from './pages/PublicUserProfile'
 import Checkout from './pages/checkout'
+import AdminDashboard from './pages/admin/AdminDashboard'
+import AdminOrders from './pages/admin/AdminOrders'
+import AdminUsers from './pages/admin/AdminUsers'
+import AdminSettings from './pages/admin/AdminSettings'
+import AdminLayout from './components/admin/AdminLayout'
 import ProtectedRoute from './components/ProtectedRoute'
+import Dashboard from './pages/Dashboard'
 
 function App() {
     const location = useLocation();
@@ -63,6 +69,11 @@ function App() {
         }
 
         if (path.includes('/dashboard/buyer/insights')) {
+            return true;
+        }
+
+        // 6. Admin Panel
+        if (path.startsWith('/admin')) {
             return true;
         }
 
@@ -129,6 +140,14 @@ function App() {
                         <SellerSelectDashboardBusiness />
                     </ProtectedRoute>
                 } />
+                <Route path="/dashboard" element={<Dashboard />} />
+
+                <Route path="/dashboard/seller/:user_id" element={
+                    <ProtectedRoute role="seller">
+                        <SellerDashboard />
+                    </ProtectedRoute>
+                } />
+
                 <Route path="/dashboard/seller/:businessId" element={
                     <ProtectedRoute role="seller">
                         <SellerDashboard />
@@ -169,6 +188,20 @@ function App() {
                     </ProtectedRoute>
                 } />
                 <Route path="/checkout" element={<Checkout />} />
+
+                {/* Admin Routes */}
+                <Route path="/admin" element={
+                    <ProtectedRoute role="admin">
+                        <AdminLayout />
+                    </ProtectedRoute>
+                }>
+                    <Route index element={<AdminDashboard />} />
+                    <Route path="orders" element={<AdminOrders />} />
+                    <Route path="orders/:orderId" element={<AdminOrders />} />
+                    <Route path="users" element={<AdminUsers />} />
+                    <Route path="users/:userId" element={<AdminUsers />} />
+                    <Route path="settings" element={<AdminSettings />} />
+                </Route>
             </Routes>
         </div>
     )

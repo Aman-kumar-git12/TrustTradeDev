@@ -22,7 +22,7 @@ const MobileMenu = ({
         { label: 'Home', path: user ? '/home' : '/', icon: HomeIcon, id: 'Home' },
         { label: 'Marketplace', path: '/marketplace', icon: ShoppingBag, id: 'Marketplace' },
         { label: 'Post Assets', path: '/post-asset', icon: PlusCircle, id: 'Post Assets', role: 'seller' },
-        { label: 'Dashboard', path: user?.role === 'seller' ? '/dashboard/seller' : `/dashboard/buyer/${user?._id}`, icon: LayoutDashboard, id: 'Dashboard', auth: true },
+        { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, id: 'Dashboard', auth: true },
         { label: 'Profile', path: '/profile', icon: User, id: 'Profile', auth: true },
     ].filter(link => {
         if (link.id === 'Marketplace' && hideMarketplace) return false;

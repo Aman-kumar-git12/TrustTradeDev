@@ -172,12 +172,12 @@ const Navbar = () => {
                                             )}
                                             <Hover text="View Dashboard">
                                                 <Link
-                                                    to={user.role === 'seller' ? "/dashboard/seller" : `/dashboard/buyer/${user._id}`}
-                                                    className={`flex items-center space-x-1.5 text-sm font-bold transition-all ${location.pathname.includes('/dashboard/')
+                                                    to="/dashboard"
+                                                    className={`flex items-center space-x-1.5 text-sm font-bold transition-all ${location.pathname.includes('/dashboard') || location.pathname.startsWith('/admin')
                                                         ? accentClass
                                                         : 'text-gray-400 hover:text-white'
                                                         }`}
-                                                    onClick={(e) => handleNavClick(e, user.role === 'seller' ? "/dashboard/seller" : `/dashboard/buyer/${user._id}`, 'Dashboard')}
+                                                    onClick={(e) => handleNavClick(e, '/dashboard', 'Dashboard')}
                                                 >
                                                     <LayoutDashboard size={18} />
                                                     <span>Dashboard</span>

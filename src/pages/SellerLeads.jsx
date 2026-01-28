@@ -259,7 +259,7 @@ const LeadRow = ({ lead, isExpanded, onToggle, onStatusUpdate, onLeadUpdate }) =
     };
 
     // Conditional Styling
-    const rowBaseClasses = `bg-white dark:bg-zinc-900 bluish:bg-gradient-to-r bluish:from-[#1e293b] bluish:to-[#0f172a] bluish:backdrop-blur-md rounded-xl border transition-all duration-300 overflow-hidden`;
+    const rowBaseClasses = `bg-white dark:bg-zinc-900 bluish:bg-gradient-to-r bluish:from-[#1e293b] bluish:to-[#0f172a] rounded-xl border transition-all duration-300 overflow-hidden relative z-10`;
     let rowClasses = rowBaseClasses;
     if (lead.salesStatus === 'sold' && lead.isManuallyMarkedSold) {
         rowClasses = `bg-emerald-50 dark:bg-emerald-900/20 rounded-xl border border-emerald-200 dark:border-emerald-800 transition-all duration-200 overflow-hidden hover:shadow-md`;
@@ -404,7 +404,7 @@ const LeadRow = ({ lead, isExpanded, onToggle, onStatusUpdate, onLeadUpdate }) =
                             animate={{ height: 'auto', opacity: 1 }}
                             exit={{ height: 0, opacity: 0 }}
                             transition={{ type: "spring", stiffness: 200, damping: 25 }}
-                            className="bg-gray-50/80 dark:bg-zinc-800/20 bluish:bg-[#0f172a]/50 border-t border-gray-100 dark:border-zinc-800 bluish:border-white/5 overflow-hidden"
+                            className="bg-gray-50 dark:bg-zinc-900 bluish:bg-[#0f172a] border-t border-gray-100 dark:border-zinc-800 bluish:border-white/5 overflow-hidden"
                         >
                             <div className="p-6">
                                 {/* Full Asset Title */}
@@ -691,7 +691,7 @@ const SellerLeads = () => {
                 {/* Leads List */}
                 <div className="space-y-4">
                     {leads.length === 0 ? (
-                        <div className="bg-white dark:bg-zinc-900 bluish:bg-[#1e293b]/60 rounded-2xl border border-dashed border-gray-300 dark:border-zinc-700 bluish:border-white/10 p-12 text-center">
+                        <div className="bg-white dark:bg-zinc-900 bluish:bg-[#1e293b] rounded-2xl border border-dashed border-gray-300 dark:border-zinc-700 bluish:border-white/10 p-12 text-center relative z-10">
                             <div className="w-16 h-16 bg-gray-50 dark:bg-zinc-800 bluish:bg-white/5 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-400 dark:text-gray-600 bluish:text-gray-500">
                                 <Inbox size={32} />
                             </div>

@@ -67,7 +67,7 @@ const InterestCard = ({ interest, isExpanded, onToggle, onDelete, navigate, setA
     };
 
     return (
-        <div className={`bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800 bluish:to-slate-900 rounded-2xl border transition-all duration-300 overflow-hidden ${isExpanded
+        <div className={`bg-white dark:bg-[#111] bluish:bg-[#152033] rounded-2xl border transition-all duration-300 overflow-hidden relative z-10 ${isExpanded
             ? 'border-blue-500 dark:border-blue-500 bluish:border-blue-500 shadow-xl ring-1 ring-blue-500/10 dark:ring-blue-500/10 bluish:ring-blue-500/10'
             : 'border-gray-100 dark:border-zinc-800 bluish:border-white/5 hover:border-blue-500/30 dark:hover:border-blue-500/30 bluish:hover:border-blue-500/30 shadow-sm hover:shadow-md'
             }`}>
@@ -243,7 +243,7 @@ const InterestCard = ({ interest, isExpanded, onToggle, onDelete, navigate, setA
 
 const OrderCard = ({ order, isExpanded, onToggle }) => {
     return (
-        <div className={`bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800 bluish:to-slate-900 rounded-2xl border transition-all duration-300 overflow-hidden ${isExpanded
+        <div className={`bg-white dark:bg-[#111] bluish:bg-[#152033] rounded-2xl border transition-all duration-300 overflow-hidden relative z-10 ${isExpanded
             ? 'border-blue-500 dark:border-blue-500 bluish:border-blue-500 shadow-xl ring-1 ring-blue-500/10 dark:ring-blue-500/10 bluish:ring-blue-500/10'
             : 'border-gray-100 dark:border-zinc-800 bluish:border-white/5 hover:border-blue-500/30 dark:hover:border-blue-500/30 bluish:hover:border-blue-500/30 shadow-sm hover:shadow-md'
             }`}>
@@ -490,7 +490,7 @@ const BuyerDashboard = () => {
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-black bluish:bg-[#0a0f1d] selection:bg-blue-500/30 bluish:selection:bg-blue-500/30 overflow-hidden relative">
-            <div className="fixed inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] dark:bg-[radial-gradient(#ffffff33_1px,#000000_1px)] bluish:bg-[radial-gradient(#ffffff33_1px,#0a0f1d_1px)] [background-size:20px_20px] opacity-20 dark:opacity-[0.26] bluish:opacity-[0.26] pointer-events-none z-[1]"></div>
+
             {/* Dynamic Background Elements */}
             <div className="fixed inset-0 z-0 pointer-events-none">
                 <img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=2670&auto=format&fit=crop" alt="Background" className="w-full h-full object-cover opacity-5 dark:opacity-20 mix-blend-overlay" />

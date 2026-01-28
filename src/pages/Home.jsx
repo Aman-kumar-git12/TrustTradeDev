@@ -15,6 +15,8 @@ const Home = () => {
     });
     const [loading, setLoading] = useState(true);
 
+    const [featuredEvent, setFeaturedEvent] = useState(null);
+
     useEffect(() => {
         const fetchHomeStats = async () => {
             try {
@@ -26,7 +28,18 @@ const Home = () => {
                 setLoading(false);
             }
         };
+
+        const fetchFeaturedEvent = async () => {
+            try {
+                const { data } = await api.get('/admin/event');
+                setFeaturedEvent(data);
+            } catch (error) {
+                console.error("Failed to fetch featured event", error);
+            }
+        };
+
         fetchHomeStats();
+        fetchFeaturedEvent();
     }, []);
 
 
@@ -46,7 +59,7 @@ const Home = () => {
             <div className="relative h-[75vh] w-full overflow-hidden group z-10">
                 <div className="absolute inset-0">
                     <img
-                        src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2670&auto=format&fit=crop"
+                        src={featuredEvent?.imageUrl || "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=2670&auto=format&fit=crop"}
                         alt="Hero"
                         className="w-full h-full object-cover opacity-80 dark:opacity-60"
                     />
@@ -65,7 +78,7 @@ const Home = () => {
                         <span className="bg-red-600 text-white text-xs font-bold px-3 py-1 rounded shadow-lg shadow-red-600/20 tracking-wider">FEATURED EVENT</span>
                         <div className="flex items-center space-x-2 text-blue-600 dark:text-emerald-400 bluish:text-blue-400 font-bold border-l border-gray-300 dark:border-white/20 pl-3">
                             <Clock className="w-4 h-4" />
-                            <span className="uppercase tracking-widest text-sm">Industrial Robotics Auction</span>
+                            <span className="uppercase tracking-widest text-sm">{featuredEvent?.description || "Industrial Robotics Auction"}</span>
                         </div>
                     </motion.div>
 
@@ -75,8 +88,8 @@ const Home = () => {
                         transition={{ duration: 0.8, delay: 0.2 }}
                         className="text-5xl md:text-7xl font-bold mb-6 leading-tight drop-shadow-2xl text-gray-900 dark:text-white"
                     >
-                        Global Industrial
-                        <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-600 dark:from-emerald-400 dark:to-emerald-600 bluish:from-blue-400 bluish:to-indigo-400">Liquidation Event</span>
+                        {featuredEvent?.title || "Global Industrial"}
+                        <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-teal-600 dark:from-emerald-400 dark:to-emerald-600 bluish:from-blue-400 bluish:to-indigo-400">{featuredEvent?.subtitle || "Liquidation Event"}</span>
                     </motion.h1>
                     <motion.p
                         initial={{ opacity: 0 }}
@@ -88,7 +101,7 @@ const Home = () => {
                     </motion.p>
 
                     <div className="flex gap-4">
-                        <Link to="/marketplace" className="px-8 py-4 bg-gradient-to-r from-blue-600 to-teal-600 dark:from-emerald-600 dark:to-emerald-500 bluish:from-blue-700 bluish:to-indigo-800 text-white rounded-full font-bold text-lg transition-all flex items-center shadow-[0_0_20px_rgba(16,185,129,0.3)] dark:shadow-[0_0_20px_rgba(16,185,129,0.3)] bluish:shadow-[0_0_20px_rgba(30,58,138,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.6)] dark:hover:shadow-[0_0_30px_rgba(16,185,129,0.6)] bluish:hover:shadow-[0_0_30px_rgba(30,58,138,0.6)] hover:scale-105 active:scale-95">
+                        <Link to={featuredEvent?.link || "/marketplace"} className="px-8 py-4 bg-gradient-to-r from-blue-600 to-teal-600 dark:from-emerald-600 dark:to-emerald-500 bluish:from-blue-700 bluish:to-indigo-800 text-white rounded-full font-bold text-lg transition-all flex items-center shadow-[0_0_20px_rgba(16,185,129,0.3)] dark:shadow-[0_0_20px_rgba(16,185,129,0.3)] bluish:shadow-[0_0_20px_rgba(30,58,138,0.3)] hover:shadow-[0_0_30px_rgba(16,185,129,0.6)] dark:hover:shadow-[0_0_30px_rgba(16,185,129,0.6)] bluish:hover:shadow-[0_0_30px_rgba(30,58,138,0.6)] hover:scale-105 active:scale-95">
                             <Zap className="fill-current w-5 h-5 mr-2" /> Explore Marketplace
                         </Link>
                         {user && user.role === 'seller' && (

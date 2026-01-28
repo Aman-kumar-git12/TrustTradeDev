@@ -7,7 +7,7 @@ import Hover from '../components/Hover';
 import SellerDashboardShimmer from '../components/shimmers/SellerDashboardShimmer';
 
 const StatCard = ({ title, value, icon: Icon, colorClass }) => (
-    <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800/80 bluish:to-slate-900/80 p-5 rounded-2xl border border-gray-100 dark:border-zinc-800 bluish:border-white/5 shadow-sm flex items-center justify-between group hover:shadow-md transition-all">
+    <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800 bluish:to-slate-900 p-5 rounded-2xl border border-gray-100 dark:border-zinc-800 bluish:border-white/5 shadow-sm flex items-center justify-between group hover:shadow-md transition-all relative z-10">
         <div>
             <p className="text-xs font-bold text-gray-400 dark:text-gray-500 bluish:text-slate-400 uppercase tracking-wider mb-1">{title}</p>
             <h3 className="text-2xl font-black text-gray-900 dark:text-white bluish:text-white">{value}</h3>
@@ -97,9 +97,9 @@ const SellerDashboard = () => {
             {/* Page Background */}
             <div className="fixed inset-0 z-0 pointer-events-none">
                 <img src="https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=2670&auto=format&fit=crop" alt="Background" className="w-full h-full object-cover opacity-5 dark:opacity-20 mix-blend-overlay" />
-                <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-gray-50/90 to-gray-50 dark:from-black dark:via-black/90 dark:to-black bluish:from-[#0a0f1d] bluish:via-[#0a0f1d]/90 bluish:to-[#0a0f1d]"></div>
+                <div className="absolute inset-0 bg-gradient-to-b from-gray-100 via-gray-50 to-gray-50 dark:from-[#050505] dark:via-black dark:to-black bluish:from-[#0a0f1d] bluish:via-[#0a0f1d] bluish:to-[#0a0f1d]"></div>
             </div>
-            <div className="fixed inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] dark:bg-[radial-gradient(#ffffff33_1px,#000000_1px)] bluish:bg-[radial-gradient(#ffffff33_1px,#0a0f1d_1px)] [background-size:20px_20px] opacity-20 dark:opacity-[0.26] bluish:opacity-[0.26] pointer-events-none z-[1]"></div>
+
             <div className="max-w-7xl mx-auto px-4 py-12 relative z-10">
                 {!location.pathname.includes('/analytics/product/') && (
                     <>
