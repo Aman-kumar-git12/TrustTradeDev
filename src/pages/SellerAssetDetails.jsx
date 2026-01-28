@@ -347,7 +347,6 @@ const SellerAssetDetails = () => {
                                             price: asset.price,
                                             description: asset.description,
                                             location: asset.location,
-                                            location: asset.location,
                                             category: asset.category,
                                             condition: asset.condition,
                                             quantity: asset.quantity
