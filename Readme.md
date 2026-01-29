@@ -1,104 +1,157 @@
 # 🚀 TrustTrade — Business Buying & Selling Platform
 
-A full-stack B2B & B2C marketplace where sellers list their businesses and digital assets, and buyers can discover, negotiate, and close deals in real time through a secure and transparent system.
 
-This platform is built to solve the problem of unstructured, unsafe, and untracked business transactions that exist on traditional listing websites.
+TrustTrade is a full-stack **B2B & B2C marketplace** where sellers list businesses or digital assets, and buyers can discover, negotiate, pay, and close deals through a **secure, structured, and transparent system**.
+
+The platform is designed to solve the problem of **unstructured, unsafe, and untracked business transactions** commonly found on traditional listing websites.
 
 
-# 🌍 Live Demo
-Frontend (Vercel): https://trust-trade-dev.vercel.app/home
-Backend (Render): https://trusttrade-6d81.onrender.com
+## 🌍 Live Demo
+
+A short walkthrough showing how TrustTrade works end-to-end.
+
+▶ Watch Demo: https://youtu.be/1Q_1-1Q_1Q1
+- **Frontend (Vercel):** https://trust-trade-dev.vercel.app/home  
+- **Backend (Render):** https://trusttrade-6d81.onrender.com  
 
 
 # Follow this steps to run this project 
 
-1. When you open the website for the first time and it doesn’t load, refresh the page once.
-2. If it still doesn’t load, close the tab and reopen the link. Repeat this 2–3 times if needed.
-3. Make sure you have a stable and active internet connection.
-4. The first request may take some time because the server is waking up — please be patient while the page loads.
-5. Since images are loaded from the server, they may take a short time to appear, especially on slower connections.
+> ⚠️ **Note:** The backend is hosted on Render (free tier), so the first request may take **30–40 seconds** due to cold start.
+>
+> If the page does not load:
+> 1. Refresh the page once.
+> 2. If it still doesn’t load, **close the tab and reopen the link**.
+> 3. Repeat this 2–3 times if needed.
+>
+> This happens because the server wakes up on the first request. Please be patient.
 
 
-# 🧩 Problem Statement
+## 📌 Table of Contents
 
-Most existing marketplaces like OLX or Facebook groups only allow:
+- Overview
+- Problem Statement
+- Solution
+- Core Features
+- Buyer Features
+- Seller Features
+- Payments & Billing
+- Analytics
+- Tech Stack
+- System Architecture
+- Authentication Flow
+- Getting Started
+- Folder Structure
+- What I Learned
+- Future Enhancements
+
+
+## 🧩 Problem Statement
+
+Most existing marketplaces (such as OLX or Facebook groups) only support:
 - Posting listings
 - Random buyer messages
 - No negotiation tracking
-- No business analytics
-- No trust system
+- No trust or credibility system
+- No analytics or deal closure visibility
 
-This causes:
-- Fake buyers
-- No deal closure tracking
+### This results in:
+- Fake or low-intent buyers
+- No structured deal tracking
 - No seller performance metrics
 - Poor user experience
-- No platform built for real business transactions
+- No platform built for **real business transactions**
+
+---
 
 
-# 💡 Solution
+## 💡 Solution
 
-TrustTrade provides a complete transaction ecosystem for business selling:
+TrustTrade provides a **complete transaction ecosystem** for buying and selling businesses:
+
 - Sellers can create and manage businesses
-- Buyers can browse, filter, and contact sellers
-- Real-time negotiation chat
-- Seller performance dashboards
-- Secure authentication
-- Structured deal flow
+- Buyers can browse, filter, and negotiate
+- Real-time chat with negotiation history
+- Secure payments and verified deal closure
+- Downloadable bills for buyers and sellers
+- Seller performance dashboards and analytics
 
-It works like:
-Shopify + OLX + WhatsApp for business trading
-
-
-# ⭐ Extras for Buyers
-
-TrustTrade allows buyers to build a credibility-based profile that improves with real activity. As buyers participate in negotiations, respond quickly, and complete deals, their profile upgrades and their Elite Score increases.
-
-A higher Elite Score unlocks discounts and premium access. These discounts never reduce seller earnings — TrustTrade covers them internally so sellers always receive full value.
-
-Buyers also earn trust badges such as Verified Buyer, High Completion, and Elite Trader, allowing sellers to instantly identify serious buyers and avoid time-wasters.
+**Conceptually:**
 
 
-# 🏢 Extras for Sellers
 
-TrustTrade provides sellers with a powerful, interactive dashboard that gives full visibility into their business.
+## ⭐ Buyer Credibility & Rewards
+
+TrustTrade uses a **credibility-based buyer profile system** that improves through real platform activity.
+
+A buyer’s credibility increases when they:
+- Actively participate in negotiations
+- Respond quickly to sellers
+- Successfully complete deals
+
+As credibility increases, the buyer’s **Elite Score** improves.
+
+### Elite Score Benefits
+- Unlocks platform-funded discounts
+- Grants access to premium features
+- Improves buyer visibility to sellers
+
+> Seller earnings are **never affected** — all discounts are covered internally by TrustTrade.
+
+### Trust Badges
+Buyers earn visible trust badges such as:
+- Verified Buyer
+- High Completion
+- Elite Trader
+
+These badges help sellers instantly identify **serious, high-intent buyers** and avoid time-wasters.
+
+---
+
+## 🏢 Seller Insights & Performance Dashboard
+
+TrustTrade provides sellers with a **powerful, interactive analytics dashboard** that offers complete visibility into their business performance.
 
 Sellers can analyze:
 - Overall business performance
-- Individual products or assets
-- Customer and buyer behavior
+- Individual product or asset performance
+- Buyer engagement and behavior
+- Negotiation activity and lead quality
 
-These insights show buyer interest, negotiation activity, product performance, and listing health, helping sellers price better and close deals faster with high-confidence buyers.
+### Actionable Insights
+The dashboard highlights:
+- Buyer interest trends
+- Negotiation success rates
+- Listing health and visibility
+- Pricing effectiveness
 
-
-# 🧠 Core Features
-
-- JWT-based authentication
-- Secure HttpOnly cookies
-- Protected routes
-- Business creation and management
-- Real-time buyer-seller chat
-- Negotiation history
-- Message status tracking
-- Interactive visual dashboards
+These insights help sellers **price more accurately, focus on high-quality buyers, and close deals faster**.
 
 
-#  🛒 Buyer Features
+
+## 🧠 Core Features
+
+- JWT-based authentication with HttpOnly cookies
+- Role-based protected routes (Buyer / Seller)
+- Secure session handling
+- Business and digital asset creation & management
+- Real-time buyer–seller chat system
+- Structured negotiation flow with full history tracking
+- Message delivery and read status tracking
+- Secure payment integration with backend verification
+- Auto-generated downloadable bills for buyers and sellers
+- Transaction history and deal completion tracking
+- Interactive analytics and performance dashboards
+
+
+
+## 🛒 Buyer Features
 
 - Discover businesses
 - Filter and search listings
 - Negotiate with sellers
 - View deal history
 - Message delivery status
-
-
-# 📊 Analytics
-
-- Total listings
-- Conversion rate
-- Average listing lifecycle
-- Revenue tracking
-- Business and product-level performance
 
 
 # 🎨 Theme and Interface
@@ -111,97 +164,134 @@ TrustTrade supports three UI themes:
 The default theme is optimized for long sessions and low-light use. For best clarity, increasing screen brightness is recommended.
 
 
-# 🧱 Tech Stack
+## 🧱 Tech Stack
 
-Frontend:
-React (Vite), Tailwind CSS, Framer Motion, Axios, React Router, Context API
+### Frontend
+- **Framework:** React (Vite)
+- **Styling:** Tailwind CSS
+- **Animations:** Framer Motion
+- **Routing:** React Router
+- **State Management:** Context API (Auth, Theme, UI state)
+- **HTTP Client:** Axios (with interceptors)
+- **Build Tool:** Vite
 
-Backend:
-Node.js, Express, MongoDB, Mongoose, JWT
+### Backend
+- **Runtime:** Node.js
+- **Framework:** Express.js
+- **Database:** MongoDB
+- **ODM:** Mongoose
+- **Authentication:** JWT (stored in HttpOnly cookies)
+- **File Storage:** Cloudinary
+- **Middleware:** Custom auth & role-based access control
 
-Deployment:
-Frontend → Vercel
-Backend → Render
-Database → MongoDB Atlas
-
-
-# 🏗️ System Architecture
-
-React Client
-→ Axios and WebSockets
-→ Express API
-→ Authentication and Business Logic
-→ MongoDB
-
-
-🔐 Authentication Flow
-
-User logs in
-→ Server creates JWT
-→ Token stored in HttpOnly cookies
-→ Each request is verified
-→ Unauthorized access is blocked
+### Deployment
+- **Frontend:** Vercel
+- **Backend:** Render
+- **Database:** MongoDB Atlas
 
 
-# 📈 What I Learned
+# ⚛️ Frontend Architecture — TrustTrade
 
-- Full-stack architecture
-- Secure authentication
-- Real-time systems
-- API design
-- Database modeling
-- Production deployment
-- Business analytics dashboards
+The frontend is built with **React (Vite)** using a modular, component-based architecture.
 
+## Architecture Flow
 
-# 🔮 Future Enhancements
+## State Management
 
-- Stripe payments
-- Escrow system
-- Admin panel
-- AI-based pricing suggestions
-- Fraud detection
-- Dispute resolution
+- **Context API** for global state:
+  - Authentication
+  - Theme (Light / Dark / Bluish)
+  - Shared UI state (modals, loaders)
 
+- Local state handled using React hooks.
 
-# 🏁 Getting Started
+## Key Hooks Used
+- `useState` — component state
+- `useEffect` — lifecycle & data fetching
+- `useContext` — global state access
+- `useRef` — DOM interactions
+- `useMemo` / `useCallback` — performance optimization
 
-Follow the steps below to run the project on your machine.
-
-✅ Requirements
-Node.js (v14+)
-npm or yarn
-
-📥 Installation
-
-Clone the repository -> git clone <repository-url> -> cd vite-project
-
-Install dependencies -> npm install
+## UI & Styling
+- Tailwind CSS for styling
+- Framer Motion for animations
 
 
-🔑 Environment Variables
+# 🧠 Backend Architecture — TrustTrade
 
-Create a .env file in the project root:
+The backend is built with **Node.js and Express.js** using a layered architecture.
+
+## Architecture Flow
+
+
+## Core Responsibilities
+- JWT authentication (HttpOnly cookies)
+- Role-based access control (Buyer / Seller)
+- Business, asset, and negotiation management
+- Secure payment verification
+- Invoice generation (Buyer & Seller)
+- Transaction & sales record management
+
+## Data Layer
+- MongoDB with Mongoose schemas
+- Structured models for users, assets, deals, and sales
+
+
+
+## 📈 What I Learned
+
+- Designing a complete full-stack marketplace architecture
+- Implementing secure JWT authentication with HttpOnly cookies
+- Managing multi-role access (Buyer, Seller, Admin)
+- Building real-time chat and negotiation systems
+- Designing scalable REST APIs
+- Modeling transactions, invoices, and analytics in MongoDB
+- Handling production deployment and environment constraints
+- Building role-based dashboards (Buyer, Seller, Admin)
+
+---
+
+## 🔮 Future Enhancements
+
+- Escrow and milestone-based payments
+- Advanced admin controls and moderation tools
+- AI-driven pricing and deal recommendations
+- Fraud detection and risk scoring
+- Dispute resolution and refund handling
+
+
+
+## 🏁 Getting Started
+
+### Requirements
+- Node.js (v14+)
+- npm or yarn
+
+### Setup
+
+Clone the repository and install dependencies:
+
+git clone <repository-url>
+cd vite-project
+npm install
+
 
 # Frontend
-
-- VITE_BACKEND_URL="http://localhost:2001"
-▶ Run Development Server -> npm run dev
-🏗 Create Production Build -> npm run build
+VITE_BACKEND_URL=http://localhost:2001
 
 # Backend
+DATABASE_URL=
+JWT_SECRET_KEY=
+FRONTEND_URL=
+CLOUD_NAME=
+CLOUD_KEY=
+CLOUD_SECRET=
 
-- DATABASE_URL
-- JWT_SECRET_KEY
-- FRONTEND_URL
-- CLOUD_NAME
-- CLOUD_KEY
-- CLOUD_SECRET
 
 
-# 📁 Folder Structure 
+## 📁 Folder Structure
 
-# Frontend
+### Frontend
 
 Frontend/
 ├── src/
@@ -233,7 +323,7 @@ Frontend/
 ├── package.json            # Dependencies and Project Scripts
 └── .env                    # Environment Variables (API URLs)
     
-# Backend
+### Backend
 
 Backend/
 ├── src/
