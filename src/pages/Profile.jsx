@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { User, Mail, Building, Shield, Calendar, Clock, Edit2, Save, X, Phone, Camera, Link as LinkIcon, AlertCircle, Briefcase, MapPin, Sun, Moon, Loader2, Sparkles, Zap, ChevronRight, Settings } from 'lucide-react';
+import { User, Mail, Building, Shield, Calendar, Clock, Edit2, Save, X, Phone, Camera, Link as LinkIcon, AlertCircle, Briefcase, MapPin, Sun, Moon, Loader2, Sparkles, Zap, ChevronRight, Settings, Eye, EyeOff } from 'lucide-react';
 import api from '../utils/api';
 import ProfileShimmer from '../components/shimmers/ProfileShimmer';
 
@@ -29,6 +29,7 @@ const Profile = () => {
         description: '',
         password: ''
     });
+    const [showPassword, setShowPassword] = useState(false);
 
     useEffect(() => {
         const loadData = async () => {
@@ -274,11 +275,36 @@ const Profile = () => {
                                     </div>
                                     <div className="space-y-2 md:col-span-2">
                                         <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">Email Address</label>
-                                        <div className="p-3 bg-gray-50 dark:bg-zinc-800/50 rounded-xl font-semibold text-gray-500 dark:text-gray-400 flex justify-between items-center opacity-75 cursor-not-allowed">
-                                            {profile.email}
-                                            <Shield size={14} className="text-green-500" />
-                                        </div>
+                                        {isEditing ? (
+                                            <input type="email" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-white border border-gray-200 dark:border-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-medium" />
+                                        ) : (
+                                            <div className="p-3 bg-gray-50 dark:bg-zinc-800/50 rounded-xl font-semibold text-gray-500 dark:text-gray-400 flex justify-between items-center">
+                                                {profile.email}
+                                                <Shield size={14} className="text-green-500" />
+                                            </div>
+                                        )}
                                     </div>
+                                    {isEditing && (
+                                        <div className="space-y-2 md:col-span-2">
+                                            <label className="text-xs font-bold text-gray-400 uppercase tracking-wider">New Password</label>
+                                            <div className="relative">
+                                                <input
+                                                    type={showPassword ? "text" : "password"}
+                                                    value={formData.password}
+                                                    onChange={e => setFormData({ ...formData, password: e.target.value })}
+                                                    placeholder="Leave blank to keep current password"
+                                                    className="w-full px-4 py-3 rounded-xl bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-white border border-gray-200 dark:border-zinc-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all font-medium pr-10"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setShowPassword(!showPassword)}
+                                                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+                                                >
+                                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
 

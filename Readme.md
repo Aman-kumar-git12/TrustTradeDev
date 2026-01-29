@@ -12,7 +12,29 @@ A short walkthrough showing how TrustTrade works end-to-end.
 
 ▶ Watch Demo: https://youtu.be/1Q_1-1Q_1Q1
 - **Frontend (Vercel):** https://trust-trade-dev.vercel.app/home  
-- **Backend (Render):** https://trusttrade-6d81.onrender.com  
+- **Backend (Render):** https://trusttrade-6d81.onrender.com
+
+
+
+## 🔑 Demo Accounts
+
+To explore the platform without signing up, use the demo credentials below.
+
+### Buyer Account
+- Email: user@gmail.com
+- Password: password123
+
+### Seller Account
+- Email: sarah@gmail.com
+- Password: password123
+
+### Admin Account
+- Email: aman@gmail.com
+- Password: password123
+
+> ⚠️ Demo accounts are for evaluation only.  
+> Some actions (real payments, destructive updates) may be restricted.
+
 
 
 # Follow this steps to run this project 
@@ -277,7 +299,7 @@ npm install
 
 
 # Frontend
-VITE_BACKEND_URL=http://localhost:2001
+VITE_BACKEND_URL=http://localhost:5001
 
 # Backend
 DATABASE_URL=
