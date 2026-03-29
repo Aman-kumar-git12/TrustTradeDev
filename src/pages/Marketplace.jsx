@@ -44,7 +44,6 @@ const Marketplace = () => {
             setScrollPosition(window.scrollY);
             if (observer.current) observer.current.disconnect();
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []); // Run once on mount/unmount
 
     // Intersection Observer
@@ -137,7 +136,6 @@ const Marketplace = () => {
         if (assets.length === 0) {
             fetchAssets(filters, false);
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [filters]); // If filters change, this runs. If mount with existing filters & empty assets, runs. 
     // BUT if mount with existing filters & existing assets, we skip? 
     // Problem: `[filters]` dependency will run on mount. If `assets` is not empty, it won't fetch. Correct.

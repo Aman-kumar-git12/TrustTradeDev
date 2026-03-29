@@ -44,6 +44,7 @@ api.interceptors.response.use(
                 window.location.pathname !== '/' &&
                 window.location.pathname !== '/register'
             ) {
+                localStorage.removeItem('trusttrade_token'); // Clear stale token to fix auth loop
                 window.location.href = '/login';
             }
         }

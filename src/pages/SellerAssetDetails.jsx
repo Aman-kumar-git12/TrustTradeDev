@@ -190,7 +190,7 @@ const SellerAssetDetails = () => {
                                     className="w-full px-3 py-2 border border-gray-200 dark:border-zinc-700 rounded-xl text-sm bg-white dark:bg-zinc-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500/20 dark:focus:ring-emerald-500/20 focus:border-blue-500 dark:focus:border-emerald-500 outline-none transition-all cursor-pointer"
                                 >
                                     <option value="New">New</option>
-                                    <option value="Like New">Like New</option>
+                                    <option value="Used - Like New">Used - Like New</option>
                                     <option value="Used - Good">Used - Good</option>
                                     <option value="Used - Fair">Used - Fair</option>
                                 </select>
@@ -225,11 +225,11 @@ const SellerAssetDetails = () => {
 
                         {!isEditing ? (
                             <div className="text-3xl font-bold text-gray-900 dark:text-white transition-colors duration-300">
-                                ${asset.price.toLocaleString()}
+                                ₹{asset.price.toLocaleString()}
                             </div>
                         ) : (
                             <div>
-                                <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1 transition-colors duration-300">Price (USD)</label>
+                                <label className="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1 transition-colors duration-300">Price (INR)</label>
                                 <div className="relative">
                                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-500 dark:text-gray-400 font-bold">₹</div>
                                     <input

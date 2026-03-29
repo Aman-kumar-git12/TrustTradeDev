@@ -19,7 +19,8 @@ import {
     Filter as FilterIcon,
     BarChart2,
     ShieldCheck,
-    Zap
+    Zap,
+    Download
 } from 'lucide-react';
 import api from '../utils/api';
 import { useTheme } from '../context/ThemeContext';
@@ -28,6 +29,7 @@ import { useUI } from '../context/UIContext';
 import Filter from '../components/Filter';
 import BuyerDashboardShimmer from '../components/shimmers/BuyerDashboardShimmer';
 import { startPayment, loadRazorpay } from '../assets/razorpay';
+import { generateInvoice } from '../utils/invoiceGenerator';
 
 const StatCard = ({ title, value, icon: Icon, colorClass }) => (
     <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800 bluish:to-slate-900 p-5 rounded-2xl border border-gray-100 dark:border-zinc-800 bluish:border-white/5 shadow-sm flex items-center justify-between group hover:shadow-md transition-all">
@@ -242,6 +244,24 @@ const InterestCard = ({ interest, isExpanded, onToggle, onDelete, navigate, setA
 };
 
 const OrderCard = ({ order, isExpanded, onToggle }) => {
+    const { showSnackbar } = useUI();
+
+    const handleExportBill = (e) => {
+        e.stopPropagation();
+        generateInvoice({
+            saleId: order._id,
+            status: order.status,
+            buyerName: order.buyer?.fullName || 'Unknown Buyer',
+            buyerEmail: order.buyer?.email || 'N/A',
+            buyerPhone: order.buyer?.phone || 'N/A',
+            assetTitle: order.asset?.title,
+            quantity: order.quantity,
+            unitPrice: order.price,
+            totalAmount: order.totalAmount
+        });
+        showSnackbar("Invoice downloaded! 📄", "success");
+    };
+
     return (
         <div className={`bg-white dark:bg-[#111] bluish:bg-[#152033] rounded-2xl border transition-all duration-300 overflow-hidden relative z-10 ${isExpanded
             ? 'border-blue-500 dark:border-blue-500 bluish:border-blue-500 shadow-xl ring-1 ring-blue-500/10 dark:ring-blue-500/10 bluish:ring-blue-500/10'
@@ -292,6 +312,17 @@ const OrderCard = ({ order, isExpanded, onToggle }) => {
                         <ShieldCheck size={10} className="mr-1" />
                         PAID
                     </span>
+
+                    {/* Export Bill Button */}
+                    <button
+                        onClick={handleExportBill}
+                        className="flex items-center px-3 py-1.5 ml-2 bg-gray-100 dark:bg-zinc-800 text-gray-700 dark:text-gray-300 text-[10px] sm:text-xs font-bold rounded-lg shadow-sm border border-gray-200 dark:border-zinc-700 hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors"
+                        title="Download Invoice"
+                    >
+                        <Download size={12} className="mr-1.5" />
+                        Bill
+                    </button>
+
                     <div className={`p-1.5 sm:p-2 rounded-lg transition-transform ml-auto sm:ml-0 ${isExpanded ? 'rotate-180 bg-blue-50 dark:bg-blue-900/20 bluish:bg-blue-500/10 text-blue-600 dark:text-blue-400 bluish:text-blue-400' : 'text-gray-400'}`}>
                         <ChevronDown size={16} />
                     </div>

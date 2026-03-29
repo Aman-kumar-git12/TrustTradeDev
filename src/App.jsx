@@ -29,6 +29,7 @@ import SellerBusinessDetails from './pages/SellerBusinessDetails'
 import PublicBusinessDetails from './pages/PublicBusinessDetails'
 import PublicBusinessListings from './pages/PublicBusinessListings'
 import PublicUserProfile from './pages/PublicUserProfile'
+import AIAgent from './pages/AIAgent'
 import Checkout from './pages/checkout'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import AdminOrders from './pages/admin/AdminOrders'
@@ -70,7 +71,7 @@ function App() {
             return true;
         }
 
-        if (path.includes('/dashboard/buyer/insights')) {
+        if (path.includes('/dashboard/buyer/') && path.includes('/insights')) {
             return true;
         }
 
@@ -110,6 +111,11 @@ function App() {
                         <Profile />
                     </ProtectedRoute>
                 } />
+                <Route path="/agent" element={
+                    <ProtectedRoute>
+                        <AIAgent />
+                    </ProtectedRoute>
+                } />
                 <Route path="/my-businesses" element={
                     <ProtectedRoute role="seller">
                         <SellerMyBusinesses />
@@ -143,12 +149,6 @@ function App() {
                     </ProtectedRoute>
                 } />
                 <Route path="/dashboard" element={<Dashboard />} />
-
-                <Route path="/dashboard/seller/:user_id" element={
-                    <ProtectedRoute role="seller">
-                        <SellerDashboard />
-                    </ProtectedRoute>
-                } />
 
                 <Route path="/dashboard/seller/:businessId" element={
                     <ProtectedRoute role="seller">

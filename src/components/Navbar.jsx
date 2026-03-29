@@ -1,6 +1,6 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { LayoutDashboard, LogOut, PlusCircle, Building2, Menu, X } from 'lucide-react';
+import { LayoutDashboard, LogOut, PlusCircle, Building2, Menu, X, Bot } from 'lucide-react';
 import MobileMenu from './MobileMenu';
 import { useUI } from '../context/UIContext';
 import { useAuth } from '../context/AuthContext';
@@ -181,6 +181,19 @@ const Navbar = () => {
                                                 >
                                                     <LayoutDashboard size={18} />
                                                     <span>Dashboard</span>
+                                                </Link>
+                                            </Hover>
+                                            <Hover text="Chat With AI Agent">
+                                                <Link
+                                                    to="/agent"
+                                                    className={`flex items-center space-x-1.5 text-sm font-bold transition-all ${location.pathname.startsWith('/agent')
+                                                        ? accentClass
+                                                        : 'text-gray-400 hover:text-white'
+                                                        }`}
+                                                    onClick={(e) => handleNavClick(e, '/agent', 'AI Agent')}
+                                                >
+                                                    <Bot size={18} />
+                                                    <span>AI Agent</span>
                                                 </Link>
                                             </Hover>
                                             <div className="flex items-center space-x-4 border-l pl-6 border-white/10">

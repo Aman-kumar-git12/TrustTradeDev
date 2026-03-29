@@ -47,7 +47,6 @@ const SellerListings = () => {
     useEffect(() => {
         setFilters({ search: '', status: '', category: '', minPrice: '', maxPrice: '' });
         fetchListings({}); // Pass empty to override potential stale state
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [businessId]);
 
     const handleApplyFilters = () => {

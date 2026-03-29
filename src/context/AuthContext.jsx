@@ -15,29 +15,34 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const checkLoggedIn = async () => {
-            // Check if user has seen splash in this session
-            const hasSeenSplash = sessionStorage.getItem('trusttrade_splash_seen');
+        let isMounted = true;
+        const timeoutId = setTimeout(() => {
+            if (isMounted) {
+                console.warn("Auth initialization timed out after 5s - forcing ready state.");
+                setLoading(false);
+            }
+        }, 5000);
 
+        const checkLoggedIn = async () => {
             try {
                 const { data } = await api.get('/auth/me');
-                setUser(data);
+                if (isMounted) setUser(data);
             } catch (error) {
-                setUser(null);
+                if (isMounted) setUser(null);
             } finally {
-                if (!hasSeenSplash) {
-                    // First time: Show splash for at least 1.5s for branding
-                    setTimeout(() => {
-                        setLoading(false);
-                        sessionStorage.setItem('trusttrade_splash_seen', 'true');
-                    }, 1500);
-                } else {
-                    // Subsequent loads: Quick load (no artificial delay)
+                if (isMounted) {
+                    clearTimeout(timeoutId);
                     setLoading(false);
+                    sessionStorage.setItem('trusttrade_splash_seen', 'true');
                 }
             }
         };
         checkLoggedIn();
+
+        return () => {
+            isMounted = false;
+            clearTimeout(timeoutId);
+        };
     }, []);
 
     const login = async (email, password) => {

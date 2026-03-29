@@ -1,6 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Home as HomeIcon, ShoppingBag, PlusCircle, LayoutDashboard, User, LogOut } from 'lucide-react';
+import { Home as HomeIcon, ShoppingBag, PlusCircle, LayoutDashboard, User, LogOut, Bot } from 'lucide-react';
 
 const MobileMenu = ({
     isOpen,
@@ -23,6 +23,7 @@ const MobileMenu = ({
         { label: 'Marketplace', path: '/marketplace', icon: ShoppingBag, id: 'Marketplace' },
         { label: 'Post Assets', path: '/post-asset', icon: PlusCircle, id: 'Post Assets', role: 'seller' },
         { label: 'Dashboard', path: '/dashboard', icon: LayoutDashboard, id: 'Dashboard', auth: true },
+        { label: 'AI Agent', path: '/agent', icon: Bot, id: 'AI Agent', auth: true },
         { label: 'Profile', path: '/profile', icon: User, id: 'Profile', auth: true },
     ].filter(link => {
         if (link.id === 'Marketplace' && hideMarketplace) return false;
