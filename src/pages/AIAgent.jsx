@@ -211,6 +211,22 @@ const AIAgent = () => {
     const [isMobileHistoryOpen, setIsMobileHistoryOpen] = useState(false);
     const [chatMode, setChatMode] = useState('conversation');
     const [isModeMenuOpen, setIsModeMenuOpen] = useState(false);
+
+    // Consolidated mode switcher that handles history restoration
+    const switchMode = (mode) => {
+        if (chatMode === mode) return;
+        
+        setIsModeMenuOpen(false);
+        setChatMode(mode);
+        
+        // Find the most recent session for the target mode
+        const targetSessions = sessions.filter(s => resolveSessionMode(s) === mode);
+        if (targetSessions.length > 0) {
+            loadSession(targetSessions[0].id);
+        } else {
+            startNewChat(mode);
+        }
+    };
     const [isOffline, setIsOffline] = useState(
         typeof navigator !== 'undefined' ? navigator.onLine === false : false
     );
@@ -974,7 +990,7 @@ const AIAgent = () => {
                                                             <div className="flex flex-col p-1.5 sm:p-2 gap-1">
                                                                 <button
                                                                     type="button"
-                                                                    onClick={() => { setChatMode('conversation'); setIsModeMenuOpen(false); startNewChat('conversation'); }}
+                                                                    onClick={() => switchMode('conversation')}
                                                                     className={`flex items-start gap-3 sm:gap-4 rounded-xl px-3 sm:px-4 py-3 sm:py-4 text-left transition-all ${chatMode === 'conversation' ? 'bg-chat-accent/10' : 'hover:bg-chat-bg'}`}
                                                                 >
                                                                     <MessageSquare className={`h-4 w-4 sm:h-5 sm:w-5 shrink-0 mt-0.5 ${chatMode === 'conversation' ? 'text-chat-accent' : 'text-chat-text-secondary'}`} />
@@ -989,7 +1005,7 @@ const AIAgent = () => {
                                                                 </button>
                                                                 <button
                                                                     type="button"
-                                                                    onClick={() => { setChatMode('agent'); setIsModeMenuOpen(false); startNewChat('agent'); }}
+                                                                    onClick={() => switchMode('agent')}
                                                                     className={`flex items-start gap-3 sm:gap-4 rounded-xl px-3 sm:px-4 py-3 sm:py-4 text-left transition-all ${chatMode === 'agent' ? 'bg-chat-accent/10' : 'hover:bg-chat-bg'}`}
                                                                 >
                                                                     <Bot className={`h-4 w-4 sm:h-5 sm:w-5 shrink-0 mt-0.5 ${chatMode === 'agent' ? 'text-chat-accent' : 'text-chat-text-secondary'}`} />
