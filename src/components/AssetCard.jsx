@@ -23,7 +23,7 @@ const AssetCard = React.forwardRef(({ asset }, ref) => {
                 <div className="hidden bluish:block absolute inset-0 bg-gradient-to-t from-[#131b2e] via-transparent to-transparent opacity-40 pointer-events-none"></div>
 
                 <div className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-white/90 dark:bg-black/80 bluish:bg-[#0a0f1d] px-2 py-0.5 sm:px-3 sm:py-1 rounded-md sm:rounded-full bluish:rounded-lg text-xs sm:text-sm font-bold text-gray-900 dark:text-white bluish:text-white shadow-sm bluish:shadow-lg bluish:border bluish:border-white/10 z-10">
-                    ${asset.price.toLocaleString()}
+                    ₹{asset.price.toLocaleString()}
                 </div>
             </div>
 

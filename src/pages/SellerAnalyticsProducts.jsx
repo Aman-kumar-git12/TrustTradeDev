@@ -98,10 +98,10 @@ const SellerAnalyticsProducts = () => {
                                         </span>
                                     </td>
                                     <td className="px-6 py-4 text-center font-bold text-gray-900 dark:text-white">
-                                        {product.soldPrice ? `$${product.soldPrice.toLocaleString()}` : '-'}
+                                        {product.soldPrice ? `₹${product.soldPrice.toLocaleString()}` : '-'}
                                     </td>
                                     <td className={`px-6 py-4 text-center font-bold ${product.profit < 0 ? 'text-rose-600 dark:text-rose-400' : 'text-blue-600 dark:text-emerald-400 bluish:text-blue-600'}`}>
-                                        {product.profit ? `$${product.profit.toLocaleString()}` : '-'}
+                                        {product.profit ? `₹${product.profit.toLocaleString()}` : '-'}
                                     </td>
                                     <td className="px-6 py-4 text-center text-sm">
                                         {product.margin ? (

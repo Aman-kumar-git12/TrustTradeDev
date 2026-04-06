@@ -814,7 +814,7 @@ const AIAgent = () => {
                                                                 <div className="space-y-2.5 text-xs">
                                                                     <div className="flex justify-between text-chat-text-secondary">
                                                                         <span>Base Asset Price</span>
-                                                                        <span className="font-mono">${message.metadata.active_quote.basePrice}</span>
+                                                                        <span className="font-mono">₹{message.metadata.active_quote.basePrice}</span>
                                                                     </div>
                                                                     <div className="flex justify-between text-chat-text-secondary">
                                                                         <span>Quantity</span>
@@ -822,15 +822,15 @@ const AIAgent = () => {
                                                                     </div>
                                                                     <div className="flex justify-between text-chat-text-secondary">
                                                                         <span>Strategic Platform Fee (3%)</span>
-                                                                        <span className="font-mono">${message.metadata.active_quote.platformFee}</span>
+                                                                        <span className="font-mono">₹{message.metadata.active_quote.platformFee}</span>
                                                                     </div>
                                                                     <div className="flex justify-between text-chat-text-secondary">
                                                                         <span>Estimated Tax</span>
-                                                                        <span className="font-mono">${message.metadata.active_quote.tax}</span>
+                                                                        <span className="font-mono">₹{message.metadata.active_quote.tax}</span>
                                                                     </div>
                                                                     <div className="pt-3 mt-3 border-t border-chat-border/50 flex justify-between text-base font-black text-chat-text-primary">
                                                                         <span className="uppercase tracking-tighter">Total All-In Cost</span>
-                                                                        <span className="text-chat-accent font-mono">${message.metadata.active_quote.total}</span>
+                                                                        <span className="text-chat-accent font-mono">₹{message.metadata.active_quote.total}</span>
                                                                     </div>
                                                                 </div>
                                                             </div>

@@ -646,7 +646,7 @@ const BuyerDashboard = () => {
                                 />
                                 <StatCard
                                     title="Total Value Paid"
-                                    value={`$${(dashboardStats?.kpi?.totalSpent || 0).toLocaleString()}`}
+                                    value={`₹${(dashboardStats?.kpi?.totalSpent || 0).toLocaleString()}`}
                                     icon={TrendingUp}
                                     colorClass="bg-indigo-500"
                                 />

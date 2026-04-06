@@ -224,7 +224,7 @@ const PublicBusinessListings = () => {
                                                             {asset.title}
                                                         </h3>
                                                         <span className="text-sm sm:text-lg font-bold text-blue-600 dark:text-emerald-400 bluish:text-blue-400 whitespace-nowrap">
-                                                            ${asset.price.toLocaleString()}
+                                                            ₹{asset.price.toLocaleString()}
                                                         </span>
                                                     </div>
 
