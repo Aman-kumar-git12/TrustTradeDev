@@ -195,4 +195,56 @@
   html.bluish ::-webkit-scrollbar-thumb:hover {
     background: #2563eb;
   }
+
+  /* Semantic Theme Variables for Agent/Chat System */
+  :root {
+    --chat-bg: #f8fafc;
+    --chat-card: #ffffff;
+    --chat-border: #e2e8f0;
+    --chat-text-primary: #0f172a;
+    --chat-text-secondary: #64748b;
+    --chat-accent: #3b82f6;
+    --chat-accent-hover: #2563eb;
+    --chat-bubble-assistant-bg: #ffffff;
+    --chat-bubble-assistant-border: #e2e8f0;
+    --chat-bubble-user-bg: #3b82f6;
+    --chat-bubble-user-shadow: rgba(59, 130, 246, 0.2);
+    --chat-input-bg: #f8fafc;
+    --chat-input-border: #cbd5e1;
+    --chat-input-glow: rgba(59, 130, 246, 0.4);
+  }
+
+  html.dark {
+    --chat-bg: #050505;
+    --chat-card: #121212;
+    --chat-border: #27272a;
+    --chat-text-primary: #f8fafc;
+    --chat-text-secondary: #a1a1aa;
+    --chat-accent: #10b981;
+    --chat-accent-hover: #059669;
+    --chat-bubble-assistant-bg: #18181b;
+    --chat-bubble-assistant-border: #27272a;
+    --chat-bubble-user-bg: #059669;
+    --chat-bubble-user-shadow: rgba(16, 185, 129, 0.2);
+    --chat-input-bg: #050505;
+    --chat-input-border: #3f3f46;
+    --chat-input-glow: rgba(16, 185, 129, 0.4);
+  }
+
+  html.bluish {
+    --chat-bg: #0a0f1d;
+    --chat-card: rgba(16, 24, 39, 0.4);
+    --chat-border: rgba(255, 255, 255, 0.05);
+    --chat-text-primary: #f8fafc;
+    --chat-text-secondary: #94a3b8;
+    --chat-accent: #60a5fa;
+    --chat-accent-hover: #3b82f6;
+    --chat-bubble-assistant-bg: rgba(255, 255, 255, 0.03);
+    --chat-bubble-assistant-border: rgba(255, 255, 255, 0.1);
+    --chat-bubble-user-bg: #2563eb;
+    --chat-bubble-user-shadow: rgba(37, 99, 235, 0.2);
+    --chat-input-bg: #0a0f1d;
+    --chat-input-border: rgba(255, 255, 255, 0.08);
+    --chat-input-glow: rgba(96, 165, 250, 0.4);
+  }
 }

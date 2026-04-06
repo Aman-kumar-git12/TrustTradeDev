@@ -24,6 +24,22 @@ export default {
                     border: '#334155',  // Slate 700
                     text: '#f8fafc',    // Slate 50
                     muted: '#94a3b8'    // Slate 400
+                },
+                chat: {
+                    bg: 'var(--chat-bg)',
+                    card: 'var(--chat-card)',
+                    border: 'var(--chat-border)',
+                    'text-primary': 'var(--chat-text-primary)',
+                    'text-secondary': 'var(--chat-text-secondary)',
+                    accent: 'var(--chat-accent)',
+                    'accent-hover': 'var(--chat-accent-hover)',
+                    'bubble-assistant-bg': 'var(--chat-bubble-assistant-bg)',
+                    'bubble-assistant-border': 'var(--chat-bubble-assistant-border)',
+                    'bubble-user-bg': 'var(--chat-bubble-user-bg)',
+                    'bubble-user-shadow': 'var(--chat-bubble-user-shadow)',
+                    'input-bg': 'var(--chat-input-bg)',
+                    'input-border': 'var(--chat-input-border)',
+                    'input-glow': 'var(--chat-input-glow)',
                 }
             },
             fontFamily: {

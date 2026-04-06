@@ -22,9 +22,19 @@ api.interceptors.response.use(
     (response) => response,
     async (error) => {
         const { config, response } = error;
+        const isNetworkOffline =
+            typeof navigator !== 'undefined' && navigator.onLine === false;
+        const errorCode = error?.code || '';
+        const errorMessage = String(error?.message || '').toLowerCase();
+        const isLikelyOfflineError =
+            isNetworkOffline ||
+            errorCode === 'ERR_NETWORK' ||
+            errorCode === 'ECONNABORTED' ||
+            errorMessage.includes('network error') ||
+            errorMessage.includes('failed to fetch');
 
         // 1. Handle Cold Start (No Response)
-        if (!response && config && !config._isRetry) {
+        if (!response && config && !config._isRetry && !isLikelyOfflineError) {
             config._isRetry = true;
             console.log("Backend cold start detected. Retrying in 3s...");
             await new Promise(resolve => setTimeout(resolve, 3000));

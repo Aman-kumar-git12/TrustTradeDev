@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react'
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { WifiOff } from 'lucide-react'
 import Navbar from './components/Navbar'
 import ScrollToTop from './components/ScrollToTop'
 import ScrollButtons from './components/ScrollButtons'
@@ -40,9 +42,28 @@ import AdminBusinesses from './pages/admin/AdminBusinesses'
 import AdminLayout from './components/admin/AdminLayout'
 import ProtectedRoute from './components/ProtectedRoute'
 import Dashboard from './pages/Dashboard'
+import networkErrorImg from './assets/images/network-error.png'
 
 function App() {
     const location = useLocation();
+    const [isOffline, setIsOffline] = useState(
+        typeof navigator !== 'undefined' ? navigator.onLine === false : false
+    );
+
+    useEffect(() => {
+        if (typeof window === 'undefined') return undefined;
+
+        const handleOnline = () => setIsOffline(false);
+        const handleOffline = () => setIsOffline(true);
+
+        window.addEventListener('online', handleOnline);
+        window.addEventListener('offline', handleOffline);
+
+        return () => {
+            window.removeEventListener('online', handleOnline);
+            window.removeEventListener('offline', handleOffline);
+        };
+    }, []);
 
     // Determine if Navbar should be hidden based on current path
     const shouldHideNavbar = () => {
@@ -87,6 +108,46 @@ function App() {
         <div className={`min-h-screen bg-gray-50 dark:bg-black bluish:bg-[#0a0f1d] text-gray-900 dark:text-gray-200 transition-colors duration-300 relative overflow-x-hidden ${(!shouldHideNavbar() && location.pathname !== '/profile') ? 'pt-16' : ''}`}>
             {/* Global Dotted Background */}
             <div className="fixed inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] dark:bg-[radial-gradient(#ffffff33_1px,#000000_1px)] bluish:bg-[radial-gradient(#ffffff33_1px,#0a0f1d_1px)] [background-size:20px_20px] opacity-20 dark:opacity-[0.26] bluish:opacity-[0.26] pointer-events-none z-[1]"></div>
+
+            {isOffline && (
+                <div className="fixed inset-0 z-[5000] flex items-center justify-center bg-white p-4 dark:bg-black bluish:bg-[#0a0f1d]">
+                    <div className="w-full max-w-4xl overflow-hidden rounded-[32px] border border-red-500/30 bg-white shadow-2xl dark:bg-zinc-950 bluish:bg-[#09111f]">
+                        <div className="grid md:grid-cols-[360px_1fr]">
+                            <div className="relative min-h-[280px] border-b border-red-500/20 md:min-h-full md:border-b-0 md:border-r">
+                                <div className="absolute inset-0 bg-red-500/5" />
+                                <img
+                                    src={networkErrorImg}
+                                    alt="Network disconnected"
+                                    className="h-full w-full object-cover"
+                                />
+                            </div>
+                            <div className="flex flex-col justify-center gap-5 p-6 md:p-10">
+                                <div className="flex items-center gap-3 text-xs font-black uppercase tracking-[0.25em] text-red-500">
+                                    <WifiOff className="h-5 w-5" />
+                                    Network Disconnected
+                                </div>
+                                <div>
+                                    <h1 className="text-2xl font-black tracking-tight text-slate-900 bluish:text-white dark:text-white">
+                                        You are offline right now
+                                    </h1>
+                                    <p className="mt-3 max-w-2xl text-sm font-medium leading-relaxed text-slate-600 bluish:text-slate-300 dark:text-zinc-300">
+                                        Your internet connection is unavailable, so TrustTrade cannot load live data or send requests.
+                                        Reconnect to the network and the app will continue working automatically.
+                                    </p>
+                                </div>
+                                <div className="mt-2 flex flex-wrap gap-3">
+                                    <button
+                                        onClick={() => window.location.reload()}
+                                        className="rounded-xl bg-red-500 px-6 py-3 text-xs font-black uppercase tracking-widest text-white shadow-[0_0_20px_rgba(239,68,68,0.4)] transition-all hover:bg-red-600 active:scale-95"
+                                    >
+                                        Try Reconnecting
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {!shouldHideNavbar() && <Navbar />}
             <ScrollToTop />
