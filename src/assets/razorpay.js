@@ -10,13 +10,19 @@ export const loadRazorpay = () => {
     });
 };
 
-export const startPayment = async (amount, { interestId = null, assetId = null, quantity = null } = {}, onSuccess = null, onFailure = null) => {
+export const startPayment = async (
+    amount,
+    { interestId = null, assetId = null, quantity = null, reservationId = null } = {},
+    onSuccess = null,
+    onFailure = null
+) => {
     try {
         const { data: order } = await api.post('/payment/create-order', {
             amount,
             interestId,
             assetId,
-            quantity
+            quantity,
+            reservationId
         });
 
         const options = {
@@ -33,7 +39,8 @@ export const startPayment = async (amount, { interestId = null, assetId = null, 
                         ...response,
                         interestId,
                         assetId,
-                        quantity
+                        quantity,
+                        reservationId
                     });
                     if (result.success) {
                         if (onSuccess) {
