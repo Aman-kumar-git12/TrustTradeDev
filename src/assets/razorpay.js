@@ -82,3 +82,48 @@ export const startPayment = async (
         if (onFailure) onFailure(error);
     }
 };
+
+export const startAgentPayment = async (
+    paymentOrder,
+    onSuccess = null,
+    onFailure = null
+) => {
+    try {
+        if (!paymentOrder?.razorpayOrderId) {
+            throw new Error("Missing agent payment order details.");
+        }
+
+        const options = {
+            key: paymentOrder.keyId || import.meta.env.VITE_RAZORPAY_KEY,
+            amount: paymentOrder.amountPaise || Math.round(Number(paymentOrder.amount || 0) * 100),
+            currency: paymentOrder.currency || "INR",
+            name: "TrustTrade",
+            description: "Strategic Agent Checkout",
+            order_id: paymentOrder.razorpayOrderId,
+            handler: async (response) => {
+                if (onSuccess) {
+                    onSuccess(response);
+                }
+            },
+            modal: {
+                ondismiss: function () {
+                    if (onFailure) onFailure("Payment Cancelled");
+                }
+            },
+            prefill: {
+                name: "User Name",
+                email: "user@example.com",
+            },
+            theme: {
+                color: "#10b981",
+            }
+        };
+
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+    } catch (error) {
+        console.error("Agent Payment Error:", error);
+        alert(error.message || "Failed to initiate agent payment. Please try again.");
+        if (onFailure) onFailure(error);
+    }
+};

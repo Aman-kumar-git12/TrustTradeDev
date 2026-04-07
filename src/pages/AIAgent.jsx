@@ -16,6 +16,9 @@ import {
     Trash2,
     Clock,
     WifiOff,
+    Star,
+    Tag,
+    ChevronRight,
     X
 } from 'lucide-react';
 import api from '../utils/api';
@@ -211,6 +214,7 @@ const AIAgent = () => {
     const [isMobileHistoryOpen, setIsMobileHistoryOpen] = useState(false);
     const [chatMode, setChatMode] = useState('conversation');
     const [isModeMenuOpen, setIsModeMenuOpen] = useState(false);
+    const [initiatingPayments, setInitiatingPayments] = useState({});
 
     // Consolidated mode switcher that handles history restoration
     const switchMode = (mode) => {
@@ -529,9 +533,9 @@ const AIAgent = () => {
         );
     };
 
-    const sendMessage = async (rawMessage) => {
+    const sendMessage = async (rawMessage, options = {}) => {
         const message = rawMessage.trim();
-        if (!message || isBusy) return;
+        if (!message || isBusy) return null;
 
         const userMessage = createMessage('user', message);
         const nextMessages = [...messagesRef.current, userMessage];
@@ -543,7 +547,7 @@ const AIAgent = () => {
         if (typeof navigator !== 'undefined' && navigator.onLine === false) {
             setIsSending(false);
             await showOfflineAssistantMessage(nextMessages);
-            return;
+            return null;
         }
 
         try {
@@ -551,6 +555,7 @@ const AIAgent = () => {
                 message,
                 mode: chatMode,
                 sessionId: currentSessionId,
+                metadata: options.metadata || {},
                 history: nextMessages
                     .filter(m => m.role === 'user' || m.role === 'assistant')
                     .slice(-8)
@@ -592,9 +597,11 @@ const AIAgent = () => {
                     metadata: data.metadata || {}
                 }
             );
+            return { data, sessionId: resolvedSessionId };
         } catch (error) {
             setIsSending(false);
             await showOfflineAssistantMessage(nextMessages);
+            return null;
         }
     };
 
@@ -799,7 +806,7 @@ const AIAgent = () => {
 
                                                     {isAssistant && !message.isStreaming && message.metadata?.active_quote && (
                                                         <div className="mt-6 overflow-hidden rounded-2xl border border-chat-accent/30 bg-chat-card/50 backdrop-blur-xl shadow-2xl relative group">
-                                                            <div className="absolute inset-0 bg-chat-accent/5 mix-blend-overlay"></div>
+                                                            <div className="absolute inset-0 bg-chat-accent/5 mix-blend-overlay pointer-events-none"></div>
                                                             <div className="p-5 border-b border-chat-border/50">
                                                                 <div className="flex items-center justify-between mb-4">
                                                                     <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-chat-accent">
@@ -821,7 +828,7 @@ const AIAgent = () => {
                                                                         <span className="font-mono">x{message.metadata.active_quote.quantity}</span>
                                                                     </div>
                                                                     <div className="flex justify-between text-chat-text-secondary">
-                                                                        <span>Strategic Platform Fee (3%)</span>
+                                                                        <span>Strategic Platform Fee</span>
                                                                         <span className="font-mono">₹{message.metadata.active_quote.platformFee}</span>
                                                                     </div>
                                                                     <div className="flex justify-between text-chat-text-secondary">
@@ -835,33 +842,76 @@ const AIAgent = () => {
                                                                 </div>
                                                             </div>
                                                             
-                                                            <div className="p-4 bg-chat-accent/5 flex gap-3">
+                                                            <div className="p-4 bg-chat-accent/5 flex gap-3 relative z-20">
                                                                 <button
-                                                                    disabled={isBusy}
+                                                                    disabled={isBusy || message.metadata?.paymentOrder?.is_completed || initiatingPayments[message.id]}
                                                                     onClick={async () => {
-                                                                        const { loadRazorpay, startPayment } = await import('../assets/razorpay');
+                                                                        const { loadRazorpay, startAgentPayment } = await import('../assets/razorpay');
                                                                         const isLoaded = await loadRazorpay();
-                                                                        if (isLoaded) {
-                                                                            startPayment(message.metadata.active_quote.total, {
-                                                                                assetId: message.metadata.active_quote.assetId,
-                                                                                quantity: message.metadata.active_quote.quantity,
-                                                                                reservationId: message.metadata.active_quote.reservationId
-                                                                            }, (res) => {
-                                                                                sendMessage("Payment Successful! Record the order.");
-                                                                            }, (err) => {
-                                                                                sendMessage("Payment failed or cancelled. Retry?");
-                                                                            });
+                                                                        if (!isLoaded) return;
+
+                                                                        // Mark as initiating locally
+                                                                        setInitiatingPayments(prev => ({ ...prev, [message.id]: true }));
+
+                                                                        try {
+                                                                            // 1. Check if we already have the payment details
+                                                                            let paymentOrder = message.metadata?.paymentOrder;
+                                                                            
+                                                                            // 2. If not, ask the Agent to prepare them
+                                                                            if (!paymentOrder?.razorpayOrderId) {
+                                                                                const res = await sendMessage("Pay Securely Now");
+                                                                                paymentOrder = res?.data?.metadata?.paymentOrder;
+                                                                            }
+
+                                                                            // 3. Initiate if we have the order details now
+                                                                            if (paymentOrder?.razorpayOrderId) {
+                                                                                startAgentPayment(paymentOrder, (res) => {
+                                                                                    // Successfully verified by Razorpay
+                                                                                    setInitiatingPayments(prev => ({ ...prev, [message.id]: false }));
+                                                                                    sendMessage("I completed payment in the app.", {
+                                                                                        metadata: {
+                                                                                            paymentVerification: {
+                                                                                                razorpayOrderId: res.razorpay_order_id,
+                                                                                                razorpayPaymentId: res.razorpay_payment_id,
+                                                                                                razorpaySignature: res.razorpay_signature
+                                                                                            }
+                                                                                        }
+                                                                                    });
+                                                                                }, (err) => {
+                                                                                    console.error("Payment failed:", err);
+                                                                                    setInitiatingPayments(prev => ({ ...prev, [message.id]: false }));
+                                                                                    sendMessage("Payment was not completed. Can we try again?");
+                                                                                });
+                                                                            } else {
+                                                                                setInitiatingPayments(prev => ({ ...prev, [message.id]: false }));
+                                                                            }
+                                                                        } catch (err) {
+                                                                            setInitiatingPayments(prev => ({ ...prev, [message.id]: false }));
                                                                         }
                                                                     }}
-                                                                    className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-chat-accent hover:opacity-90 px-6 py-3 text-sm font-black text-white transition-all active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+                                                                    className={`flex-1 flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-sm font-black text-white transition-all active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.3)] disabled:opacity-50 disabled:grayscale ${message.metadata?.paymentOrder?.is_completed ? 'bg-chat-accent/40' : 'bg-chat-accent hover:opacity-90'}`}
                                                                 >
-                                                                    <CreditCard className="h-4 w-4" />
-                                                                    PAY SECURELY NOW
+                                                                    {message.metadata?.paymentOrder?.is_completed ? (
+                                                                        <>
+                                                                            <ShieldCheck className="h-4 w-4" />
+                                                                            PURCHASE COMPLETED
+                                                                        </>
+                                                                    ) : initiatingPayments[message.id] ? (
+                                                                        <>
+                                                                            <Loader2 className="h-4 w-4 animate-spin" />
+                                                                            INITIATING...
+                                                                        </>
+                                                                    ) : (
+                                                                        <>
+                                                                            <CreditCard className="h-4 w-4" />
+                                                                            PAY SECURELY NOW
+                                                                        </>
+                                                                    )}
                                                                 </button>
                                                                 <button
                                                                     disabled={isBusy}
                                                                     onClick={() => sendMessage("Cancel this purchase.")}
-                                                                    className="rounded-xl bg-transparent border border-chat-border px-4 py-3 text-xs font-bold text-chat-text-secondary transition-all hover:bg-chat-bg hover:text-chat-text-primary active:scale-95"
+                                                                    className="rounded-xl bg-transparent border border-chat-border px-4 py-3 text-xs font-bold text-chat-text-secondary transition-all hover:bg-chat-bg hover:text-chat-text-primary active:scale-95 disabled:opacity-50"
                                                                 >
                                                                     Cancel
                                                                 </button>
@@ -873,7 +923,7 @@ const AIAgent = () => {
                                                         <div className="mt-6 flex flex-col gap-4">
                                                             {message.toolCalls.map((tool) => (
                                                                 <div key={tool.id} className="rounded-2xl border border-chat-accent/30 bg-chat-card p-4 backdrop-blur-md shadow-2xl relative overflow-hidden group">
-                                                                    <div className="absolute inset-0 bg-chat-accent/5 mix-blend-overlay opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                                                    <div className="absolute inset-0 bg-chat-accent/5 mix-blend-overlay opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
                                                                     <div className="relative z-10 flex flex-col">
                                                                         <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-chat-accent mb-2">
                                                                             <ShieldCheck className="h-4 w-4" />
@@ -903,7 +953,69 @@ const AIAgent = () => {
                                                                 </div>
                                                             ))}
                                                         </div>
-                                                    )}
+                                                    )}                                                     {isAssistant && !message.isStreaming && message.metadata?.active_options?.length > 0 && (
+                                                         <div className="mt-6 flex flex-col gap-4">
+                                                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                                                                 {message.metadata.active_options.map((asset, idx) => {
+                                                                     const globalIdx = (message.metadata.optionOffset || 0) + idx + 1;
+                                                                     return (
+                                                                         <button
+                                                                             key={asset._id}
+                                                                             disabled={isBusy}
+                                                                             onClick={() => sendMessage(`Select Option ${globalIdx}`)}
+                                                                             className="group relative flex flex-col overflow-hidden rounded-2xl border border-chat-border bg-chat-card/30 backdrop-blur-xl transition-all hover:border-chat-accent/50 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] active:scale-[0.98] text-left"
+                                                                         >
+                                                                             <div className="aspect-[4/3] w-full overflow-hidden bg-black/20 relative">
+                                                                                 {asset.images?.[0]?.url ? (
+                                                                                     <img 
+                                                                                         src={asset.images[0].url} 
+                                                                                         alt={asset.title}
+                                                                                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                                                                                     />
+                                                                                 ) : (
+                                                                                     <div className="flex h-full w-full items-center justify-center text-chat-text-secondary/20">
+                                                                                         <Tag className="h-12 w-12" />
+                                                                                     </div>
+                                                                                 )}
+                                                                                 <div className="absolute top-2 right-2 rounded-full bg-black/60 backdrop-blur-md px-2 py-1 text-[10px] font-black text-white border border-white/10">
+                                                                                     Option {globalIdx}
+                                                                                 </div>
+                                                                             </div>
+                                                                             <div className="p-4 flex flex-col flex-1">
+                                                                                 <h4 className="text-xs font-bold text-chat-text-primary line-clamp-1 mb-1 group-hover:text-chat-accent transition-colors">
+                                                                                     {asset.title}
+                                                                                 </h4>
+                                                                                 <div className="flex items-center gap-1 mb-3">
+                                                                                     <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
+                                                                                     <span className="text-[10px] font-bold text-chat-text-secondary">
+                                                                                         {asset.rating || '4.5'}
+                                                                                     </span>
+                                                                                 </div>
+                                                                                 <div className="mt-auto flex items-center justify-between">
+                                                                                     <div className="text-sm font-black text-chat-accent">
+                                                                                         ₹{Number(asset.price).toLocaleString()}
+                                                                                     </div>
+                                                                                     <div className="h-6 w-6 rounded-lg bg-chat-accent/10 flex items-center justify-center text-chat-accent group-hover:bg-chat-accent group-hover:text-white transition-all">
+                                                                                         <ChevronRight className="h-4 w-4" />
+                                                                                     </div>
+                                                                                 </div>
+                                                                             </div>
+                                                                             <div className="absolute inset-0 bg-chat-accent/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+                                                                         </button>
+                                                                     );
+                                                                 })}
+                                                             </div>
+                                                             {message.metadata.has_more && (
+                                                                <button
+                                                                    disabled={isBusy}
+                                                                    onClick={() => sendMessage("Show More Options")}
+                                                                    className="w-full py-2 rounded-xl border border-dashed border-chat-border text-[10px] font-bold text-chat-text-secondary hover:border-chat-accent/50 hover:text-chat-accent transition-all"
+                                                                >
+                                                                    Show More Options
+                                                                </button>
+                                                             )}
+                                                         </div>
+                                                     )}
 
                                                     {isAssistant && !message.isStreaming && message.quickReplies?.length > 0 && (chatMode === 'agent' || message.isErrorState) && (
                                                         <div className="mt-6 flex flex-wrap gap-2">
