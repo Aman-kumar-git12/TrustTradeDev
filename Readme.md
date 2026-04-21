@@ -25,7 +25,7 @@ To explore the platform without signing up, use the demo credentials below.
 - Password: password123
 
 ### Seller Account
-- Email: sarah@gmail.com
+- Email: sarah@techsell.com
 - Password: password123
 
 ### Admin Account
