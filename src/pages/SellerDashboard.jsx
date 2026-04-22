@@ -1,4 +1,4 @@
-import { NavLink, Outlet, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { NavLink, Link, Outlet, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Filter as FilterIcon, ArrowLeft, TrendingUp, Tag, ShoppingBag, BarChart2, CheckCircle, Clock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -106,63 +106,73 @@ const SellerDashboard = () => {
                         {/* Header & Business Switcher Section */}
                         <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
                             <div className="text-center md:text-left">
-                                <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white bluish:text-white tracking-tight mb-2 bluish:drop-shadow-lg">Seller Command</h1>
+                                <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white bluish:text-white tracking-tight mb-2 bluish:drop-shadow-lg">Seller Hub</h1>
                                 <p className="text-gray-500 dark:text-gray-400 bluish:text-gray-400 font-semibold text-sm md:text-base">Manage your businesses, track leads, and optimize your listings.</p>
                             </div>
 
-                            <div className="relative flex justify-center md:block">
-                                <button
-                                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                                    className="flex items-center gap-3 p-2 pr-4 bg-white dark:bg-zinc-900 bluish:bg-[#1e293b]/80 bluish:backdrop-blur-md rounded-2xl border border-gray-200 dark:border-zinc-800 bluish:border-white/10 shadow-sm hover:shadow-md transition-all group w-full md:w-auto"
+                            <div className="flex items-center gap-3">
+                                <Link 
+                                    to="/dashboard/buyer"
+                                    className="hidden md:flex items-center px-6 py-3 bg-white dark:bg-zinc-800 bluish:bg-white/5 text-gray-700 dark:text-white bluish:text-blue-200 rounded-2xl font-black text-sm transition-all border border-gray-200 dark:border-zinc-800 bluish:border-white/10 hover:bg-gray-50 dark:hover:bg-zinc-700 bluish:hover:bg-white/10 active:scale-95 group"
                                 >
-                                    <div className="h-10 w-10 rounded-xl bg-blue-500/10 dark:bg-emerald-500/10 flex items-center justify-center text-blue-600 dark:text-emerald-400 font-bold text-lg group-hover:bg-blue-500 group-hover:dark:bg-emerald-500 group-hover:text-white transition-all">
-                                        {currentBusiness?.businessName?.charAt(0) || 'B'}
-                                    </div>
-                                    <div className="text-left">
-                                        <p className="text-[10px] font-black text-gray-400 dark:text-zinc-500 uppercase tracking-widest leading-none mb-1">Active Business</p>
-                                        <h3 className="text-sm font-bold text-gray-900 dark:text-white bluish:text-white flex items-center gap-2">
-                                            {currentBusiness ? currentBusiness.businessName : 'Loading...'}
-                                            <svg
-                                                className={`w-4 h-4 text-gray-400 dark:text-gray-500 transform transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
-                                                fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                                            >
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                            </svg>
-                                        </h3>
-                                    </div>
-                                </button>
+                                    <ShoppingBag className="mr-2 group-hover:-rotate-12 transition-transform" size={18} />
+                                    BUYING HUB
+                                </Link>
 
-                                {/* Dropdown Menu */}
-                                {isDropdownOpen && (
-                                    <div className="absolute top-full right-0 mt-3 w-72 bg-white dark:bg-zinc-900 bluish:bg-[#1e293b] rounded-2xl shadow-2xl border border-gray-200 dark:border-zinc-800 bluish:border-white/10 z-50 animate-fade-in divide-y divide-gray-100 dark:divide-zinc-800 bluish:divide-white/5 overflow-hidden">
-                                        <div className="p-2">
-                                            <p className="text-[10px] font-black text-gray-400 dark:text-zinc-500 uppercase tracking-widest px-3 py-2">Switch Business</p>
-                                            <div className="max-h-64 overflow-y-auto custom-scrollbar">
-                                                {businesses.map(b => (
-                                                    <button
-                                                        key={b._id}
-                                                        onClick={() => handleBusinessSwitch(b._id)}
-                                                        className={`w-full text-left px-3 py-3 rounded-xl flex items-center gap-3 transition-all ${b._id === businessId ? 'bg-blue-50 dark:bg-emerald-900/20 bluish:bg-blue-500/20 text-blue-700 dark:text-emerald-400 bluish:text-blue-400' : 'hover:bg-gray-50 dark:hover:bg-zinc-800 bluish:hover:bg-white/5 text-gray-700 dark:text-gray-200 bluish:text-gray-300'}`}
-                                                    >
-                                                        <div className={`h-8 w-8 rounded-lg flex items-center justify-center text-sm font-bold ${b._id === businessId ? 'bg-blue-500 dark:bg-emerald-500 text-white shadow-lg shadow-blue-500/20 dark:shadow-emerald-500/20' : 'bg-gray-100 dark:bg-zinc-800 text-gray-500 dark:text-gray-400'}`}>
-                                                            {b.businessName.charAt(0)}
-                                                        </div>
-                                                        <span className="font-bold truncate">{b.businessName}</span>
-                                                        {b._id === businessId && <span className="ml-auto text-blue-600 dark:text-emerald-400">✓</span>}
-                                                    </button>
-                                                ))}
+                                <div className="relative flex justify-center md:block">
+                                    <button
+                                        onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                                        className="flex items-center gap-3 p-2 pr-4 bg-white dark:bg-zinc-900 bluish:bg-[#1e293b]/80 bluish:backdrop-blur-md rounded-2xl border border-gray-200 dark:border-zinc-800 bluish:border-white/10 shadow-sm hover:shadow-md transition-all group w-full md:w-auto"
+                                    >
+                                        <div className="h-10 w-10 rounded-xl bg-blue-500/10 dark:bg-emerald-500/10 flex items-center justify-center text-blue-600 dark:text-emerald-400 font-bold text-lg group-hover:bg-blue-500 group-hover:dark:bg-emerald-500 group-hover:text-white transition-all">
+                                            {currentBusiness?.businessName?.charAt(0) || 'B'}
+                                        </div>
+                                        <div className="text-left">
+                                            <p className="text-[10px] font-black text-gray-400 dark:text-zinc-500 uppercase tracking-widest leading-none mb-1">Active Business</p>
+                                            <h3 className="text-sm font-bold text-gray-900 dark:text-white bluish:text-white flex items-center gap-2">
+                                                {currentBusiness ? currentBusiness.businessName : 'Loading...'}
+                                                <svg
+                                                    className={`w-4 h-4 text-gray-400 dark:text-gray-500 transform transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`}
+                                                    fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                                                >
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                                                </svg>
+                                            </h3>
+                                        </div>
+                                    </button>
+
+                                    {/* Dropdown Menu */}
+                                    {isDropdownOpen && (
+                                        <div className="absolute top-full right-0 mt-3 w-72 bg-white dark:bg-zinc-900 bluish:bg-[#1e293b] rounded-2xl shadow-2xl border border-gray-200 dark:border-zinc-800 bluish:border-white/10 z-50 animate-fade-in divide-y divide-gray-100 dark:divide-zinc-800 bluish:divide-white/5 overflow-hidden">
+                                            <div className="p-2">
+                                                <p className="text-[10px] font-black text-gray-400 dark:text-zinc-500 uppercase tracking-widest px-3 py-2">Switch Business</p>
+                                                <div className="max-h-64 overflow-y-auto custom-scrollbar">
+                                                    {businesses.map(b => (
+                                                        <button
+                                                            key={b._id}
+                                                            onClick={() => handleBusinessSwitch(b._id)}
+                                                            className={`w-full text-left px-3 py-3 rounded-xl flex items-center gap-3 transition-all ${b._id === businessId ? 'bg-blue-50 dark:bg-emerald-900/20 bluish:bg-blue-500/20 text-blue-700 dark:text-emerald-400 bluish:text-blue-400' : 'hover:bg-gray-50 dark:hover:bg-zinc-800 bluish:hover:bg-white/5 text-gray-700 dark:text-gray-200 bluish:text-gray-300'}`}
+                                                        >
+                                                            <div className={`h-8 w-8 rounded-lg flex items-center justify-center text-sm font-bold ${b._id === businessId ? 'bg-blue-500 dark:bg-emerald-500 text-white shadow-lg shadow-blue-500/20 dark:shadow-emerald-500/20' : 'bg-gray-100 dark:bg-zinc-800 text-gray-500 dark:text-gray-400'}`}>
+                                                                {b.businessName.charAt(0)}
+                                                            </div>
+                                                            <span className="font-bold truncate">{b.businessName}</span>
+                                                            {b._id === businessId && <span className="ml-auto text-blue-600 dark:text-emerald-400">✓</span>}
+                                                        </button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                            <div className="p-2 bg-gray-50 dark:bg-zinc-800/30">
+                                                <button
+                                                    onClick={() => navigate('/my-businesses')}
+                                                    className="w-full py-2 text-xs font-black text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-emerald-400 transition-colors uppercase tracking-widest"
+                                                >
+                                                    Manage All Businesses
+                                                </button>
                                             </div>
                                         </div>
-                                        <div className="p-2 bg-gray-50 dark:bg-zinc-800/30">
-                                            <button
-                                                onClick={() => navigate('/my-businesses')}
-                                                className="w-full py-2 text-xs font-black text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-emerald-400 transition-colors uppercase tracking-widest"
-                                            >
-                                                Manage All Businesses
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
+                                    )}
+                                </div>
                             </div>
                         </div>
 

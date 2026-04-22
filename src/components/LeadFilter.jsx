@@ -1,15 +1,29 @@
-import React from 'react';
-import { Search, Filter, Layers, X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search, Filter, X } from 'lucide-react';
 
 const LeadFilter = ({ filters, setFilters, onClose, onApply, onClear, hideStatus }) => {
+    // Local state to hold changes before applying
+    const [localFilters, setLocalFilters] = useState(filters);
+
+    // Sync local filters if parent filters change (e.g. on mount or global clear)
+    useEffect(() => {
+        setLocalFilters(filters || {});
+    }, [filters]);
 
     const handleChange = (key, value) => {
-        setFilters(prev => ({ ...prev, [key]: value }));
+        setLocalFilters(prev => ({ ...prev, [key]: value }));
+    };
+
+    const handleApply = () => {
+        setFilters(localFilters);
+        onApply?.(localFilters);
     };
 
     const handleReset = () => {
-        setFilters({});
-        onClear?.();
+        const empty = {};
+        setLocalFilters(empty);
+        setFilters(empty);
+        onClear?.(empty);
     };
 
     const statuses = ['negotiating', 'accepted', 'rejected'];
@@ -37,7 +51,7 @@ const LeadFilter = ({ filters, setFilters, onClose, onApply, onClear, hideStatus
                             type="text"
                             placeholder="Asset or Buyer name..."
                             className="w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white dark:bg-zinc-800 bluish:bg-slate-800/50 text-gray-900 dark:text-white bluish:text-white transition-colors duration-300"
-                            value={filters.search || ''}
+                            value={localFilters.search || ''}
                             onChange={(e) => handleChange('search', e.target.value)}
                         />
                     </div>
@@ -53,11 +67,11 @@ const LeadFilter = ({ filters, setFilters, onClose, onApply, onClear, hideStatus
                                     type="radio"
                                     id="status-all"
                                     name="status"
-                                    checked={!filters.status}
+                                    checked={!localFilters.status}
                                     onChange={() => handleChange('status', '')}
-                                    className="text-blue-600 focus:ring-blue-500 bg-gray-100 dark:bg-zinc-800 bluish:bg-slate-800 border-gray-300 dark:border-zinc-600 bluish:border-white/10"
+                                    className="text-blue-600 focus:ring-blue-500 bg-gray-100 dark:bg-zinc-800 bluish:bg-slate-800 border-gray-300 dark:border-zinc-600 bluish:border-white/10 shadow-sm"
                                 />
-                                <label htmlFor="status-all" className="ml-2 text-sm text-gray-600 dark:text-gray-400 bluish:text-slate-400">All Statuses</label>
+                                <label htmlFor="status-all" className="ml-2 text-sm text-gray-600 dark:text-gray-400 bluish:text-slate-400 cursor-pointer">All Statuses</label>
                             </div>
                             {statuses.map(status => (
                                 <div key={status} className="flex items-center">
@@ -65,11 +79,11 @@ const LeadFilter = ({ filters, setFilters, onClose, onApply, onClear, hideStatus
                                         type="radio"
                                         id={`status-${status}`}
                                         name="status"
-                                        checked={filters.status === status}
+                                        checked={localFilters.status === status}
                                         onChange={() => handleChange('status', status)}
-                                        className="text-blue-600 focus:ring-blue-500 bg-gray-100 dark:bg-zinc-800 bluish:bg-slate-800 border-gray-300 dark:border-zinc-600 bluish:border-white/10"
+                                        className="text-blue-600 focus:ring-blue-500 bg-gray-100 dark:bg-zinc-800 bluish:bg-slate-800 border-gray-300 dark:border-zinc-600 bluish:border-white/10 shadow-sm"
                                     />
-                                    <label htmlFor={`status-${status}`} className="ml-2 text-sm text-gray-600 dark:text-gray-400 bluish:text-slate-400 capitalize">
+                                    <label htmlFor={`status-${status}`} className="ml-2 text-sm text-gray-600 dark:text-gray-400 bluish:text-slate-400 capitalize cursor-pointer">
                                         {status}
                                     </label>
                                 </div>
@@ -87,11 +101,11 @@ const LeadFilter = ({ filters, setFilters, onClose, onApply, onClear, hideStatus
                                 type="radio"
                                 id="sales-all"
                                 name="salesStatus"
-                                checked={!filters.salesStatus}
+                                checked={!localFilters.salesStatus}
                                 onChange={() => handleChange('salesStatus', '')}
-                                className="text-blue-600 focus:ring-blue-500 bg-gray-100 dark:bg-zinc-800 bluish:bg-slate-800 border-gray-300 dark:border-zinc-600 bluish:border-white/10"
+                                className="text-blue-600 focus:ring-blue-500 bg-gray-100 dark:bg-zinc-800 bluish:bg-slate-800 border-gray-300 dark:border-zinc-600 bluish:border-white/10 shadow-sm"
                             />
-                            <label htmlFor="sales-all" className="ml-2 text-sm text-gray-600 dark:text-gray-400 bluish:text-slate-400">All</label>
+                            <label htmlFor="sales-all" className="ml-2 text-sm text-gray-600 dark:text-gray-400 bluish:text-slate-400 cursor-pointer">All</label>
                         </div>
                         {['sold', 'unsold'].map(status => (
                             <div key={status} className="flex items-center">
@@ -99,11 +113,11 @@ const LeadFilter = ({ filters, setFilters, onClose, onApply, onClear, hideStatus
                                     type="radio"
                                     id={`sales-${status}`}
                                     name="salesStatus"
-                                    checked={filters.salesStatus === status}
+                                    checked={localFilters.salesStatus === status}
                                     onChange={() => handleChange('salesStatus', status)}
-                                    className="text-blue-600 focus:ring-blue-500 bg-gray-100 dark:bg-zinc-800 bluish:bg-slate-800 border-gray-300 dark:border-zinc-600 bluish:border-white/10"
+                                    className="text-blue-600 focus:ring-blue-500 bg-gray-100 dark:bg-zinc-800 bluish:bg-slate-800 border-gray-300 dark:border-zinc-600 bluish:border-white/10 shadow-sm"
                                 />
-                                <label htmlFor={`sales-${status}`} className="ml-2 text-sm text-gray-600 dark:text-gray-400 bluish:text-slate-400 capitalize">{status}</label>
+                                <label htmlFor={`sales-${status}`} className="ml-2 text-sm text-gray-600 dark:text-gray-400 bluish:text-slate-400 capitalize cursor-pointer">{status}</label>
                             </div>
                         ))}
                     </div>
@@ -112,8 +126,8 @@ const LeadFilter = ({ filters, setFilters, onClose, onApply, onClear, hideStatus
                 {/* Actions */}
                 <div className="pt-4 border-t border-gray-100 dark:border-zinc-800 bluish:border-white/10 flex flex-col space-y-3 transition-colors duration-300">
                     <button
-                        onClick={() => { onApply?.(); }}
-                        className="w-full py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors shadow-lg shadow-blue-600/20"
+                        onClick={handleApply}
+                        className="w-full py-2.5 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors shadow-lg shadow-blue-600/20 active:scale-95 transform"
                     >
                         Apply Filters
                     </button>

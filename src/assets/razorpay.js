@@ -12,7 +12,7 @@ export const loadRazorpay = () => {
 
 export const startPayment = async (
     amount,
-    { interestId = null, assetId = null, quantity = null, reservationId = null } = {},
+    { interestId = null, assetId = null, quantity = null, reservationId = null, buyerName = "User", buyerEmail = "" } = {},
     onSuccess = null,
     onFailure = null
 ) => {
@@ -35,6 +35,7 @@ export const startPayment = async (
 
             handler: async (response) => {
                 try {
+                    // response contains: razorpay_payment_id, razorpay_order_id, razorpay_signature
                     const { data: result } = await api.post('/payment/verify', {
                         ...response,
                         interestId,
@@ -42,21 +43,24 @@ export const startPayment = async (
                         quantity,
                         reservationId
                     });
+
                     if (result.success) {
                         if (onSuccess) {
                             onSuccess(result);
                         } else {
+                            // Minimal fallback if no callback provided
                             alert("Payment Successful!");
-                            window.location.href = "/home"; // Redirect on success
                         }
                     } else {
-                        alert("Payment Verification Failed. Please contact support.");
-                        if (onFailure) onFailure("Verification Failed");
+                        const errorMsg = result.message || "Payment Verification Failed.";
+                        alert(errorMsg);
+                        if (onFailure) onFailure(errorMsg);
                     }
                 } catch (error) {
                     console.error("Verification Error:", error);
-                    alert("An error occurred during payment verification.");
-                    if (onFailure) onFailure(error);
+                    const errorMsg = error.response?.data?.message || "An error occurred during payment verification.";
+                    alert(errorMsg);
+                    if (onFailure) onFailure(errorMsg);
                 }
             },
             modal: {
@@ -66,25 +70,31 @@ export const startPayment = async (
                 }
             },
             prefill: {
-                name: "User Name", // Ideally get from AuthContext
-                email: "user@example.com",
+                name: buyerName,
+                email: buyerEmail,
             },
             theme: {
-                color: "#10b981", // Emerald Green to match Dark Mode
+                color: "#10b981", 
             }
         };
+
+        if (!window.Razorpay) {
+            throw new Error("Razorpay SDK not loaded. Please refresh the page.");
+        }
 
         const rzp = new window.Razorpay(options);
         rzp.open();
     } catch (error) {
         console.error("Payment Error:", error);
-        alert(error.message || "Failed to initiate payment. Please try again.");
-        if (onFailure) onFailure(error);
+        const errorMsg = error.response?.data?.message || error.message || "Failed to initiate payment. Please try again.";
+        alert(errorMsg);
+        if (onFailure) onFailure(errorMsg);
     }
 };
 
 export const startAgentPayment = async (
     paymentOrder,
+    { buyerName = "User", buyerEmail = "" } = {},
     onSuccess = null,
     onFailure = null
 ) => {
@@ -100,7 +110,8 @@ export const startAgentPayment = async (
             name: "TrustTrade",
             description: "Strategic Agent Checkout",
             order_id: paymentOrder.razorpayOrderId,
-            handler: async (response) => {
+            handler: (response) => {
+                // response contains: razorpay_payment_id, razorpay_order_id, razorpay_signature
                 if (onSuccess) {
                     onSuccess(response);
                 }
@@ -111,19 +122,24 @@ export const startAgentPayment = async (
                 }
             },
             prefill: {
-                name: "User Name",
-                email: "user@example.com",
+                name: buyerName,
+                email: buyerEmail,
             },
             theme: {
                 color: "#10b981",
             }
         };
 
+        if (!window.Razorpay) {
+            throw new Error("Razorpay SDK not loaded.");
+        }
+
         const rzp = new window.Razorpay(options);
         rzp.open();
     } catch (error) {
         console.error("Agent Payment Error:", error);
-        alert(error.message || "Failed to initiate agent payment. Please try again.");
+        alert(error.message || "Failed to initiate agent payment.");
         if (onFailure) onFailure(error);
     }
 };
+

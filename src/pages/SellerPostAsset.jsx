@@ -1,10 +1,11 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
-    ArrowLeft, Upload, IndianRupee, MapPin, Tag, FileText, CheckCircle, AlertCircle, Image as ImageIcon,
+    ArrowLeft, IndianRupee, MapPin, Tag, FileText,
     Factory, Truck, Cpu, Building2, Stethoscope, Smartphone, Hammer, Printer, HelpCircle,
-    Loader2, Link as LinkIcon, Plus, Trash2, X
+    Loader2, Link as LinkIcon, Plus, Trash2, AlertCircle, CheckCircle
 } from 'lucide-react';
+import DragAndDropUpload from '../components/DragAndDropUpload';
 import api from '../utils/api';
 import { useUI } from '../context/UIContext';
 import PostAssetShimmer from '../components/shimmers/PostAssetShimmer';
@@ -50,7 +51,6 @@ const SellerPostAsset = () => {
     }, [businessId]);
 
     // Image Upload State
-    const fileInputRef = useRef(null);
     const [uploadingImage, setUploadingImage] = useState(false);
     const [urlInput, setUrlInput] = useState('');
 
@@ -76,10 +76,8 @@ const SellerPostAsset = () => {
         setFormData({ ...formData, category: '' });
     };
 
-    const handleFileSelect = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
+    const handleFileSelect = async (files) => {
+        if (!files || files.length === 0) return;
         if (formData.images.length >= 5) {
             showSnackbar('Maximum 5 images allowed', 'error');
             return;
@@ -87,23 +85,28 @@ const SellerPostAsset = () => {
 
         try {
             setUploadingImage(true);
-            const imageFormData = new FormData();
-            imageFormData.append('image', file);
+            
+            // Handle multiple files if dropped
+            const filesToUpload = Array.from(files).slice(0, 5 - formData.images.length);
+            
+            const uploadPromises = filesToUpload.map(async (file) => {
+                const imageFormData = new FormData();
+                imageFormData.append('image', file);
+                const { data } = await api.post('/images/upload', imageFormData);
+                return data.url;
+            });
 
-            // Upload using existing endpoint
-            const uploadRes = await api.post('/images/upload', imageFormData);
-
+            const newUrls = await Promise.all(uploadPromises);
             setFormData(prev => ({
                 ...prev,
-                images: [...prev.images, uploadRes.data.url]
+                images: [...prev.images, ...newUrls]
             }));
-            showSnackbar('Image uploaded successfully', 'success');
+            showSnackbar(`Successfully uploaded ${newUrls.length} image(s)`, 'success');
         } catch (error) {
             console.error('Image upload failed', error);
-            showSnackbar('Failed to upload image', 'error');
+            showSnackbar('Failed to upload some images', 'error');
         } finally {
             setUploadingImage(false);
-            if (fileInputRef.current) fileInputRef.current.value = '';
         }
     };
 
@@ -128,14 +131,6 @@ const SellerPostAsset = () => {
         }));
     };
 
-    const triggerFileInput = () => {
-        if (formData.images.length >= 5) {
-            showSnackbar('Maximum 5 images allowed', 'error');
-            return;
-        }
-        fileInputRef.current.click();
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -151,7 +146,8 @@ const SellerPostAsset = () => {
                 businessId
             });
             showSnackbar('Asset listed successfully!', 'success');
-            navigate('/dashboard/seller');
+            // Redirect to the specific business listings tab in the seller hub
+            navigate(`/dashboard/seller/${businessId}/listings`);
         } catch (error) {
             console.error('Failed to post asset', error);
             showSnackbar('Failed to post asset', 'error');
@@ -372,32 +368,29 @@ const SellerPostAsset = () => {
 
                                         {/* Add Button */}
                                         {formData.images.length < 5 && (
-                                            <button
-                                                type="button"
-                                                onClick={triggerFileInput}
-                                                disabled={uploadingImage}
-                                                className={`relative group overflow-hidden bg-gray-50 dark:bg-zinc-800/50 bluish:bg-slate-800 border-2 border-dashed border-gray-300 dark:border-zinc-700 bluish:border-white/10 hover:border-blue-500 dark:hover:border-emerald-500 bluish:hover:border-blue-500 rounded-xl flex flex-col items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-emerald-400 bluish:hover:text-blue-400 transition-all duration-300 ${formData.images.length === 0 ? 'col-span-2 aspect-video' : 'aspect-square'}`}
+                                            <DragAndDropUpload
+                                                onFilesSelected={handleFileSelect}
+                                                loading={uploadingImage}
+                                                multiple={true}
+                                                className={`relative group overflow-hidden bg-gray-50/50 dark:bg-zinc-800/30 bluish:bg-slate-800/50 border-2 border-dashed border-gray-300 dark:border-zinc-700 bluish:border-white/10 hover:border-blue-500 dark:hover:border-emerald-500 bluish:hover:border-blue-500 rounded-xl flex flex-col items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-emerald-400 bluish:hover:text-blue-400 transition-all duration-300 ${formData.images.length === 0 ? 'col-span-2 aspect-[21/9]' : 'aspect-square'}`}
                                             >
                                                 {uploadingImage ? (
                                                     <Loader2 size={24} className="animate-spin mb-2" />
                                                 ) : (
-                                                    <Plus size={32} className="mb-2 group-hover:scale-110 transition-transform" />
+                                                    <div className="flex flex-col items-center">
+                                                        <Plus size={formData.images.length === 0 ? 40 : 28} className="mb-2 group-hover:scale-110 transition-transform" />
+                                                        <span className="text-xs font-black uppercase tracking-widest">{uploadingImage ? 'Uploading...' : 'Add Image'}</span>
+                                                        {formData.images.length === 0 && (
+                                                            <span className="text-[10px] text-gray-400 dark:text-gray-500 mt-1 font-medium italic">or drag and drop here</span>
+                                                        )}
+                                                    </div>
                                                 )}
-                                                <span className="text-xs font-bold">{uploadingImage ? 'Uploading...' : 'Add Image'}</span>
-                                            </button>
+                                            </DragAndDropUpload>
                                         )}
                                     </div>
 
                                     {/* URL Input Handling */}
                                     <div className="bg-gray-50 dark:bg-zinc-800/50 bluish:bg-slate-800 p-4 rounded-xl border border-gray-100 dark:border-zinc-800 bluish:border-white/5">
-                                        <input
-                                            type="file"
-                                            ref={fileInputRef}
-                                            className="hidden"
-                                            accept="image/*"
-                                            onChange={handleFileSelect}
-                                        />
-
                                         <div className="relative group">
                                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                                 <LinkIcon size={14} className="text-gray-400 group-focus-within:text-blue-500 transition-colors" />

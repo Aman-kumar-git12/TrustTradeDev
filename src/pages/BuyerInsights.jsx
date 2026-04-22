@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import api from '../utils/api';
+import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import DashboardNav from '../components/dashboard/DashboardNav';
 import {
     AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
     PieChart, Pie, Cell, Legend, BarChart, Bar
@@ -14,7 +16,6 @@ import {
 } from 'lucide-react';
 import KPICard from '../components/KPICard';
 import BuyerInsightsShimmer from '../components/shimmers/BuyerInsightsShimmer';
-// ... (keep other imports)
 
 const chartColors = {
     primary: '#3b82f6',
@@ -82,6 +83,7 @@ const BreakdownItem = ({ label, score, max, icon: Icon, color }) => (
 
 const BuyerInsights = () => {
     const { userId } = useParams();
+    const { user } = useAuth();
     const navigate = useNavigate();
     const [activeRange, setActiveRange] = useState('1m');
     const [loading, setLoading] = useState(true);
@@ -117,7 +119,7 @@ const BuyerInsights = () => {
             return (
                 <div className="text-center py-20 mt-12 bg-white dark:bg-zinc-900 rounded-2xl border border-gray-100 dark:border-zinc-800">
                     <h3 className="text-xl font-bold text-gray-500 dark:text-gray-400">Unable to load insights</h3>
-                    <button onClick={() => navigate(`/dashboard/buyer/${userId}`)} className="mt-4 text-blue-600 dark:text-blue-400 font-bold hover:underline">Return to Dashboard</button>
+                    <button onClick={() => navigate(`/dashboard/buyer/${businessId}/intelligence`)} className="mt-4 text-blue-600 dark:text-blue-400 font-bold hover:underline">Return to Dashboard</button>
                 </div>
             );
         }
@@ -309,56 +311,29 @@ const BuyerInsights = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 dark:bg-black bluish:bg-[#0a0f1d] selection:bg-blue-500/30 bluish:selection:bg-blue-500/30 overflow-hidden relative">
-            {/* Dynamic Background Elements - Bluish Theme Style */}
-            <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-                <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob"></div>
-                <div className="absolute top-[20%] right-[-10%] w-96 h-96 bg-purple-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob animation-delay-2000"></div>
-                <div className="absolute bottom-[-10%] left-[20%] w-96 h-96 bg-blue-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob animation-delay-4000"></div>
+        <div className="space-y-8 animate-fade-in pb-2 pt-4 relative z-10 w-full">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                <div>
+                    <h2 className="text-2xl font-black text-gray-900 dark:text-white bluish:text-white tracking-tight italic">Intelligence Deep Dive</h2>
+                    <p className="text-gray-500 dark:text-gray-400 bluish:text-gray-300 font-bold uppercase tracking-[0.2em] text-[10px] mt-1">Real-time Trust Reputation Tracking</p>
+                </div>
 
-                {/* Background Image & Overlay */}
-                <div className="absolute inset-0">
-                    <img
-                        src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2670&auto=format&fit=crop"
-                        alt="Background"
-                        className="absolute inset-0 w-full h-full object-cover opacity-10 mix-blend-overlay"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-b from-gray-50 via-gray-50/90 to-gray-50 dark:from-black dark:via-black/90 dark:to-black bluish:from-[#0a0f1d] bluish:via-[#0a0f1d]/90 bluish:to-[#0a0f1d]"></div>
+                <div className="bg-white dark:bg-black/50 bluish:bg-white/5 rounded-xl p-1 border border-gray-200 dark:border-zinc-800 bluish:border-white/10 flex text-[10px] font-black uppercase tracking-widest transition-colors duration-300 w-fit mx-auto lg:mx-0">
+                    {['24h', '15d', '1m', '1y', 'all'].map(r => (
+                        <button
+                            key={r}
+                            onClick={() => handleRangeChange(r)}
+                            disabled={loading}
+                            className={`px-4 py-2 rounded-lg transition-all ${activeRange === r ? 'bg-blue-600 text-white shadow-sm' : 'text-gray-400 hover:text-white'} ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        >
+                            {r}
+                        </button>
+                    ))}
                 </div>
             </div>
 
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8 animate-fade-in pb-20 relative z-10">
-                {/* Top Navigation Row - Persists during loading */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                    <div className="flex items-center gap-4">
-                        <button
-                            onClick={() => navigate(`/dashboard/buyer/${userId}`)}
-                            className="p-3 bg-white dark:bg-zinc-900 bluish:bg-white/5 border border-gray-200 dark:border-zinc-800 bluish:border-white/10 rounded-2xl shadow-sm hover:shadow-md transition-all text-gray-900 dark:text-white bluish:text-white hover:text-blue-400"
-                        >
-                            <ArrowLeft size={20} />
-                        </button>
-                        <div>
-                            <h1 className="text-4xl font-black text-gray-900 dark:text-white bluish:text-white tracking-tight">Buyer Intelligence</h1>
-                            <p className="text-gray-500 dark:text-gray-400 bluish:text-gray-300 font-medium">Analytics, patterns, and your trust reputation.</p>
-                        </div>
-                    </div>
-
-                    <div className="bg-white dark:bg-black/50 bluish:bg-white/5 rounded-xl p-1 border border-gray-200 dark:border-zinc-800 bluish:border-white/10 flex text-[10px] font-black uppercase tracking-widest transition-colors duration-300">
-                        {['24h', '15d', '1m', '1y', 'all'].map(r => (
-                            <button
-                                key={r}
-                                onClick={() => handleRangeChange(r)}
-                                disabled={loading}
-                                className={`px-4 py-2 rounded-lg transition-all ${activeRange === r ? 'bg-blue-600 text-white shadow-sm' : 'text-gray-400 hover:text-white'} ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                            >
-                                {r}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Content Area - Switches between Data and Shimmer */}
-                {renderContent()}
+            {/* Content Area - Switches between Data and Shimmer */}
+            {renderContent()}
 
                 {/* Education Modal */}
                 <AnimatePresence>
@@ -560,7 +535,6 @@ const BuyerInsights = () => {
                     )}
                 </AnimatePresence>
             </div>
-        </div>
     );
 };
 

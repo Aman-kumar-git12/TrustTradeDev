@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { User, Mail, Building, Shield, Calendar, Clock, Edit2, Save, X, Phone, Camera, Link as LinkIcon, AlertCircle, Briefcase, MapPin, Sun, Moon, Loader2, Sparkles, Zap, ChevronRight, Settings, Eye, EyeOff } from 'lucide-react';
 import api from '../utils/api';
 import ProfileShimmer from '../components/shimmers/ProfileShimmer';
+import DragAndDropUpload from '../components/DragAndDropUpload';
 
 import { useUI } from '../context/UIContext';
 import { useAuth } from '../context/AuthContext';
@@ -19,7 +20,6 @@ const Profile = () => {
 
     // File Upload State
     const [uploadingImage, setUploadingImage] = useState(false);
-    const fileInputRef = useRef(null);
 
     // Form State
     const [formData, setFormData] = useState({
@@ -61,8 +61,8 @@ const Profile = () => {
         loadData();
     }, []);
 
-    const handleFileSelect = async (e) => {
-        const file = e.target.files[0];
+    const handleFileSelect = async (files) => {
+        const file = files[0];
         if (!file) return;
 
         try {
@@ -79,13 +79,10 @@ const Profile = () => {
             showSnackbar('Failed to upload image', 'error');
         } finally {
             setUploadingImage(false);
-            if (fileInputRef.current) fileInputRef.current.value = '';
         }
     };
 
-    const triggerFileInput = () => {
-        fileInputRef.current.click();
-    };
+
 
     const handleUpdate = async (e) => {
         e.preventDefault();
@@ -159,7 +156,12 @@ const Profile = () => {
                     <div className="bg-gradient-to-br from-white/90 to-blue-50/90 dark:from-zinc-900/90 dark:to-black/90 bluish:from-slate-900/90 bluish:to-slate-950/90 backdrop-blur-xl rounded-3xl p-6 md:p-10 shadow-xl border border-white/20 dark:border-white/5 bluish:border-slate-700/50 mb-8 flex flex-col md:flex-row gap-8 items-center md:items-start text-center md:text-left transition-all hover:shadow-2xl hover:scale-[1.01] duration-500 group/card">
 
                         {/* Avatar Section */}
-                        <div className="relative group shrink-0 animate-float">
+                        <DragAndDropUpload 
+                            onFilesSelected={handleFileSelect}
+                            loading={uploadingImage}
+                            className="relative group shrink-0 animate-float"
+                            activeClassName="scale-110 ring-4 ring-blue-500/20 rounded-[3rem]"
+                        >
                             <div className="w-32 h-32 md:w-40 md:h-40 rounded-[2.5rem] p-2 bg-white/30 dark:bg-white/10 backdrop-blur-md border border-white/50 dark:border-white/20 shadow-2xl relative z-10 transition-transform duration-500 group-hover:scale-105">
                                 <div className="w-full h-full rounded-[2rem] overflow-hidden bg-gray-100 dark:bg-zinc-900 relative shadow-inner">
                                     {profile.avatarUrl ? (
@@ -174,15 +176,10 @@ const Profile = () => {
                             </div>
 
                             {/* Floating Camera Button */}
-                            <button
-                                type="button"
-                                onClick={triggerFileInput}
-                                className="absolute -bottom-2 -right-2 bg-black dark:bg-white text-white dark:text-black p-3 rounded-xl shadow-lg hover:scale-110 active:scale-95 transition-all duration-300 z-20"
-                            >
+                            <div className="absolute -bottom-2 -right-2 bg-black dark:bg-white text-white dark:text-black p-3 rounded-xl shadow-lg hover:scale-110 active:scale-95 transition-all duration-300 z-20">
                                 <Camera size={18} />
-                            </button>
-                            <input ref={fileInputRef} type="file" className="hidden" onChange={handleFileSelect} accept="image/*" />
-                        </div>
+                            </div>
+                        </DragAndDropUpload>
 
                         {/* Text Info section */}
                         <div className="flex-1 w-full pt-2 md:pt-4">

@@ -16,14 +16,13 @@ const Dashboard = () => {
     // Role-based redirection
     switch (user.role) {
         case 'admin':
-            // Admins go to the specialized Admin Panel
             return <Navigate to="/admin" replace />;
         case 'seller':
-            // Sellers go to the seller dashboard (which handles business selection)
+            // Sellers go to the Seller Command Center (Hub)
             return <Navigate to="/dashboard/seller" replace />;
         case 'buyer':
-            // Buyers go to their specific buyer dashboard
-            return <Navigate to={`/dashboard/buyer/${user._id}`} replace />;
+            // Buyers go to the unified buying hub
+            return <Navigate to="/dashboard/buyer" replace />;
         default:
             return <Navigate to="/home" replace />;
     }

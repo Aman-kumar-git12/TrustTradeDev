@@ -1,10 +1,19 @@
 import { loadRazorpay, startPayment } from "../assets/razorpay";
 import { CreditCard, ShieldCheck, ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
 
 function Checkout() {
+    const navigate = useNavigate();
+    const { user } = useAuth();
+
     const handlePay = async () => {
+        if (!user) {
+            navigate('/login');
+            return;
+        }
+
         const loaded = await loadRazorpay();
         if (!loaded) {
             alert("Razorpay SDK failed to load");
@@ -53,7 +62,7 @@ function Checkout() {
                     onClick={handlePay}
                     className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-emerald-600 dark:to-emerald-500 text-white rounded-2xl font-bold text-lg shadow-xl shadow-blue-600/20 dark:shadow-emerald-500/10 hover:shadow-blue-600/40 dark:hover:shadow-emerald-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
                 >
-                    Pay Now with Razorpay
+                    {user ? 'Pay Now with Razorpay' : 'Login to Continue'}
                 </button>
 
                 <div className="mt-8 flex items-center justify-center gap-2 text-xs text-gray-400 uppercase tracking-widest font-bold">

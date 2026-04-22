@@ -225,7 +225,7 @@ const Home = () => {
                             <>
                                 <h2 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white drop-shadow-sm dark:drop-shadow-lg">Can&apos;t find what you need?</h2>
                                 <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 drop-shadow-sm dark:drop-shadow-md">Post a generic buy request and let sellers come to you.</p>
-                                <Link to={user?.role === 'buyer' ? `/dashboard/buyer/${user._id}` : user ? "/dashboard" : "/login"} className="inline-flex px-8 py-3 bg-gradient-to-r from-blue-600 to-teal-600 dark:from-emerald-600 dark:to-emerald-500 bluish:from-blue-700 bluish:to-indigo-800 text-white rounded-lg font-bold hover:shadow-[0_0_20px_rgba(16,185,129,0.5)] dark:hover:shadow-[0_0_20px_rgba(16,185,129,0.5)] bluish:hover:shadow-[0_0_20px_rgba(30,58,138,0.5)] hover:scale-105 transition-all active:scale-95 border border-transparent dark:border-white/10 shadow-lg">
+                                <Link to={user ? "/dashboard" : "/login"} className="inline-flex px-8 py-3 bg-gradient-to-r from-blue-600 to-teal-600 dark:from-emerald-600 dark:to-emerald-500 bluish:from-blue-700 bluish:to-indigo-800 text-white rounded-lg font-bold hover:shadow-[0_0_20px_rgba(16,185,129,0.5)] dark:hover:shadow-[0_0_20px_rgba(16,185,129,0.5)] bluish:hover:shadow-[0_0_20px_rgba(30,58,138,0.5)] hover:scale-105 transition-all active:scale-95 border border-transparent dark:border-white/10 shadow-lg">
                                     Create Buy Request
                                 </Link>
                             </>

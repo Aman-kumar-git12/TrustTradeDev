@@ -89,22 +89,32 @@ const AssetDetails = () => {
             await loadRazorpay();
             await startPayment(
                 amount,
-                { assetId: asset._id, quantity },
-                () => {
+                { 
+                    assetId: asset._id, 
+                    quantity,
+                    buyerName: user.fullName || "User",
+                    buyerEmail: user.email || ""
+                },
+                (result) => {
                     // Success Callback
                     setIsPaymentInitiating(false);
+                    showSnackbar("Payment successful! Your order is being processed.", "success");
+                    
                     setSearchParams(prev => {
                         const newParams = new URLSearchParams(prev);
                         newParams.delete('bill');
                         return newParams;
                     });
-                    navigate(`/dashboard/buyer/${user._id}?tab=orders`);
+                    
+                    // Redirect to the unified activity hub
+                    navigate(`/dashboard/buyer/${user._id}/orders`);
                 },
-                () => {
+                (error) => {
                     // Failure/Cancel Callback
                     setIsPaymentInitiating(false);
-                    // Optional: You can choose to close the modal here or keep it open for retry
-                    // For now, keeping it open so user can try again easily
+                    if (error !== "Payment Cancelled") {
+                        showSnackbar(typeof error === 'string' ? error : "Payment failed. Please try again.", "error");
+                    }
                 }
             );
         } catch (error) {
@@ -521,10 +531,10 @@ const AssetDetails = () => {
 
                                 <div className="space-y-4">
                                     <button
-                                        onClick={() => navigate(`/dashboard/buyer/${user?._id}`)}
+                                        onClick={() => navigate(`/dashboard/buyer/${user._id}/orders`)}
                                         className="w-full bg-blue-500 hover:bg-blue-600 dark:bg-emerald-500 dark:hover:bg-emerald-600 text-white py-4 rounded-xl font-bold text-lg flex items-center justify-center group transition-all"
                                     >
-                                        Go to Buyer Dashboard
+                                        Go to Activity Hub
                                         <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                                     </button>
                                     <button

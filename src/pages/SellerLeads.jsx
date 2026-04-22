@@ -700,8 +700,8 @@ const SellerLeads = () => {
                         filters={filters}
                         setFilters={setFilters}
                         onClose={handleCloseFilter}
-                        onApply={() => fetchLeads(filters)}
-                        onClear={() => fetchLeads({})}
+                        onApply={(appliedFilters) => fetchLeads(appliedFilters)}
+                        onClear={(clearedFilters) => fetchLeads(clearedFilters)}
                     />
                 </div>
             )}

@@ -1,6 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { Building, MapPin, Save, Trash2, ArrowLeft, Image as ImageIcon, Camera, Loader2, Link as LinkIcon, Plus, X, Eye } from 'lucide-react';
+import { 
+    Building, MapPin, Save, Trash2, ArrowLeft, Image as ImageIcon, 
+    Loader2, Link as LinkIcon, Plus, Eye 
+} from 'lucide-react';
+import DragAndDropUpload from '../components/DragAndDropUpload';
 import api from '../utils/api';
 import { useUI } from '../context/UIContext';
 import BusinessDetailsShimmer from '../components/shimmers/BusinessDetailsShimmer';
@@ -11,13 +15,9 @@ const SellerBusinessDetails = () => {
     const { confirm, showSnackbar } = useUI();
     const isNew = id === 'new';
 
-    // File Upload Ref
-    const fileInputRef = useRef(null);
-
     const [loading, setLoading] = useState(!isNew);
     const [uploadingImage, setUploadingImage] = useState(false);
 
-    // Changed imageUrl to images array
     const [formData, setFormData] = useState({
         businessName: '',
         images: [],
@@ -26,7 +26,6 @@ const SellerBusinessDetails = () => {
         description: ''
     });
 
-    // Temporary state for the URL input
     const [urlInput, setUrlInput] = useState('');
 
     useEffect(() => {
@@ -41,7 +40,6 @@ const SellerBusinessDetails = () => {
             const business = data.find(b => b._id === id);
 
             if (business) {
-                // Backend compatibility: if 'images' exists use it, otherwise use 'imageUrl' as single item array
                 let images = business.images || [];
                 if (images.length === 0 && business.imageUrl) {
                     images = [business.imageUrl];
@@ -67,10 +65,8 @@ const SellerBusinessDetails = () => {
         }
     };
 
-    const handleFileSelect = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
+    const handleFileSelect = async (files) => {
+        if (!files || files.length === 0) return;
         if (formData.images.length >= 5) {
             showSnackbar('Maximum 5 images allowed', 'error');
             return;
@@ -78,23 +74,26 @@ const SellerBusinessDetails = () => {
 
         try {
             setUploadingImage(true);
-            const imageFormData = new FormData();
-            imageFormData.append('image', file);
+            const filesToUpload = Array.from(files).slice(0, 5 - formData.images.length);
+            
+            const uploadPromises = filesToUpload.map(async (file) => {
+                const imageFormData = new FormData();
+                imageFormData.append('image', file);
+                const { data } = await api.post('/images/upload', imageFormData);
+                return data.url;
+            });
 
-            // Upload to Cloudinary via backend proxy
-            const uploadRes = await api.post('/images/upload', imageFormData);
-
+            const newUrls = await Promise.all(uploadPromises);
             setFormData(prev => ({
                 ...prev,
-                images: [...prev.images, uploadRes.data.url]
+                images: [...prev.images, ...newUrls]
             }));
-            showSnackbar('Image uploaded successfully', 'success');
+            showSnackbar(`Successfully uploaded ${newUrls.length} image(s)`, 'success');
         } catch (error) {
             console.error('Image upload failed', error);
-            showSnackbar('Failed to upload image', 'error');
+            showSnackbar('Failed to upload images', 'error');
         } finally {
             setUploadingImage(false);
-            if (fileInputRef.current) fileInputRef.current.value = '';
         }
     };
 
@@ -119,14 +118,6 @@ const SellerBusinessDetails = () => {
         }));
     };
 
-    const triggerFileInput = () => {
-        if (formData.images.length >= 5) {
-            showSnackbar('Maximum 5 images allowed', 'error');
-            return;
-        }
-        fileInputRef.current.click();
-    };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -136,8 +127,10 @@ const SellerBusinessDetails = () => {
             };
 
             if (isNew) {
-                await api.post('/businesses', payload);
+                const { data } = await api.post('/businesses', payload);
                 showSnackbar('Business created successfully', 'success');
+                navigate(`/post-assets/${data._id}`);
+                return;
             } else {
                 await api.put(`/businesses/${id}`, payload);
                 showSnackbar('Business updated successfully', 'success');
@@ -172,13 +165,10 @@ const SellerBusinessDetails = () => {
 
     return (
         <div className="min-h-[calc(100vh-64px)] bg-gray-50 dark:bg-zinc-950 bluish:bg-[#0a0f1d] selection:bg-blue-500/30 dark:selection:bg-emerald-500/30 bluish:selection:bg-blue-500/30 py-12 px-4 sm:px-6 lg:px-8 transition-colors duration-300 relative overflow-hidden">
-            {/* Dynamic Background Elements - Bluish Theme Only */}
             <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden hidden bluish:block">
                 <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob"></div>
                 <div className="absolute top-[20%] right-[-10%] w-96 h-96 bg-purple-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob animation-delay-2000"></div>
                 <div className="absolute bottom-[-10%] left-[20%] w-96 h-96 bg-blue-600/20 rounded-full mix-blend-screen filter blur-[100px] opacity-30 animate-blob animation-delay-4000"></div>
-
-                {/* Background Image & Overlay */}
                 <div className="absolute inset-0">
                     <img
                         src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=2670&auto=format&fit=crop"
@@ -201,7 +191,6 @@ const SellerBusinessDetails = () => {
                 </button>
 
                 <div className="bg-white dark:bg-zinc-900 bluish:bg-gradient-to-br bluish:from-slate-800 bluish:to-slate-900 rounded-3xl shadow-xl dark:shadow-emerald-900/10 overflow-hidden border border-gray-100 dark:border-zinc-800 bluish:border-white/5 transition-all">
-                    {/* Premium Header */}
                     <div className="h-40 bg-gradient-to-r from-zinc-900 to-zinc-800 bluish:from-slate-900 bluish:to-slate-800 relative overflow-hidden">
                         <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] animate-pulse-slow"></div>
                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
@@ -223,18 +212,12 @@ const SellerBusinessDetails = () => {
                                         <Eye size={14} className="mr-2" /> View Public Page
                                     </Link>
                                 )}
-                                {isNew && (
-                                    <span className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-white text-xs font-bold border border-white/20">
-                                        Step 1 of 1
-                                    </span>
-                                )}
                             </div>
                         </div>
                     </div>
 
                     <form onSubmit={handleSubmit} className="p-8 lg:p-10 space-y-10">
                         <div className="flex flex-col lg:flex-row gap-12">
-                            {/* Left Column - Gallery Section (Moved Left for better UX on desktop) */}
                             <div className="lg:w-[400px] flex-shrink-0 space-y-6 order-2 lg:order-1">
                                 <div className="space-y-4">
                                     <div className="flex justify-between items-center">
@@ -250,35 +233,14 @@ const SellerBusinessDetails = () => {
                                         </span>
                                     </div>
 
-                                    {/* Unified Grid Layout */}
                                     <div className="grid grid-cols-2 gap-3">
-                                        {/* Main Cover (First Image) */}
-                                        {formData.images.length > 0 && (
-                                            <div className="col-span-2 aspect-video relative group rounded-2xl overflow-hidden shadow-md border border-gray-100 dark:border-zinc-700 bluish:border-white/10">
-                                                <img src={formData.images[0]} alt="Cover" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                                                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[2px]">
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => handleRemoveImage(0)}
-                                                        className="p-3 bg-red-500/90 text-white rounded-full hover:bg-red-600 transition-all hover:scale-110 shadow-lg"
-                                                    >
-                                                        <Trash2 size={20} />
-                                                    </button>
-                                                </div>
-                                                <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-md text-white text-[10px] px-3 py-1.5 rounded-full font-bold uppercase tracking-wider border border-white/10 shadow-sm">
-                                                    Main Cover
-                                                </div>
-                                            </div>
-                                        )}
-
-                                        {/* Remaining Images */}
-                                        {formData.images.slice(1).map((img, idx) => (
-                                            <div key={idx + 1} className="aspect-square relative group rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-zinc-700 bluish:border-white/10">
-                                                <img src={img} alt={`Gallery ${idx + 2}`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                                        {formData.images.map((img, idx) => (
+                                            <div key={idx} className={`${idx === 0 ? 'col-span-2 aspect-video' : 'aspect-square'} relative group rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-zinc-700 bluish:border-white/10`}>
+                                                <img src={img} alt={`Gallery ${idx + 1}`} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                                                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-[1px]">
                                                     <button
                                                         type="button"
-                                                        onClick={() => handleRemoveImage(idx + 1)}
+                                                        onClick={() => handleRemoveImage(idx)}
                                                         className="p-2 bg-red-500/90 text-white rounded-full hover:bg-red-600 transition-all hover:scale-110 shadow-md"
                                                     >
                                                         <Trash2 size={16} />
@@ -287,36 +249,29 @@ const SellerBusinessDetails = () => {
                                             </div>
                                         ))}
 
-                                        {/* Add Button (Integrated into Grid) */}
                                         {formData.images.length < 5 && (
-                                            <button
-                                                type="button"
-                                                onClick={triggerFileInput}
-                                                disabled={uploadingImage}
-                                                className={`relative group overflow-hidden bg-gray-50 dark:bg-zinc-800/50 bluish:bg-slate-800 border-2 border-dashed border-gray-300 dark:border-zinc-700 bluish:border-white/10 hover:border-blue-500 dark:hover:border-emerald-500 bluish:hover:border-blue-500 rounded-xl flex flex-col items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-emerald-400 bluish:hover:text-blue-400 transition-all duration-300 ${formData.images.length === 0 ? 'col-span-2 aspect-video' : 'aspect-square'
-                                                    }`}
+                                            <DragAndDropUpload
+                                                onFilesSelected={handleFileSelect}
+                                                loading={uploadingImage}
+                                                multiple={true}
+                                                className={`relative group overflow-hidden bg-gray-50/50 dark:bg-zinc-800/30 bluish:bg-slate-800/50 border-2 border-dashed border-gray-300 dark:border-zinc-700 bluish:border-white/10 hover:border-blue-500 dark:hover:border-emerald-500 bluish:hover:border-blue-500 rounded-xl flex flex-col items-center justify-center text-gray-400 hover:text-blue-600 dark:hover:text-emerald-400 bluish:hover:text-blue-400 transition-all duration-300 ${formData.images.length === 0 ? 'col-span-2 aspect-[21/9]' : 'aspect-square'}`}
                                             >
-                                                <div className="absolute inset-0 bg-blue-50/50 dark:bg-emerald-900/10 bluish:bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                                                 {uploadingImage ? (
-                                                    <Loader2 size={24} className="animate-spin mb-2 relative z-10" />
+                                                    <Loader2 size={24} className="animate-spin mb-2" />
                                                 ) : (
-                                                    <Plus size={32} className="mb-2 relative z-10 group-hover:scale-110 transition-transform" />
+                                                    <div className="flex flex-col items-center">
+                                                        <Plus size={formData.images.length === 0 ? 40 : 28} className="mb-2 group-hover:scale-110 transition-transform" />
+                                                        <span className="text-xs font-black uppercase tracking-widest">{uploadingImage ? 'Uploading...' : 'Add Image'}</span>
+                                                        {formData.images.length === 0 && (
+                                                            <span className="text-[10px] text-gray-400 dark:text-gray-500 mt-1 font-medium italic">or drag and drop here</span>
+                                                        )}
+                                                    </div>
                                                 )}
-                                                <span className="text-xs font-bold relative z-10">{uploadingImage ? 'Uploading...' : 'Add Image'}</span>
-                                            </button>
+                                            </DragAndDropUpload>
                                         )}
                                     </div>
 
-                                    {/* Action Buttons */}
                                     <div className="bg-gray-50 dark:bg-zinc-800/50 bluish:bg-slate-800 p-5 rounded-2xl border border-gray-100 dark:border-zinc-800 bluish:border-white/5 space-y-4">
-                                        <input
-                                            type="file"
-                                            ref={fileInputRef}
-                                            className="hidden"
-                                            accept="image/*"
-                                            onChange={handleFileSelect}
-                                        />
-
                                         <div className="relative group">
                                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                                 <LinkIcon size={14} className="text-gray-400 group-focus-within:text-blue-500 dark:group-focus-within:text-emerald-500 bluish:group-focus-within:text-blue-500 transition-colors" />

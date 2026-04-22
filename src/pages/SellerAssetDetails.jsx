@@ -1,7 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../utils/api';
-import { MapPin, Tag, CheckCircle, ArrowLeft, Edit, Trash2, Eye, PauseCircle, PlayCircle, FileText } from 'lucide-react';
+import { 
+    Tag, MapPin, Eye, 
+    Plus, X, ArrowLeft,
+    CheckCircle, Edit, FileText,
+    PauseCircle, PlayCircle, Trash2,
+    Loader2, Link as LinkIcon, AlertCircle 
+} from 'lucide-react';
+import DragAndDropUpload from '../components/DragAndDropUpload';
 import { useUI } from '../context/UIContext';
 import AssetDetailsShimmer from '../components/shimmers/AssetDetailsShimmer';
 
@@ -12,6 +19,11 @@ const SellerAssetDetails = () => {
     const [loading, setLoading] = useState(true);
     const [asset, setAsset] = useState(null);
     const { showSnackbar, confirm } = useUI();
+    
+    // Image Upload State
+    const [uploadingImage, setUploadingImage] = useState(false);
+    const [urlInput, setUrlInput] = useState('');
+
     const [editForm, setEditForm] = useState({
         title: '',
         price: '',
@@ -19,7 +31,8 @@ const SellerAssetDetails = () => {
         location: '',
         category: '',
         condition: '',
-        quantity: ''
+        quantity: '',
+        images: []
     });
 
     useEffect(() => {
@@ -35,7 +48,8 @@ const SellerAssetDetails = () => {
                     location: data.location,
                     category: data.category,
                     condition: data.condition,
-                    quantity: data.quantity
+                    quantity: data.quantity,
+                    images: data.images || []
                 });
             } catch (error) {
                 console.error("Failed to fetch asset", error);
@@ -50,6 +64,60 @@ const SellerAssetDetails = () => {
 
     const handleInputChange = (e) => {
         setEditForm({ ...editForm, [e.target.name]: e.target.value });
+    };
+
+    // Image Management Logic
+    const handleFileSelect = async (files) => {
+        if (!files || files.length === 0) return;
+        if (editForm.images.length >= 5) {
+            showSnackbar('Maximum 5 images allowed', 'error');
+            return;
+        }
+
+        try {
+            setUploadingImage(true);
+            const filesToUpload = Array.from(files).slice(0, 5 - editForm.images.length);
+            
+            const uploadPromises = filesToUpload.map(async (file) => {
+                const imageFormData = new FormData();
+                imageFormData.append('image', file);
+                const { data } = await api.post('/images/upload', imageFormData);
+                return data.url;
+            });
+
+            const newUrls = await Promise.all(uploadPromises);
+            setEditForm(prev => ({
+                ...prev,
+                images: [...prev.images, ...newUrls]
+            }));
+            showSnackbar(`Successfully uploaded ${newUrls.length} image(s)`, 'success');
+        } catch (error) {
+            console.error('Image upload failed', error);
+            showSnackbar('Failed to upload images', 'error');
+        } finally {
+            setUploadingImage(false);
+        }
+    };
+
+    const handleAddLink = () => {
+        if (!urlInput) return;
+        if (editForm.images.length >= 5) {
+            showSnackbar('Maximum 5 images allowed', 'error');
+            return;
+        }
+
+        setEditForm(prev => ({
+            ...prev,
+            images: [...prev.images, urlInput]
+        }));
+        setUrlInput('');
+    };
+
+    const handleRemoveImage = (indexToRemove) => {
+        setEditForm(prev => ({
+            ...prev,
+            images: prev.images.filter((_, index) => index !== indexToRemove)
+        }));
     };
 
     const handleUpdateAsset = async () => {
@@ -114,25 +182,99 @@ const SellerAssetDetails = () => {
 
             <div className="grid lg:grid-cols-2 gap-12 items-start">
                 {/* Image Section - Left (Rounded as per image) */}
-                <div className="bg-gray-100 dark:bg-zinc-800 rounded-2xl overflow-hidden aspect-[4/3] shadow-inner relative group transition-colors duration-300">
-                    {asset.images && asset.images.length > 0 ? (
-                        <img
-                            src={asset.images[0]}
-                            alt={asset.title}
-                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
-                    ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-zinc-600">No Image</div>
-                    )}
+                <div className="space-y-6">
+                    <div className="bg-gray-100 dark:bg-zinc-800 rounded-2xl overflow-hidden aspect-[4/3] shadow-inner relative group transition-colors duration-300">
+                        {(!isEditing && asset.images && asset.images.length > 0) || (isEditing && editForm.images.length > 0) ? (
+                            <img
+                                src={isEditing ? editForm.images[0] : asset.images[0]}
+                                alt={asset.title}
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
+                        ) : (
+                            <div className="w-full h-full flex items-center justify-center text-gray-400 dark:text-zinc-600">No Image</div>
+                        )}
 
-                    {/* Status Overlay */}
-                    <div className="absolute top-4 left-4">
-                        <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide shadow-sm ${asset.status === 'active' ? 'bg-blue-100 text-blue-700 dark:bg-emerald-900/40 dark:text-emerald-300' :
-                            'bg-gray-100 text-gray-700 dark:bg-zinc-700 dark:text-gray-300'
-                            } transition-colors duration-300`}>
-                            {asset.status}
-                        </span>
+                        {/* Status Overlay */}
+                        <div className="absolute top-4 left-4">
+                            <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide shadow-sm ${asset.status === 'active' ? 'bg-blue-100 text-blue-700 dark:bg-emerald-900/40 dark:text-emerald-300' :
+                                'bg-gray-100 text-gray-700 dark:bg-zinc-700 dark:text-gray-300'
+                                } transition-colors duration-300`}>
+                                {asset.status}
+                            </span>
+                        </div>
                     </div>
+
+                    {/* Image Management UI (Only in Edit Mode) */}
+                    {isEditing && (
+                        <div className="animate-fade-in space-y-4">
+                            <div className="flex justify-between items-center px-1">
+                                <label className="text-sm font-bold text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                                    Manage Images <span className="text-xs font-medium text-gray-400">({editForm.images.length}/5)</span>
+                                </label>
+                            </div>
+
+                            {/* Thumbnail Grid */}
+                            <div className="grid grid-cols-5 gap-3">
+                                {editForm.images.map((img, idx) => (
+                                    <div key={idx} className="aspect-square relative group rounded-lg overflow-hidden border border-gray-200 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800">
+                                        <img src={img} alt={`Preview ${idx + 1}`} className="w-full h-full object-cover" />
+                                        <button
+                                            type="button"
+                                            onClick={() => handleRemoveImage(idx)}
+                                            className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg scale-75"
+                                        >
+                                            <X size={12} />
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Upload Tools */}
+                            <div className="mt-4 space-y-3">
+                                <div className="flex gap-2">
+                                    <DragAndDropUpload
+                                        onFilesSelected={handleFileSelect}
+                                        loading={uploadingImage}
+                                        multiple={true}
+                                        className="flex-shrink-0 w-12 h-12 bg-gray-100 dark:bg-zinc-800 bluish:bg-slate-800 border-2 border-dashed border-gray-200 dark:border-zinc-700 bluish:border-white/10 rounded-xl flex items-center justify-center hover:border-blue-500 dark:hover:border-emerald-500 transition-all shadow-sm"
+                                    >
+                                        {uploadingImage ? <Loader2 size={18} className="animate-spin text-blue-500" /> : <Plus size={24} className="text-gray-400 group-hover:text-blue-500 transition-colors" />}
+                                    </DragAndDropUpload>
+
+                                    <div className="flex-grow relative group">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500">
+                                            <LinkIcon size={14} />
+                                        </div>
+                                        <input
+                                            type="url"
+                                            className="w-full pl-9 pr-4 py-2 text-xs bg-gray-50 dark:bg-zinc-800 border border-gray-200 dark:border-zinc-700 rounded-lg focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
+                                            placeholder="Paste image URL..."
+                                            value={urlInput}
+                                            onChange={e => setUrlInput(e.target.value)}
+                                            onKeyDown={e => {
+                                                if (e.key === 'Enter') {
+                                                    e.preventDefault();
+                                                    handleAddLink();
+                                                }
+                                            }}
+                                        />
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={handleAddLink}
+                                        disabled={!urlInput || editForm.images.length >= 5}
+                                        className="px-3 py-2 bg-blue-500 text-white rounded-lg text-xs font-bold hover:bg-blue-600 transition-colors disabled:opacity-50"
+                                    >
+                                        Add
+                                    </button>
+                                </div>
+                                <p className="text-[10px] text-gray-400 flex items-center">
+                                    <AlertCircle size={10} className="mr-1" />
+                                    Drop images or paste URL. Max 5 images.
+                                </p>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* Info Section - Right */}
@@ -349,7 +491,8 @@ const SellerAssetDetails = () => {
                                             location: asset.location,
                                             category: asset.category,
                                             condition: asset.condition,
-                                            quantity: asset.quantity
+                                            quantity: asset.quantity,
+                                            images: asset.images || []
                                         });
                                     }}
                                     className="flex-1 bg-gray-100 dark:bg-zinc-800 hover:bg-gray-200 dark:hover:bg-zinc-700 text-gray-700 dark:text-gray-300 py-3 px-6 rounded-xl font-bold transition-all flex items-center justify-center gap-2"

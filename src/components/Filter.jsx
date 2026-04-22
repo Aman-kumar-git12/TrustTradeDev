@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Filter as FilterIcon, X } from 'lucide-react';
+import { Search, Filter as FilterIcon, X, MapPin } from 'lucide-react';
 
 const CATEGORIES = [
     'Industrial',
@@ -57,10 +57,25 @@ const Filter = ({ filters, onFilterChange, onClear, onApply, onClose, accentColo
                         <Search className="absolute left-3 top-2.5 text-gray-400 dark:text-gray-500" size={18} />
                         <input
                             type="text"
-                            placeholder="Search assets or business name..."
+                            placeholder="Keywords (e.g. 'Laptop', 'Truck')..."
                             className={`w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 rounded-lg focus:ring-2 ${accentRing} outline-none bg-white dark:bg-zinc-800 bluish:bg-slate-800/50 text-gray-900 dark:text-white transition-colors`}
                             value={filters.search || ''}
                             onChange={(e) => handleChange('search', e.target.value)}
+                        />
+                    </div>
+                </div>
+
+                {/* Location */}
+                <div>
+                    <label className="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2 transition-colors">Location</label>
+                    <div className="relative">
+                        <MapPin className="absolute left-3 top-2.5 text-gray-400 dark:text-gray-500" size={18} />
+                        <input
+                            type="text"
+                            placeholder="City or Region..."
+                            className={`w-full pl-10 pr-4 py-2 border border-gray-200 dark:border-zinc-700 bluish:border-white/10 rounded-lg focus:ring-2 ${accentRing} outline-none bg-white dark:bg-zinc-800 bluish:bg-slate-800/50 text-gray-900 dark:text-white transition-colors`}
+                            value={filters.location || ''}
+                            onChange={(e) => handleChange('location', e.target.value)}
                         />
                     </div>
                 </div>

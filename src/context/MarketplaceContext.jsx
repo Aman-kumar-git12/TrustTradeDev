@@ -13,6 +13,7 @@ export const MarketplaceProvider = ({ children }) => {
     const [filters, setFilters] = useState({
         search: '',
         category: '',
+        location: '',
         minPrice: '',
         maxPrice: '',
         condition: ''
@@ -26,6 +27,7 @@ export const MarketplaceProvider = ({ children }) => {
         setFilters({
             search: '',
             category: '',
+            location: '',
             minPrice: '',
             maxPrice: '',
             condition: ''

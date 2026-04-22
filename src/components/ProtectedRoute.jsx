@@ -13,8 +13,12 @@ const ProtectedRoute = ({ children, role }) => {
         return <Navigate to="/" replace />;
     }
 
-    if (role && user.role !== role && user.role !== 'admin') {
-        return <Navigate to="/" replace />;
+    // Support for multiple roles (array or single string)
+    if (role) {
+        const allowedRoles = Array.isArray(role) ? role : [role];
+        if (!allowedRoles.includes(user.role) && user.role !== 'admin') {
+            return <Navigate to="/" replace />;
+        }
     }
 
     return children;

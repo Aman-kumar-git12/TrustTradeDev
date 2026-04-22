@@ -41,7 +41,7 @@ const Login = () => {
         setIsLoading(true);
         setError(null);
         try {
-            await login(email, password);
+            await login(email.trim(), password.trim());
             navigate('/home');
         } catch (err) {
             setError('Invalid credentials');

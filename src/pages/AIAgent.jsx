@@ -865,10 +865,17 @@ const AIAgent = () => {
 
                                                                             // 3. Initiate if we have the order details now
                                                                             if (paymentOrder?.razorpayOrderId) {
-                                                                                startAgentPayment(paymentOrder, (res) => {
-                                                                                    // Successfully verified by Razorpay
-                                                                                    setInitiatingPayments(prev => ({ ...prev, [message.id]: false }));
-                                                                                    sendMessage("I completed payment in the app.", {
+                                                                                startAgentPayment(paymentOrder, { buyerName: user?.fullName, buyerEmail: user?.email }, async (res) => {
+                                                                                    // Authoritative verification first
+                                                                                    try {
+                                                                                        await api.post('/agent/complete-purchase', {
+                                                                                            razorpayOrderId: res.razorpay_order_id,
+                                                                                            razorpayPaymentId: res.razorpay_payment_id,
+                                                                                            razorpaySignature: res.razorpay_signature
+                                                                                        });
+                                                                                        
+                                                                                        setInitiatingPayments(prev => ({ ...prev, [message.id]: false }));
+                                                                                         await sendMessage("I completed payment in the app.", {
                                                                                         metadata: {
                                                                                             paymentVerification: {
                                                                                                 razorpayOrderId: res.razorpay_order_id,
@@ -876,7 +883,7 @@ const AIAgent = () => {
                                                                                                 razorpaySignature: res.razorpay_signature
                                                                                             }
                                                                                         }
-                                                                                    });
+                                                                                    }); } catch(e) { console.error(e); }
                                                                                 }, (err) => {
                                                                                     console.error("Payment failed:", err);
                                                                                     setInitiatingPayments(prev => ({ ...prev, [message.id]: false }));

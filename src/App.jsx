@@ -21,11 +21,15 @@ import SellerAnalyticsOverview from './pages/SellerAnalyticsOverview'
 import SellerAnalyticsProducts from './pages/SellerAnalyticsProducts'
 import SellerAnalyticsCustomers from './pages/SellerAnalyticsCustomers'
 import BuyerDashboard from './pages/BuyerDashboard'
+import BuyingHub from './pages/BuyingHub'
+import BuyerInterests from './pages/BuyerInterests'
+import BuyerOrders from './pages/BuyerOrders'
 import Profile from './pages/Profile'
 import BuyerInsights from './pages/BuyerInsights'
 import SellerSelectBusinessPost from './pages/SellerSelectBusinessPost'
 import SellerSelectDashboardBusiness from './pages/SellerSelectDashboardBusiness'
 import SellerDashboardRedirect from './pages/SellerDashboardRedirect'
+import BuyerDashboardRedirect from './pages/BuyerDashboardRedirect'
 import SellerMyBusinesses from './pages/SellerMyBusinesses'
 import SellerBusinessDetails from './pages/SellerBusinessDetails'
 import PublicBusinessDetails from './pages/PublicBusinessDetails'
@@ -92,7 +96,7 @@ function App() {
             return true;
         }
 
-        if (path.includes('/dashboard/buyer/') && path.includes('/insights')) {
+        if (path.includes('/dashboard/intelligence')) {
             return true;
         }
 
@@ -199,57 +203,87 @@ function App() {
                         <SellerPostAsset />
                     </ProtectedRoute>
                 } />
-                <Route path="/dashboard/seller" element={
-                    <ProtectedRoute role="seller">
-                        <SellerDashboardRedirect />
-                    </ProtectedRoute>
-                } />
-                <Route path="/dashboard/seller/select" element={
-                    <ProtectedRoute role="seller">
-                        <SellerSelectDashboardBusiness />
-                    </ProtectedRoute>
-                } />
-                <Route path="/dashboard" element={<Dashboard />} />
-
-                <Route path="/dashboard/seller/:businessId" element={
-                    <ProtectedRoute role="seller">
-                        <SellerDashboard />
-                    </ProtectedRoute>
-                }>
-                    <Route index element={<Navigate to="leads" replace />} />
-                    <Route path="leads" element={<SellerLeads />} />
-                    <Route path="leads/filter" element={<SellerLeads />} />
-                    <Route path="listings" element={<SellerListings />} />
-                    <Route path="listings/filter" element={<SellerListings />} />
-
-                    {/* Analytics Routes */}
-                    <Route path="analytics" element={<SellerAnalytics />}>
-                        <Route index element={<Navigate to="overview/1m" replace />} />
-                        <Route path="overview" element={<Navigate to="1m" replace />} />
-                        <Route path="overview/:range" element={<SellerAnalyticsOverview />} />
-                        <Route path="products" element={<SellerAnalyticsProducts />} />
-                        <Route path="product/:assetId/:range?" element={<SellerProductAnalytics />} />
-                        <Route path="customers" element={<SellerAnalyticsCustomers />} />
+                {/* Unified Dashboard System */}
+                <Route path="/dashboard">
+                    <Route index element={<Dashboard />} />
+                    
+                    {/* Unified Activity Hub (Common for both Buyers and Sellers) */}
+                    <Route path="buyer" element={
+                        <ProtectedRoute role={['buyer', 'seller']}>
+                            <BuyerDashboardRedirect />
+                        </ProtectedRoute>
+                    } />
+                    
+                    <Route path="buyer/:userId" element={
+                        <ProtectedRoute role={['buyer', 'seller']}>
+                            <BuyingHub />
+                        </ProtectedRoute>
+                    }>
+                        <Route index element={<Navigate to="orders" replace />} />
+                        <Route path="interest" element={<BuyerInterests />} />
+                        <Route path="orders" element={<BuyerOrders />} />
+                        <Route path="intelligence" element={<BuyerInsights />} />
                     </Route>
+
+                    {/* Legacy Redirects */}
+                    <Route path="interests" element={<Navigate to="/dashboard/buyer" replace />} />
+                    <Route path="orders" element={<Navigate to="/dashboard/buyer" replace />} />
+                    <Route path="intelligence" element={<Navigate to="/dashboard/buyer" replace />} />
+
+                    {/* Seller Specialized Tools */}
+                    <Route path="seller" element={
+                        <ProtectedRoute role="seller">
+                            <SellerDashboardRedirect />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="seller/select" element={
+                        <ProtectedRoute role="seller">
+                            <SellerSelectDashboardBusiness />
+                        </ProtectedRoute>
+                    } />
+                    
+                    <Route path="seller/:businessId" element={
+                        <ProtectedRoute role="seller">
+                            <SellerDashboard />
+                        </ProtectedRoute>
+                    }>
+                        <Route index element={<Navigate to="leads" replace />} />
+                        <Route path="leads" element={<SellerLeads />} />
+                        <Route path="leads/filter" element={<SellerLeads />} />
+                        <Route path="listings" element={<SellerListings />} />
+                        <Route path="listings/filter" element={<SellerListings />} />
+
+                        {/* Analytics Routes */}
+                        <Route path="analytics" element={<SellerAnalytics />}>
+                            <Route index element={<Navigate to="overview/1m" replace />} />
+                            <Route path="overview" element={<Navigate to="1m" replace />} />
+                            <Route path="overview/:range" element={<SellerAnalyticsOverview />} />
+                            <Route path="products" element={<SellerAnalyticsProducts />} />
+                            <Route path="product/:assetId/:range?" element={<SellerProductAnalytics />} />
+                            <Route path="customers" element={<SellerAnalyticsCustomers />} />
+                        </Route>
+                    </Route>
+
+                    {/* Specific Asset Details Route (Standalone within Dashboard) */}
+                    <Route path="seller/:businessId/listings/:id" element={
+                        <ProtectedRoute role="seller">
+                            <SellerAssetDetails />
+                        </ProtectedRoute>
+                    } />
+
+                    {/* Legacy Aliases for Backward Compatibility */}
+                    <Route path="buyer/:userId" element={
+                        <ProtectedRoute role={['buyer', 'seller']}>
+                            <Navigate to="/dashboard/interests" replace />
+                        </ProtectedRoute>
+                    } />
+                    <Route path="buyer/:userId/insights/:range?" element={
+                        <ProtectedRoute role={['buyer', 'seller']}>
+                            <Navigate to="/dashboard/intelligence" replace />
+                        </ProtectedRoute>
+                    } />
                 </Route>
-                {/* Specific Asset Details Route (Standalone) */}
-                <Route path="/dashboard/seller/:businessId/listings/:id" element={
-                    <ProtectedRoute role="seller">
-                        <SellerAssetDetails />
-                    </ProtectedRoute>
-                } />
-                <Route path="/dashboard/buyer/:userId" element={
-                    <ProtectedRoute role="buyer">
-                        <BuyerDashboard />
-                    </ProtectedRoute>
-                }>
-                    <Route path="filter" element={<div />} />
-                </Route>
-                <Route path="/dashboard/buyer/:userId/insights/:range?" element={
-                    <ProtectedRoute role="buyer">
-                        <BuyerInsights />
-                    </ProtectedRoute>
-                } />
+
                 <Route path="/checkout" element={<Checkout />} />
 
                 {/* Admin Routes */}

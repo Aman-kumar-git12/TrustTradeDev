@@ -409,7 +409,7 @@ const BuyerDashboard = () => {
     useEffect(() => {
         const fetchActivityCounts = async () => {
             try {
-                const { data } = await api.get('/auth/activity-counts');
+                const { data } = await api.get('/auth/activity-counts?scope=buying');
                 setActivityCounts(data);
             } catch (error) {
                 console.error("Failed to fetch activity counts", error);
@@ -483,10 +483,10 @@ const BuyerDashboard = () => {
             });
 
             if (tab === 'interests') {
-                const res = await api.get(`/interests/buyer?${params.toString()}`);
+                const res = await api.get(`/interests/me?${params.toString()}`);
                 setInterests(res.data);
             } else {
-                const res = await api.get(`/sales/buyer?${params.toString()}`);
+                const res = await api.get(`/sales/me?${params.toString()}`);
                 setOrders(res.data);
             }
         } catch (error) {
@@ -583,7 +583,7 @@ const BuyerDashboard = () => {
 
                             <Hover text="Intelligence Hub">
                                 <button
-                                    onClick={() => navigate(`/dashboard/buyer/${userId}/insights/1m`)}
+                                    onClick={() => navigate('/dashboard/intelligence')}
                                     className={`flex items-center px-6 py-2.5 rounded-lg font-bold text-sm transition-all shadow-sm group whitespace-nowrap ${location.pathname.includes('/insights')
                                         ? 'bg-gradient-to-br from-blue-50 to-blue-100/50 dark:from-emerald-500/20 dark:to-emerald-500/5 bluish:from-blue-500/20 bluish:to-blue-500/5 text-blue-600 dark:text-emerald-400 bluish:text-blue-400 border border-blue-100/50 dark:border-emerald-500/20 bluish:border-blue-500/20'
                                         : 'text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'}`}

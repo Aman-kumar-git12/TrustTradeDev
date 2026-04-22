@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { MapPin, Tag, Filter as FilterIcon, PlusCircle, Factory, Truck, Cpu, Building2, Stethoscope, Smartphone, Hammer, Printer, HelpCircle, Loader2, Link as LinkIcon, Plus, Trash2, X, AlertCircle } from 'lucide-react';
 import api from '../utils/api';
-import { MapPin, Tag, Filter as FilterIcon } from 'lucide-react';
 import Filter from '../components/Filter';
 import GridShimmer from '../components/shimmers/GridShimmer';
 import { useTheme } from '../context/ThemeContext';
@@ -20,6 +20,14 @@ const Marketplace = () => {
         filters, setFilters,
         clearMarketplaceState
     } = useMarketplace();
+
+    // Local state for unapplied filters
+    const [localFilters, setLocalFilters] = useState(filters);
+    
+    // Sync local filters if global filters change (e.g. from context reset)
+    useEffect(() => {
+        setLocalFilters(filters);
+    }, [filters]);
 
     const [loading, setLoading] = useState(assets.length === 0); // Only load if empty
     const [isFetchingMore, setIsFetchingMore] = useState(false);
@@ -82,6 +90,7 @@ const Marketplace = () => {
             if (activeFilters.minPrice) params.append('minPrice', activeFilters.minPrice);
             if (activeFilters.maxPrice) params.append('maxPrice', activeFilters.maxPrice);
             if (activeFilters.condition) params.append('condition', activeFilters.condition);
+            if (activeFilters.location) params.append('location', activeFilters.location);
             params.append('limit', '9');
 
             if (isLoadMore) {
@@ -121,29 +130,10 @@ const Marketplace = () => {
 
     // Initial load logic
     useEffect(() => {
-        // If we have assets and no filters changed (checked via simplified logic or assuming filters persist in context), don't refetch
-        // We know filters persist in context.
-        // We only fetch if assets are empty (refresh or first load) OR if filters effectively changed locally?
-        // Actually, if we just rely on `assets.length === 0`, that handles the "refresh" case.
-        // What if user changes filters? `handleFilterChange` updates context filters. 
-        // We need an effect that watches `filters`.
-
-        // Strategy: 
-        // 1. If assets are empty, fetch.
-        // 2. If filters change, we MUST fetch fresh. But we need to distinguish "initial mount with existing filters" vs "user changed filters".
-        // The context stores the *current* filters.
-
         if (assets.length === 0) {
             fetchAssets(filters, false);
         }
-    }, [filters]); // If filters change, this runs. If mount with existing filters & empty assets, runs. 
-    // BUT if mount with existing filters & existing assets, we skip? 
-    // Problem: `[filters]` dependency will run on mount. If `assets` is not empty, it won't fetch. Correct.
-    // What if user changes filter? `setFilters` updates context. This effect runs. `assets` is NOT empty. We MUST fetch.
-
-    // Correction: We need to know if this is a "mount" or a "change".
-    // Alternatively, `handleFilterChange` can trigger the fetch or clear assets.
-    // Let's modify `handleFilterChange` to clear assets, which trips the effect.
+    }, [filters]); 
 
     const handleClearFilters = () => {
         const emptyFilters = {
@@ -151,33 +141,25 @@ const Marketplace = () => {
             category: '',
             minPrice: '',
             maxPrice: '',
-            condition: ''
+            condition: '',
+            location: ''
         };
+        setLocalFilters(emptyFilters);
         setFilters(emptyFilters);
-        setAssets([]); // Clear assets to trigger refetch
+        setAssets([]); 
         setHasMore(true);
-        // Effect will run because filters changed OR assets is empty is checked?
-        // Let's rely on explicitly calling fetch or clearing assets.
+        fetchAssets(emptyFilters, false);
     };
 
     const handleFilterChange = (newFilters) => {
-        setFilters(prev => {
-            const updated = { ...prev, ...newFilters };
-            // We should also clear assets/reset here to force a refetch in the Effect?
-            // Doing it in setState callback or immediately after?
-            return updated;
-        });
-        // Side effect: We want to refetch when filters update.
-        // Better: Make the useEffect *always* fetch if it's a filter change, but GUARD against the "mount restoration" case.
-
-        // For now, let's keep it simple:
-        // If the user *interacts* to change filters, we call `fetchAssets` directly or reset `assets`.
-        setAssets([]);
-        setHasMore(true);
+        setLocalFilters(newFilters);
     };
 
     const handleApplyFilters = () => {
-        // Handled by logic above
+        setFilters(localFilters);
+        setAssets([]); 
+        setHasMore(true);
+        fetchAssets(localFilters, false);
     };
 
     const isDark = theme === 'dark';
@@ -214,12 +196,13 @@ const Marketplace = () => {
                     {isFilterOpen && (
                         <div className="w-full md:w-1/4 flex-shrink-0 transition-all duration-300 ease-in-out block animate-fade-in">
                             <Filter
-                                filters={filters}
+                                filters={localFilters}
                                 onFilterChange={handleFilterChange}
                                 onClear={handleClearFilters}
                                 onApply={handleApplyFilters}
                                 onClose={() => navigate('/marketplace')}
                                 accentColor={accentColor}
+                                hideStatus={true}
                             />
                         </div>
                     )}
