@@ -122,7 +122,7 @@ const BuyingHub = () => {
 
                     {user?.role === 'seller' && (
                         <Link 
-                            to="/dashboard/seller"
+                            to="/dashboard/seller/select"
                             className="flex items-center justify-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-black text-sm transition-all shadow-xl shadow-indigo-500/20 active:scale-95 group"
                         >
                             <Building2 className="mr-2 group-hover:rotate-12 transition-transform" size={18} />

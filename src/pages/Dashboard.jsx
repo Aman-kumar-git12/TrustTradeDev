@@ -18,8 +18,8 @@ const Dashboard = () => {
         case 'admin':
             return <Navigate to="/admin" replace />;
         case 'seller':
-            // Sellers go to the Seller Command Center (Hub)
-            return <Navigate to="/dashboard/seller" replace />;
+            // Always go to the selection/creation page (Seller Hub)
+            return <Navigate to="/dashboard/seller/select" replace />;
         case 'buyer':
             // Buyers go to the unified buying hub
             return <Navigate to="/dashboard/buyer" replace />;
