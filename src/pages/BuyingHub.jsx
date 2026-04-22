@@ -121,8 +121,8 @@ const BuyingHub = () => {
                     </div>
 
                     {user?.role === 'seller' && (
-                        <Link 
-                            to="/dashboard/seller/select"
+                        <Link
+                            to="/dashboard/seller"
                             className="flex items-center justify-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-black text-sm transition-all shadow-xl shadow-indigo-500/20 active:scale-95 group"
                         >
                             <Building2 className="mr-2 group-hover:rotate-12 transition-transform" size={18} />
@@ -235,14 +235,14 @@ const BuyingHub = () => {
                                 filters={filters}
                                 onFilterChange={setFilters}
                                 onClear={handleClearFilters}
-                                onApply={() => {}} // Now handled by child components responding to state changes
+                                onApply={() => { }} // Now handled by child components responding to state changes
                                 accentColor="blue"
                                 hideStatus={isOrdersTab}
                                 onClose={toggleFilter}
                             />
                         </div>
                     )}
-                    
+
                     <div className="flex-grow w-full">
                         <AnimatePresence mode="wait">
                             <motion.div

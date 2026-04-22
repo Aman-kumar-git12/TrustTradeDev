@@ -44,7 +44,21 @@ const SellerDashboardRedirect = () => {
         fetchBusinesses();
     }, []);
 
-    // Always go to the selection/creation page (Seller Hub)
+    if (businessId) {
+        return <Navigate to={`/dashboard/seller/${businessId}/leads`} replace />;
+    }
+
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-[60vh]">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+            </div>
+        );
+    }
+
+    // Fallback: If no business found, go to the selection/creation page
+    // We can import SelectDashboardBusiness here or just navigate to a routed path if we kept it.
+    // Let's assume we reuse the existing SelectDashboardBusiness for the "Empty" state.
     return <Navigate to="/dashboard/seller/select" replace />;
 };
 
