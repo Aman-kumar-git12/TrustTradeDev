@@ -353,8 +353,9 @@ const AIAgent = () => {
             setIsSending(false); await showOfflineAssistantMessage(nextMessages); return null;
         }
         try {
-            const { data } = await api.post('/agent/chat', {
-                message, mode: chatMode, sessionId: currentSessionId, metadata: options.metadata || {},
+            const targetPath = chatMode === 'agent' ? '/agent/chat/strategic' : '/agent/chat/conversation';
+            const { data } = await api.post(targetPath, {
+                message, sessionId: currentSessionId, metadata: options.metadata || {},
                 history: nextMessages.filter(m => m.role === 'user' || m.role === 'assistant').slice(-8).map(m => ({ role: m.role, content: m.content }))
             });
             let resolvedSessionId = currentSessionId;
