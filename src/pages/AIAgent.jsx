@@ -36,6 +36,8 @@ const thinkingStages = [
 
 const LOCAL_SESSION_PREFIX = 'local-';
 const LOCAL_SESSION_STORAGE_KEY = 'trusttrade_agent_local_sessions';
+const ACTIVE_SESSION_KEY = 'trusttrade_agent_active_session';
+const ACTIVE_MODE_KEY = 'trusttrade_agent_active_mode';
 
 const createMessageId = (role) => `${role}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
 const createLocalSessionId = () => `${LOCAL_SESSION_PREFIX}${Date.now()}-${Math.random().toString(16).slice(2)}`;
@@ -162,12 +164,16 @@ const AIAgent = () => {
     const [streamingMessageId, setStreamingMessageId] = useState(null);
     const [messages, setMessages] = useState([]);
     const [sessions, setSessions] = useState([]);
-    const [currentSessionId, setCurrentSessionId] = useState(null);
+    const [currentSessionId, setCurrentSessionId] = useState(() => {
+        try { return window.localStorage.getItem(ACTIVE_SESSION_KEY) || null; } catch { return null; }
+    });
     const [isLoadingSessions, setIsLoadingSessions] = useState(true);
     const [isLoadingHistory, setIsLoadingHistory] = useState(false);
     const [sessionToDelete, setSessionToDelete] = useState(null);
     const [isMobileHistoryOpen, setIsMobileHistoryOpen] = useState(false);
-    const [chatMode, setChatMode] = useState('conversation');
+    const [chatMode, setChatMode] = useState(() => {
+        try { return window.localStorage.getItem(ACTIVE_MODE_KEY) || 'conversation'; } catch { return 'conversation'; }
+    });
     const [isModeMenuOpen, setIsModeMenuOpen] = useState(false);
     const [initiatingPayments, setInitiatingPayments] = useState({});
     const [isOffline, setIsOffline] = useState(typeof navigator !== 'undefined' ? navigator.onLine === false : false);
@@ -178,6 +184,18 @@ const AIAgent = () => {
     const isSessionSwitchRef = useRef(false);
 
     useEffect(() => { messagesRef.current = messages; }, [messages]);
+
+    // Persist active session & mode to localStorage on change
+    useEffect(() => {
+        try {
+            if (currentSessionId) window.localStorage.setItem(ACTIVE_SESSION_KEY, currentSessionId);
+            else window.localStorage.removeItem(ACTIVE_SESSION_KEY);
+        } catch {}
+    }, [currentSessionId]);
+
+    useEffect(() => {
+        try { window.localStorage.setItem(ACTIVE_MODE_KEY, chatMode); } catch {}
+    }, [chatMode]);
 
     useEffect(() => {
         const isSwitch = isSessionSwitchRef.current;
@@ -226,18 +244,29 @@ const AIAgent = () => {
             const { data } = await api.get('/agent/sessions');
             const mergedSessions = mergeSessions(data, localSessions);
             setSessions(mergedSessions);
-            if (!currentSessionId && messagesRef.current.length === 0) {
-                const preferredSession = mergedSessions.find((session) => resolveSessionMode(session) === chatMode) || mergedSessions[0];
-                if (preferredSession) loadSession(preferredSession.id);
-                else startNewChat();
+            if (messagesRef.current.length === 0) {
+                // Restore last active session if it exists in the list
+                const savedId = currentSessionId;
+                const savedSession = savedId ? mergedSessions.find((s) => s.id === savedId) : null;
+                if (savedSession) loadSession(savedSession.id);
+                else {
+                    const preferredSession = mergedSessions.find((session) => resolveSessionMode(session) === chatMode) || mergedSessions[0];
+                    if (preferredSession) loadSession(preferredSession.id);
+                    else startNewChat();
+                }
             }
         } catch (error) {
             console.error('Failed to fetch sessions:', error);
             setSessions(localSessions);
-            if (!currentSessionId && messagesRef.current.length === 0) {
-                const preferredSession = localSessions.find((session) => resolveSessionMode(session) === chatMode) || localSessions[0];
-                if (preferredSession) loadSession(preferredSession.id);
-                else startNewChat();
+            if (messagesRef.current.length === 0) {
+                const savedId = currentSessionId;
+                const savedSession = savedId ? localSessions.find((s) => s.id === savedId) : null;
+                if (savedSession) loadSession(savedSession.id);
+                else {
+                    const preferredSession = localSessions.find((session) => resolveSessionMode(session) === chatMode) || localSessions[0];
+                    if (preferredSession) loadSession(preferredSession.id);
+                    else startNewChat();
+                }
             }
         } finally {
             setIsLoadingSessions(false);
@@ -279,6 +308,22 @@ const AIAgent = () => {
             : `Welcome back, ${user?.fullName?.split(' ')[0] || 'Strategic Partner'}.\n\nI can walk you through the full TrustTrade website with clear, thoughtful answers about features, buying, selling, analytics, negotiation, and checkout. What would you like to explore first?`;
         const initialPrompts = nextMode === 'agent' ? ["Start buying", "Find an asset", "Compare options"] : [];
         setMessages([createMessage('assistant', greeting, initialPrompts)]);
+    };
+
+    const bootstrapStrategicFlow = async () => {
+        if (isBusy) return null;
+
+        const bootstrapSessionId = isLocalSessionId(currentSessionId) ? currentSessionId : createLocalSessionId();
+        if (currentSessionId !== bootstrapSessionId) {
+            setCurrentSessionId(bootstrapSessionId);
+        }
+
+        setChatMode('agent');
+        return sendMessage("Start buying", {
+            sessionId: bootstrapSessionId,
+            mode: 'agent',
+            metadata: { bootstrap: true }
+        });
     };
 
     const switchMode = (mode) => {
@@ -346,6 +391,8 @@ const AIAgent = () => {
     const sendMessage = async (rawMessage, options = {}) => {
         const message = rawMessage.trim();
         if (!message || isBusy) return null;
+        const targetSessionId = options.sessionId || currentSessionId;
+        const targetMode = options.mode || chatMode;
         const userMessage = createMessage('user', message);
         const nextMessages = [...messagesRef.current, userMessage];
         setMessages(nextMessages); setInput(''); setIsSending(true);
@@ -353,21 +400,21 @@ const AIAgent = () => {
             setIsSending(false); await showOfflineAssistantMessage(nextMessages); return null;
         }
         try {
-            const targetPath = chatMode === 'agent' ? '/agent/chat/strategic' : '/agent/chat/conversation';
+            const targetPath = targetMode === 'agent' ? '/agent/chat/strategic' : '/agent/chat/conversation';
             const { data } = await api.post(targetPath, {
-                message, sessionId: currentSessionId, metadata: options.metadata || {},
+                message, sessionId: targetSessionId, metadata: options.metadata || {},
                 history: nextMessages.filter(m => m.role === 'user' || m.role === 'assistant').slice(-8).map(m => ({ role: m.role, content: m.content }))
             });
-            let resolvedSessionId = currentSessionId;
+            let resolvedSessionId = targetSessionId;
             if (data.sessionId) {
                 resolvedSessionId = data.sessionId;
-                if (currentSessionId !== data.sessionId) {
-                    if (isLocalSessionId(currentSessionId)) removeLocalSession(currentSessionId);
+                if (targetSessionId !== data.sessionId) {
+                    if (isLocalSessionId(targetSessionId)) removeLocalSession(targetSessionId);
                     setCurrentSessionId(data.sessionId);
                 }
             } else {
-                resolvedSessionId = currentSessionId || createLocalSessionId();
-                if (currentSessionId !== resolvedSessionId) setCurrentSessionId(resolvedSessionId);
+                resolvedSessionId = targetSessionId || createLocalSessionId();
+                if (targetSessionId !== resolvedSessionId) setCurrentSessionId(resolvedSessionId);
                 upsertLocalSession({ id: resolvedSessionId, userId: currentUserId, mode: chatMode, messages: nextMessages });
             }
             setIsSending(false);
@@ -496,7 +543,16 @@ const AIAgent = () => {
                                                     {isAssistant && !message.isStreaming && message.quickReplies?.length > 0 && (chatMode === 'agent' || message.isErrorState) && (
                                                         <div className="mt-6 flex flex-wrap gap-2">
                                                             {message.quickReplies.map((prompt) => (
-                                                                <button key={prompt} onClick={() => sendMessage(prompt)} disabled={isBusy} className={`rounded-xl border px-3 py-2 text-[10px] font-bold transition-all disabled:opacity-30 ${message.isErrorState ? 'border-red-500/30 bg-red-500/10 text-red-300' : 'border-chat-border hover:bg-chat-bg text-chat-text-primary'}`}>
+                                                                <button
+                                                                    key={prompt}
+                                                                    onClick={() => (
+                                                                        prompt === 'Start buying'
+                                                                            ? bootstrapStrategicFlow()
+                                                                            : sendMessage(prompt)
+                                                                    )}
+                                                                    disabled={isBusy}
+                                                                    className={`rounded-xl border px-3 py-2 text-[10px] font-bold transition-all disabled:opacity-30 ${message.isErrorState ? 'border-red-500/30 bg-red-500/10 text-red-300' : 'border-chat-border hover:bg-chat-bg text-chat-text-primary'}`}
+                                                                >
                                                                     {prompt}
                                                                 </button>
                                                             ))}

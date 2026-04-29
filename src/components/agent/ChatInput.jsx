@@ -29,7 +29,7 @@ const ChatInput = ({
                                 }
                             }}
                             rows={2}
-                            placeholder={chatMode === 'agent' ? "Tell me what you want to buy..." : "Ask anything about the TrustTrade website..."}
+                            placeholder={chatMode === 'agent' ? "Type a message or use the options above..." : "Ask anything about the TrustTrade website..."}
                             className="h-20 w-full resize-none bg-transparent px-5 py-4 text-sm font-medium text-chat-text-primary outline-none placeholder:text-chat-text-secondary/70"
                         />
                         <div className="flex items-center justify-between border-t border-chat-border py-3 pl-5 pr-3">
@@ -46,46 +46,53 @@ const ChatInput = ({
                                     </button>
                                     <AnimatePresence>
                                         {isModeMenuOpen && (
-                                            <motion.div
-                                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                                exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                                transition={{ duration: 0.15 }}
-                                                className="absolute bottom-full left-0 mb-3 w-[220px] sm:w-[320px] overflow-hidden rounded-2xl border border-chat-border bg-chat-bg/80 backdrop-blur-xl shadow-2xl z-[80] origin-bottom-left"
-                                            >
-                                                <div className="flex flex-col p-1.5 sm:p-2 gap-1">
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => switchMode('conversation')}
-                                                        className={`flex items-start gap-3 sm:gap-4 rounded-xl px-3 sm:px-4 py-3 sm:py-4 text-left transition-all ${chatMode === 'conversation' ? 'bg-chat-accent/10' : 'hover:bg-chat-bg'}`}
-                                                    >
-                                                        <MessageSquare className={`h-4 w-4 sm:h-5 sm:w-5 shrink-0 mt-0.5 ${chatMode === 'conversation' ? 'text-chat-accent' : 'text-chat-text-secondary'}`} />
-                                                        <div className="flex flex-col gap-1 sm:gap-1.5">
-                                                            <span className={`text-[10px] sm:text-xs font-bold uppercase tracking-widest ${chatMode === 'conversation' ? 'text-chat-accent' : 'text-chat-text-primary'}`}>
-                                                                Conversation Mode
-                                                            </span>
-                                                            <span className="text-[10px] sm:text-[11px] font-medium leading-relaxed text-chat-text-secondary line-clamp-2">
-                                                                Explains the full TrustTrade website with grounded answers about pages, features, workflows, and user journeys.
-                                                            </span>
-                                                        </div>
-                                                    </button>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => switchMode('agent')}
-                                                        className={`flex items-start gap-3 sm:gap-4 rounded-xl px-3 sm:px-4 py-3 sm:py-4 text-left transition-all ${chatMode === 'agent' ? 'bg-chat-accent/10' : 'hover:bg-chat-bg'}`}
-                                                    >
-                                                        <Bot className={`h-4 w-4 sm:h-5 sm:w-5 shrink-0 mt-0.5 ${chatMode === 'agent' ? 'text-chat-accent' : 'text-chat-text-secondary'}`} />
-                                                        <div className="flex flex-col gap-1 sm:gap-1.5">
-                                                            <span className={`text-[10px] sm:text-xs font-bold uppercase tracking-widest ${chatMode === 'agent' ? 'text-chat-accent' : 'text-chat-text-primary'}`}>
-                                                                Agent Mode
-                                                            </span>
-                                                            <span className="text-[10px] sm:text-[11px] font-medium leading-relaxed text-chat-text-secondary line-clamp-2">
-                                                                Guides a structured buy flow with options, quotes, reservation, and secure checkout support.
-                                                            </span>
-                                                        </div>
-                                                    </button>
-                                                </div>
-                                            </motion.div>
+                                            <>
+                                                {/* Backdrop to close on outside click */}
+                                                <div
+                                                    className="fixed inset-0 z-[199]"
+                                                    onClick={() => setIsModeMenuOpen(false)}
+                                                />
+                                                <motion.div
+                                                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                                    transition={{ duration: 0.15 }}
+                                                    className="absolute bottom-full left-0 mb-3 w-[220px] sm:w-[320px] overflow-hidden rounded-2xl border border-chat-border bg-chat-bg backdrop-blur-xl shadow-[0_-8px_40px_rgba(0,0,0,0.5)] z-[200] origin-bottom-left"
+                                                >
+                                                    <div className="flex flex-col p-1.5 sm:p-2 gap-1">
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => switchMode('conversation')}
+                                                            className={`flex items-start gap-3 sm:gap-4 rounded-xl px-3 sm:px-4 py-3 sm:py-4 text-left transition-all ${chatMode === 'conversation' ? 'bg-chat-accent/10' : 'hover:bg-chat-bg'}`}
+                                                        >
+                                                            <MessageSquare className={`h-4 w-4 sm:h-5 sm:w-5 shrink-0 mt-0.5 ${chatMode === 'conversation' ? 'text-chat-accent' : 'text-chat-text-secondary'}`} />
+                                                            <div className="flex flex-col gap-1 sm:gap-1.5">
+                                                                <span className={`text-[10px] sm:text-xs font-bold uppercase tracking-widest ${chatMode === 'conversation' ? 'text-chat-accent' : 'text-chat-text-primary'}`}>
+                                                                    Conversation Mode
+                                                                </span>
+                                                                <span className="text-[10px] sm:text-[11px] font-medium leading-relaxed text-chat-text-secondary line-clamp-2">
+                                                                    Explains the full TrustTrade website with grounded answers about pages, features, workflows, and user journeys.
+                                                                </span>
+                                                            </div>
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => switchMode('agent')}
+                                                            className={`flex items-start gap-3 sm:gap-4 rounded-xl px-3 sm:px-4 py-3 sm:py-4 text-left transition-all ${chatMode === 'agent' ? 'bg-chat-accent/10' : 'hover:bg-chat-bg'}`}
+                                                        >
+                                                            <Bot className={`h-4 w-4 sm:h-5 sm:w-5 shrink-0 mt-0.5 ${chatMode === 'agent' ? 'text-chat-accent' : 'text-chat-text-secondary'}`} />
+                                                            <div className="flex flex-col gap-1 sm:gap-1.5">
+                                                                <span className={`text-[10px] sm:text-xs font-bold uppercase tracking-widest ${chatMode === 'agent' ? 'text-chat-accent' : 'text-chat-text-primary'}`}>
+                                                                    Agent Mode
+                                                                </span>
+                                                                <span className="text-[10px] sm:text-[11px] font-medium leading-relaxed text-chat-text-secondary line-clamp-2">
+                                                                    Guides a structured buy flow with options, quotes, reservation, and secure checkout support.
+                                                                </span>
+                                                            </div>
+                                                        </button>
+                                                    </div>
+                                                </motion.div>
+                                            </>
                                         )}
                                     </AnimatePresence>
                                 </div>
