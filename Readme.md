@@ -1,4 +1,4 @@
-# 🚀 TrustTrade — Business Buying & Selling Platform
+# 🚀 TrustTrade - Business Buying & Selling Platform
 
 
 TrustTrade is a full-stack **B2B & B2C marketplace** where sellers list businesses or digital assets, and buyers can discover, negotiate, pay, and close deals through a **secure, structured, and transparent system**.
