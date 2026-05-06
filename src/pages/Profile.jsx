@@ -34,13 +34,11 @@ const Profile = () => {
     useEffect(() => {
         const loadData = async () => {
             try {
-                const [profileRes, businessRes] = await Promise.all([
-                    api.get('/auth/me'),
-                    api.get('/businesses')
-                ]);
-
+                const profileRes = await api.get('/auth/me');
+                
                 setProfile(profileRes.data);
                 if (profileRes.data.role === 'seller') {
+                    const businessRes = await api.get('/businesses');
                     setBusinesses(businessRes.data || []);
                 }
 
