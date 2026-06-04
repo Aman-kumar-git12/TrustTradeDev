@@ -3,13 +3,13 @@ import { Link } from 'react-router-dom';
 
 const ChatHeader = ({ chatMode, onMobileHistoryOpen }) => {
     return (
-        <header className="flex items-center justify-between border-b border-chat-border px-6 py-4">
+        <header className="flex items-center justify-between border-b border-chat-border px-5 py-2.5">
             <div className="flex items-center gap-4">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-chat-accent/30 bg-chat-accent/10 text-chat-accent lg:hidden">
-                    <Bot className="h-6 w-6" />
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg border border-chat-accent/30 bg-chat-accent/10 text-chat-accent lg:hidden">
+                    <Bot className="h-5 w-5" />
                 </div>
                 <div>
-                    <h1 className="flex items-center gap-2 text-sm font-bold text-chat-text-primary uppercase tracking-wider">
+                    <h1 className="flex items-center gap-2 text-xs font-bold text-chat-text-primary uppercase tracking-wider">
                         {chatMode === 'agent' ? 'Strategic Command' : 'TrustTrade Guide'}
                         <span className="hidden sm:inline-block rounded-full border border-chat-accent/20 bg-chat-accent/10 px-2.5 py-0.5 text-[9px] font-black uppercase tracking-widest text-chat-accent">
                             {chatMode === 'agent' ? 'Agent Flow' : 'Conversation'}

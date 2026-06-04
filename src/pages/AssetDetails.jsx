@@ -26,6 +26,8 @@ const AssetDetails = () => {
     const [message, setMessage] = useState('');
     const [quantity, setQuantity] = useState(1);
     const [isHovered, setIsHovered] = useState(false);
+    
+    const availableQty = asset ? Math.max(0, asset.quantity - (asset.reservedQuantity || 0)) : 0;
 
     useEffect(() => {
         const fetchAsset = async () => {
@@ -255,7 +257,7 @@ const AssetDetails = () => {
                         <div className="flex items-center space-x-4 mb-8">
                             <div className="flex items-center text-sm font-semibold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-zinc-800 px-3 py-1 rounded-full">
                                 <CheckCircle size={14} className="mr-1.5 text-blue-500 dark:text-emerald-500" />
-                                {asset.quantity} Available
+                                {availableQty} Available
                             </div>
                             {asset.sales > 0 && (
                                 <div className="flex items-center text-sm font-semibold text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-zinc-800 px-3 py-1 rounded-full">
@@ -377,15 +379,15 @@ const AssetDetails = () => {
                                             </button>
                                             <span className="font-bold text-lg text-gray-900 dark:text-white">{quantity}</span>
                                             <button
-                                                onClick={() => setQuantity(Math.min(asset.quantity, quantity + 1))}
+                                                onClick={() => setQuantity(Math.min(availableQty, quantity + 1))}
                                                 className="w-10 h-10 rounded-lg bg-white dark:bg-zinc-800 shadow-sm flex items-center justify-center text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-emerald-400 transition-colors disabled:opacity-50"
-                                                disabled={quantity >= asset.quantity}
+                                                disabled={quantity >= availableQty}
                                             >
                                                 +
                                             </button>
                                         </div>
                                         <p className="text-xs text-right text-gray-500 mt-1">
-                                            {asset.quantity} units available
+                                            {availableQty} units available
                                         </p>
                                     </div>
 
@@ -459,12 +461,12 @@ const AssetDetails = () => {
                                         </button>
                                         <span className="text-xl font-bold dark:text-white w-8 text-center">{quantity}</span>
                                         <button
-                                            onClick={() => setQuantity(Math.min(asset.quantity, quantity + 1))}
+                                            onClick={() => setQuantity(Math.min(availableQty, quantity + 1))}
                                             className="w-10 h-10 rounded-lg bg-gray-100 dark:bg-zinc-800 flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-zinc-700 transition-colors font-bold"
                                         >
                                             +
                                         </button>
-                                        <span className="text-sm text-gray-500 dark:text-zinc-500 font-medium">({asset.quantity} units available)</span>
+                                        <span className="text-sm text-gray-500 dark:text-zinc-500 font-medium">({availableQty} units available)</span>
                                     </div>
                                 </div>
 

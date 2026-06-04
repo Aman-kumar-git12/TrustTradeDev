@@ -1,7 +1,12 @@
 import axios from 'axios';
 
+const defaultApiBaseUrl =
+    typeof window !== 'undefined'
+        ? `${window.location.protocol}//${window.location.hostname}:5002/api`
+        : 'http://localhost:5002/api';
+
 const api = axios.create({
-    baseURL: `${import.meta.env.VITE_API_URL || 'http://localhost:5002/api'}`,
+    baseURL: `${import.meta.env.VITE_API_URL || defaultApiBaseUrl}`,
     withCredentials: true // Important for cookies
 });
 
@@ -43,8 +48,13 @@ api.interceptors.response.use(
 
         // 2. Handle 401 Unauthorized
         if (response && response.status === 401) {
+            const requestUrl = String(config?.url || '');
+            const isAuthCheck = requestUrl.includes('/auth/me');
+            const isPaymentFlow = requestUrl.includes('/payment/') || requestUrl.includes('/agent/');
+
             // Don't redirect if the error is from /auth/me (AuthContext handles this)
-            if (config.url.includes('/auth/me')) {
+            // or from payment/agent actions where we want the caller to surface the error.
+            if (isAuthCheck || isPaymentFlow) {
                 return Promise.reject(error);
             }
 

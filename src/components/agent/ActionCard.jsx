@@ -3,7 +3,7 @@ import { ShieldCheck, Zap, Tag, Star, ChevronRight, Loader2 } from 'lucide-react
 const ActionCard = ({ type, data, isBusy, onAction }) => {
     if (type === 'tool_call') {
         return (
-            <div className="mt-6 rounded-2xl border border-chat-accent/30 bg-chat-card p-4 backdrop-blur-md shadow-2xl relative overflow-hidden group">
+            <div className="mt-4 rounded-2xl border border-chat-accent/30 bg-chat-card p-3.5 backdrop-blur-md shadow-2xl relative overflow-hidden group">
                 <div className="absolute inset-0 bg-chat-accent/5 mix-blend-overlay opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
                 <div className="relative z-10 flex flex-col">
                     <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-chat-accent mb-2">
@@ -38,8 +38,8 @@ const ActionCard = ({ type, data, isBusy, onAction }) => {
     if (type === 'options') {
         const { active_options, optionOffset = 0, has_more } = data;
         return (
-            <div className="mt-6 flex flex-col gap-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="mt-4 flex flex-col gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                     {active_options.map((asset, idx) => {
                         const globalIdx = optionOffset + idx + 1;
                         return (
@@ -49,7 +49,7 @@ const ActionCard = ({ type, data, isBusy, onAction }) => {
                                 onClick={() => onAction(`Select Option ${globalIdx}`)}
                                 className="group relative flex flex-col overflow-hidden rounded-2xl border border-chat-border bg-chat-card/30 backdrop-blur-xl transition-all hover:border-chat-accent/50 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] active:scale-[0.98] text-left"
                             >
-                                <div className="aspect-[4/3] w-full overflow-hidden bg-black/20 relative">
+                                <div className="aspect-[16/9] w-full overflow-hidden bg-black/20 relative">
                                     {asset.images?.[0]?.url ? (
                                         <img 
                                             src={asset.images[0].url} 
@@ -65,7 +65,7 @@ const ActionCard = ({ type, data, isBusy, onAction }) => {
                                         Option {globalIdx}
                                     </div>
                                 </div>
-                                <div className="p-4 flex flex-col flex-1">
+                                <div className="p-3 flex flex-col flex-1">
                                     <h4 className="text-xs font-bold text-chat-text-primary line-clamp-1 mb-1 group-hover:text-chat-accent transition-colors">
                                         {asset.title}
                                     </h4>

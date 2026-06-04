@@ -448,6 +448,23 @@ const AIAgent = () => {
                 startAgentPayment(paymentOrder, { buyerName: user?.fullName, buyerEmail: user?.email }, async (res) => {
                     try {
                         await api.post('/agent/complete-purchase', { razorpayOrderId: res.razorpay_order_id, razorpayPaymentId: res.razorpay_payment_id, razorpaySignature: res.razorpay_signature });
+                        
+                        setMessages(current => current.map(msg => {
+                            if (msg.id === message.id) {
+                                return {
+                                    ...msg,
+                                    metadata: {
+                                        ...msg.metadata,
+                                        paymentOrder: {
+                                            ...(msg.metadata?.paymentOrder || {}),
+                                            is_completed: true
+                                        }
+                                    }
+                                };
+                            }
+                            return msg;
+                        }));
+
                         setInitiatingPayments(prev => ({ ...prev, [message.id]: false }));
                         await sendMessage("I completed payment in the app.", { metadata: { paymentVerification: { razorpayOrderId: res.razorpay_order_id, razorpayPaymentId: res.razorpay_payment_id, razorpaySignature: res.razorpay_signature } } });
                     } catch(e) { console.error(e); }
@@ -462,7 +479,7 @@ const AIAgent = () => {
 
     return (
         <div className="relative z-10 h-[calc(100vh-64px)] overflow-hidden bg-transparent font-sans">
-            <div className="mx-auto flex h-full w-full max-w-[1600px] gap-4 p-4 lg:p-6">
+            <div className="mx-auto flex h-full w-full max-w-[1600px] gap-3 p-3 lg:p-4">
                 <ChatSidebar 
                     onNewChat={startNewChat}
                     chatMode={chatMode}
@@ -474,14 +491,14 @@ const AIAgent = () => {
                     resolveSessionMode={resolveSessionMode}
                 />
 
-                <main className="relative flex flex-1 flex-col overflow-visible rounded-[32px] border border-chat-border bg-chat-bg/40 shadow-[0_40px_100px_rgba(0,0,0,0.4)] backdrop-blur-2xl">
+                <main className="relative flex flex-1 flex-col overflow-visible rounded-3xl border border-chat-border bg-chat-bg/40 shadow-[0_40px_100px_rgba(0,0,0,0.4)] backdrop-blur-2xl">
                     <ChatHeader 
                         chatMode={chatMode} 
                         onMobileHistoryOpen={() => setIsMobileHistoryOpen(true)}
                     />
 
-                    <div className="flex-1 overflow-y-auto px-4 py-8 lg:px-6 scrollbar-none">
-                        <div className="mx-auto flex max-w-4xl flex-col gap-8">
+                    <div className="flex-1 overflow-y-auto px-4 py-3 lg:px-6 scrollbar-none">
+                        <div className="mx-auto flex max-w-4xl flex-col gap-3">
                             {isOffline && (
                                 <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="overflow-hidden rounded-[28px] border border-red-500/30 bg-red-500/[0.04] shadow-xl">
                                     <div className="grid md:grid-cols-[260px_1fr]">
@@ -506,10 +523,10 @@ const AIAgent = () => {
                                     {messages.map((message) => {
                                         const isAssistant = message.role === 'assistant';
                                         return (
-                                            <motion.div key={message.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className={`flex ${isAssistant ? 'justify-start' : 'justify-end'}`}>
-                                                <div className={`relative max-w-[85%] rounded-[24px] px-5 py-4 shadow-xl sm:max-w-[75%] ${message.isErrorState ? 'border border-red-500/20 bg-red-500/[0.03]' : isAssistant ? 'border border-chat-bubble-assistant-border bg-chat-bubble-assistant-bg text-chat-text-primary' : 'bg-chat-bubble-user-bg text-white'}`}>
-                                                    <div className={`mb-2 text-[9px] font-black uppercase tracking-widest ${isAssistant ? 'text-chat-accent/80' : 'text-white/60'}`}>
-                                                        {isAssistant ? 'UNIT-01 RESPONSE' : 'COMMAND UPLOAD'}
+                                            <motion.div key={message.id} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.2 }} className={`flex ${isAssistant ? 'justify-start' : 'justify-end'}`}>
+                                                <div className={`relative max-w-[95%] rounded-2xl px-3 py-2.5 shadow-md sm:max-w-[85%] ${message.isErrorState ? 'border border-red-500/20 bg-red-500/[0.03]' : isAssistant ? 'border border-chat-bubble-assistant-border bg-chat-bubble-assistant-bg text-chat-text-primary' : 'bg-chat-bubble-user-bg text-white'}`}>
+                                                    <div className={`mb-1 text-[8px] font-black uppercase tracking-widest ${isAssistant ? 'text-chat-accent/70' : 'text-white/50'}`}>
+                                                        {isAssistant ? 'UNIT-01' : 'YOU'}
                                                     </div>
                                                     
                                                     {message.isErrorState && <img src={networkErrorImg} alt="Error" className="mb-4 rounded-xl border border-red-500/20 max-h-[300px] w-full object-cover" />}
@@ -541,7 +558,7 @@ const AIAgent = () => {
                                                     )}
 
                                                     {isAssistant && !message.isStreaming && message.quickReplies?.length > 0 && (chatMode === 'agent' || message.isErrorState) && (
-                                                        <div className="mt-6 flex flex-wrap gap-2">
+                                                        <div className="mt-3 flex flex-wrap gap-1.5">
                                                             {message.quickReplies.map((prompt) => (
                                                                 <button
                                                                     key={prompt}
@@ -551,7 +568,7 @@ const AIAgent = () => {
                                                                             : sendMessage(prompt)
                                                                     )}
                                                                     disabled={isBusy}
-                                                                    className={`rounded-xl border px-3 py-2 text-[10px] font-bold transition-all disabled:opacity-30 ${message.isErrorState ? 'border-red-500/30 bg-red-500/10 text-red-300' : 'border-chat-border hover:bg-chat-bg text-chat-text-primary'}`}
+                                                                    className={`rounded-md border px-2 py-1.5 text-[9px] font-bold transition-all disabled:opacity-30 ${message.isErrorState ? 'border-red-500/30 bg-red-500/10 text-red-300' : 'border-chat-border hover:bg-chat-bg text-chat-text-primary'}`}
                                                                 >
                                                                     {prompt}
                                                                 </button>

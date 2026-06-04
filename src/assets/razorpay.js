@@ -86,7 +86,15 @@ export const startPayment = async (
         rzp.open();
     } catch (error) {
         console.error("Payment Error:", error);
-        const errorMsg = error.response?.data?.message || error.message || "Failed to initiate payment. Please try again.";
+        const backendMessage =
+            error.response?.data?.message ||
+            error.response?.data?.error ||
+            error.response?.data?.detail ||
+            "";
+        const errorMsg = backendMessage || error.message || "Failed to initiate payment. Please try again.";
+        if (backendMessage) {
+            console.error("Payment Backend Message:", backendMessage);
+        }
         alert(errorMsg);
         if (onFailure) onFailure(errorMsg);
     }
@@ -142,4 +150,3 @@ export const startAgentPayment = async (
         if (onFailure) onFailure(error);
     }
 };
-

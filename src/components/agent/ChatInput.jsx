@@ -12,7 +12,7 @@ const ChatInput = ({
     switchMode 
 }) => {
     return (
-        <div className="px-4 py-6 lg:px-8">
+        <div className="px-4 py-3 lg:px-6">
             <form
                 onSubmit={(e) => { e.preventDefault(); onSendMessage(input); }}
                 className="relative mx-auto max-w-4xl"
@@ -30,9 +30,9 @@ const ChatInput = ({
                             }}
                             rows={2}
                             placeholder={chatMode === 'agent' ? "Type a message or use the options above..." : "Ask anything about the TrustTrade website..."}
-                            className="h-20 w-full resize-none bg-transparent px-5 py-4 text-sm font-medium text-chat-text-primary outline-none placeholder:text-chat-text-secondary/70"
+                            className="h-14 w-full resize-none bg-transparent px-4 py-3 text-sm font-medium text-chat-text-primary outline-none placeholder:text-chat-text-secondary/70"
                         />
-                        <div className="flex items-center justify-between border-t border-chat-border py-3 pl-5 pr-3">
+                        <div className="flex items-center justify-between border-t border-chat-border py-2 pl-4 pr-2">
                             <div className="flex items-center gap-3">
                                 <div className="relative">
                                     <button
@@ -103,7 +103,7 @@ const ChatInput = ({
                             <button
                                 type="submit"
                                 disabled={isBusy || !input.trim()}
-                                className="flex h-10 items-center justify-center gap-2 rounded-xl bg-chat-accent px-6 text-[10px] font-black uppercase tracking-[0.2em] text-white transition-all hover:bg-chat-accent-hover active:scale-95 disabled:opacity-30"
+                                className="flex h-9 items-center justify-center gap-2 rounded-xl bg-chat-accent px-5 text-[10px] font-black uppercase tracking-[0.2em] text-white transition-all hover:bg-chat-accent-hover active:scale-95 disabled:opacity-30"
                             >
                                 <Send className="h-4 w-4" />
                                 {isBusy ? 'Transmitting' : 'Execute'}
